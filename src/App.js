@@ -9,10 +9,12 @@ class App extends React.Component {
         super(props);
 
         this.state = {
+            rikaiResult: {},
             text: null
         };
 
         this.handleTextChange = this.handleTextChange.bind(this);
+        this.updateRikaiResult = this.updateRikaiResult.bind(this);
         this.resetText = this.resetText.bind(this);
     }
 
@@ -24,13 +26,19 @@ class App extends React.Component {
         this.setState({text: null});
     }
 
+    updateRikaiResult(rikaiResult) {
+        this.setState(
+            {rikaiResult: rikaiResult}
+        );
+    }
+
     render() {
 
         let currentPage = '';
         if (!this.state.text) {
             currentPage = <AddYomimono handleTextChange={this.handleTextChange}/>;
         } else {
-            currentPage = <ViewYomimono text={this.state.text} reset={this.resetText}/>;
+            currentPage = <ViewYomimono text={this.state.text} reset={this.resetText} rikaiResult={this.state.rikaiResult} updateRikaiResult={this.updateRikaiResult}/>;
         }
 
         return (
