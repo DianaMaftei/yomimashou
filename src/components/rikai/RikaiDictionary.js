@@ -150,7 +150,7 @@ class RikaiDict {
                                 continue;
                             }
                             have[newWord] = r.length;
-                            if (r[i].reason.length) o.reason = this.difReasons[rule.reason] + ' &lt; ' + r[i].reason;
+                            if (r[i].reason && r[i].reason.length) o.reason = this.difReasons[rule.reason] + ' &lt; ' + r[i].reason;
                             else o.reason = this.difReasons[rule.reason];
                             o.type = rule.type >> 8;
                             o.word = newWord;
