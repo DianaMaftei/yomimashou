@@ -15,8 +15,7 @@ class Word extends React.Component {
             firstRow.push(<span key={this.props.kanji} className="w-kanji">{this.props.kanji}</span>);
         }
 
-        firstRow.push(<span key={this.props.kana + this.props.conj}><span className="w-kana">{this.props.kana}</span><span
-            style={{float: 'right', cursor: 'pointer', color: 'blue'}} onClick={this.showExamples.bind(this)}>Ex</span></span>);
+        firstRow.push(<span key={this.props.kana + this.props.conj}><span className="w-kana">{this.props.kana}</span><span className="example-btn"  onClick={this.showExamples.bind(this)}>Ex</span></span>);
 
         if (this.props.conj) {
             firstRow.push(<span key={this.props.conj} className="w-conj">{this.props.conj}</span>);

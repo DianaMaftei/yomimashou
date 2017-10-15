@@ -4,7 +4,7 @@ class Example extends React.Component {
 
     render() {
         return (
-            <div className={"w-def "+ this.props.exampleClassName}>
+            <div className={"example "+ this.props.exampleClassName}>
                 <p>{this.props.example}</p>
             </div>
         );

@@ -12,7 +12,8 @@ class ViewYomimono extends React.Component {
                         <li>Hover over the text to detect words in the dictionary and click to see the
                             definition.
                         </li>
-                        <li>Press 'S' to switch between available dictionaries (words / kanji).</li>
+                        <li>Press the 'S' key to switch between available dictionaries (words / kanji).</li>
+                        <li>Click 'Ex' on word definitions to see example sentences.</li>
                     </ul>
                 </div>
                 <div id="text-show">{this.props.text}</div>
