@@ -1,30 +1,40 @@
 import React from "react";
 
-const Word = (props) => {
 
-    let firstRow = [];
+class Word extends React.Component {
 
-    if (props.kanji) {
-        firstRow.push(<span key={props.kanji} className="w-kanji">{props.kanji}</span>);
+    showExamples() {
+        this.props.showExamples({kanji: this.props.kanji, kana: this.props.kana});
     }
 
-    firstRow.push(<span key={props.kana} className="w-kana">{props.kana}</span>);
+    render() {
 
-    if (props.conj) {
-        firstRow.push(<span key={props.conj} className="w-conj">{props.conj}</span>);
+        let firstRow = [];
+
+        if (this.props.kanji) {
+            firstRow.push(<span key={this.props.kanji} className="w-kanji">{this.props.kanji}</span>);
+        }
+
+        firstRow.push(<span key={this.props.kana + this.props.conj}><span className="w-kana">{this.props.kana}</span><span
+            style={{float: 'right', cursor: 'pointer', color: 'blue'}} onClick={this.showExamples.bind(this)}>Ex</span></span>);
+
+        if (this.props.conj) {
+            firstRow.push(<span key={this.props.conj} className="w-conj">{this.props.conj}</span>);
+        }
+
+        let def = "";
+        if (this.props.def) {
+            def = <p className="w-def">{this.props.def}</p>;
+        }
+
+        return (
+            <div className={"w-word "+ this.props.wordClassName}>
+                {firstRow}
+                {def}
+            </div>
+        );
+
     }
-
-    let def = "";
-    if (props.def) {
-        def = <p className="w-def">{props.def}</p>;
-    }
-
-    return (
-        <div className={"w-word "+ props.wordClassName}>
-            {firstRow}
-            {def}
-        </div>
-    );
-};
+}
 
 export default Word;

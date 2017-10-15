@@ -48,6 +48,7 @@ import RikaiDict from "./RikaiDictionary";
 import Rikai from "./Rikai";
 import WordList from "./WordList";
 import NameList from "./NameList";
+import ExampleList from "./ExampleList";
 import Kanji from "./Kanji";
 
 import '../../style/rikai.css';
@@ -148,8 +149,9 @@ class RikaiPopUp extends Component {
         this.processEntry = this.processEntry.bind(this);
         this.isVisible = this.isVisible.bind(this);
         this.show = this.show.bind(this);
-        this.updateResult = this.updateResult.bind(this);
         this.tryUpdatePopup = this.tryUpdatePopup.bind(this);
+        this.updateResult = this.updateResult.bind(this);
+        this.showExamples = this.showExamples.bind(this);
 
         this.enable();
     }
@@ -763,6 +765,25 @@ class RikaiPopUp extends Component {
         return differentResult;
     }
 
+    showExamples(word) {
+        let term1 = word.kanji !== undefined ? word.kanji : word.kana;
+        let term2 = word.kanji !== undefined ? word.kana : '';
+        let url = `http://nihongo.monash.edu/cgi-bin/wwwjdic?1ZEU${term1}=1=${term2}`;
+
+        let axios = require('axios');
+        let updateResult = this.props.update.bind(this);
+
+        axios.get(url)
+            .then(function (response) {
+                let data = response.data.substring(response.data.indexOf('<pre>') + 5, response.data.indexOf('</pre>'));
+                let resultList = data.split('\n').filter(entry => entry.substring(0, 2) === 'A:').map(entry => entry.substring(2, entry.indexOf('#')).trim());
+                updateResult({type: 'examples', resultList: resultList});
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
     render() {
         if (!this.props.result) return <div></div>;
 
@@ -771,13 +792,16 @@ class RikaiPopUp extends Component {
 
         if (this.props.result.type === 'words') {
             title = 'Word Dictionary';
-            popUp = <WordList resultList={this.props.result.resultList} limit={this.config.limit}/>;
+            popUp = <WordList resultList={this.props.result.resultList} limit={this.config.limit} showExamples={this.showExamples}/>;
         } else if (this.props.result.type === 'kanji') {
             title = 'Kanji Dictionary';
             popUp = <Kanji result={this.props.result.resultList[0]}/>;
         } else if (this.props.result.type === 'names') {
             title = 'Names Dictionary';
             popUp = <NameList resultList={this.props.result.resultList} limit={this.config.limit}/>;
+        } else if (this.props.result.type === 'examples') {
+            title = 'Examples';
+            popUp = <ExampleList resultList={this.props.result.resultList}/>;
         }
 
         return (
