@@ -16,7 +16,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -27,7 +26,7 @@ import java.util.Properties;
 @EnableTransactionManagement // replaces <tx:annotation-driven/>
 @PropertySource("classpath:app.properties")
 @ComponentScan({"com.github.dianamaftei.yomimashou"})
-@EnableWebMvc // replaces <mvc:annotation-driven />
+//@EnableWebMvc // replaces <mvc:annotation-driven />
 @EnableJpaRepositories(basePackages = {"com.github.dianamaftei.yomimashou.repository"})
 public class AppConfig {
 
@@ -76,7 +75,7 @@ public class AppConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.show_sql", "false");
-//        properties.setProperty("hibernate.hbm2ddl.auto", "create");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create");
         em.setJpaProperties(properties);
 
         return em;

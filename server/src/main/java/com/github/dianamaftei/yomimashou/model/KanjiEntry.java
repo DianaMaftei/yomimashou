@@ -11,16 +11,17 @@ public class KanjiEntry {
 
     private String kanji;
     private String radical;
-    private int grade;
-    private int strokeCount;
-    private int frequency;
-    private String variant;
+    private Integer grade;
+    private Integer strokeCount;
+    private Integer frequency;
     private String skipCode;
     private String onReading;
     private String kunReading;
     private String meaning;
+    private String codepoint;
+    private String variant;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private KanjiReferences references;
 
     public Long getId() {
@@ -47,36 +48,28 @@ public class KanjiEntry {
         this.radical = radical;
     }
 
-    public int getGrade() {
+    public Integer getGrade() {
         return grade;
     }
 
-    public void setGrade(int grade) {
+    public void setGrade(Integer grade) {
         this.grade = grade;
     }
 
-    public int getStrokeCount() {
+    public Integer getStrokeCount() {
         return strokeCount;
     }
 
-    public void setStrokeCount(int strokeCount) {
+    public void setStrokeCount(Integer strokeCount) {
         this.strokeCount = strokeCount;
     }
 
-    public int getFrequency() {
+    public Integer getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(int frequency) {
+    public void setFrequency(Integer frequency) {
         this.frequency = frequency;
-    }
-
-    public String getVariant() {
-        return variant;
-    }
-
-    public void setVariant(String variant) {
-        this.variant = variant;
     }
 
     public String getSkipCode() {
@@ -111,11 +104,27 @@ public class KanjiEntry {
         this.meaning = meaning;
     }
 
+    public String getCodepoint() {
+        return codepoint;
+    }
+
+    public void setCodepoint(String codepoint) {
+        this.codepoint = codepoint;
+    }
+
     public KanjiReferences getReferences() {
         return references;
     }
 
     public void setReferences(KanjiReferences references) {
         this.references = references;
+    }
+
+    public String getVariant() {
+        return variant;
+    }
+
+    public void setVariant(String variant) {
+        this.variant = variant;
     }
 }

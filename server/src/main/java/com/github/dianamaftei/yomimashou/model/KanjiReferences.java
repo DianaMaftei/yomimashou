@@ -21,6 +21,8 @@ public class KanjiReferences {
     private String halpernKkld;
     private String halpernKkld2ed;
     private String heisig;
+    private String heisig6;
+    private String gakken;
     private String oneillNames;
     private String oneillKk;
     private String moro;
@@ -116,6 +118,22 @@ public class KanjiReferences {
 
     public void setHeisig(String heisig) {
         this.heisig = heisig;
+    }
+
+    public String getHeisig6() {
+        return heisig6;
+    }
+
+    public void setHeisig6(String heisig6) {
+        this.heisig6 = heisig6;
+    }
+
+    public String getGakken() {
+        return gakken;
+    }
+
+    public void setGakken(String gakken) {
+        this.gakken = gakken;
     }
 
     public String getOneillNames() {
