@@ -1,6 +1,5 @@
 package com.github.dianamaftei.yomimashou.creator;
 
-import com.github.dianamaftei.yomimashou.config.AppConfig;
 import com.github.dianamaftei.yomimashou.model.KanjiEntry;
 import com.github.dianamaftei.yomimashou.model.KanjiReferences;
 import com.github.dianamaftei.yomimashou.model.WordEntry;
@@ -15,7 +14,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +29,6 @@ import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
 
 /*
     run fetchDictionariesScript.sh to get the xml files TODO - run from inside this class
-    comment out @EnableWebMvc in AppConfig.java in order to get this to run, uncomment it after TODO - find a fix
     check out xsd file comments for explanation of entity structure
 */
 
@@ -49,18 +46,13 @@ public class DictionaryXMLtoPOJO {
         this.kanjiEntryRepository = kanjiEntryRepository;
     }
 
-    public static void main(String[] args) {
+    public void run() {
         System.setProperty("jdk.xml.entityExpansionLimit", "0");
 
         try {
-            AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext();
-            appContext.register(AppConfig.class);
-            appContext.refresh();
-
-            DictionaryXMLtoPOJO creator = appContext.getBean(DictionaryXMLtoPOJO.class);
-            creator.fillWordTableFromXml();
-            creator.fillKanjiTableFromXml();
-//            creator.fillNameTableFromXml();
+            fillWordTableFromXml();
+            fillKanjiTableFromXml();
+//          fillNameTableFromXml();
 
         } catch (Exception e) {
             e.printStackTrace();
