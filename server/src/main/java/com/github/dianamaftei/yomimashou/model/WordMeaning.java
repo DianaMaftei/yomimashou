@@ -1,5 +1,7 @@
 package com.github.dianamaftei.yomimashou.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,8 @@ public class WordMeaning {
 
     private String partOfSpeech;
     private String fieldOfApplication;
+
+    @Type(type = "text")
     private String glosses;
     private String antonym;
 
