@@ -1,7 +1,6 @@
 package com.github.dianamaftei.yomimashou;
 
 import com.github.dianamaftei.yomimashou.creator.DictionaryXMLtoPOJO;
-import com.github.dianamaftei.yomimashou.service.KanjiEntryService;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,7 +23,7 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        dictionaryXMLtoPOJO.run();
+//        dictionaryXMLtoPOJO.run();
     }
 
     // to use Querydsl

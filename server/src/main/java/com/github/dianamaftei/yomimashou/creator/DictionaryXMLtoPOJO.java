@@ -51,7 +51,7 @@ public class DictionaryXMLtoPOJO {
 
         try {
             fillWordTableFromXml();
-            fillKanjiTableFromXml();
+//          fillKanjiTableFromXml();
 //          fillNameTableFromXml();
 
         } catch (Exception e) {
@@ -75,13 +75,13 @@ public class DictionaryXMLtoPOJO {
             List<Entry> dictionaryEntries = jmDict.getEntry();
 
             // limit to a sample of 100 for testing purposes
-            int limit = 100;
+//            int limit = 100;
             for (Entry entry : dictionaryEntries) {
-                if (limit > 0) {
-                    WordEntry wordEntry = getWordEntry(entry);
-                    wordEntryRepository.save(wordEntry);
-                    limit--;
-                }
+//                if (limit > 0) {
+                WordEntry wordEntry = getWordEntry(entry);
+                wordEntryRepository.save(wordEntry);
+//                    limit--;
+//                }
             }
 
         } catch (JAXBException e) {
