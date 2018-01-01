@@ -1,6 +1,18 @@
 import React from 'react';
-import RikaiPopUp from './rikai/Rikai-pop-up';
+import {connect} from 'react-redux';
+import RikaiPopUp from '../components/rikai/Rikai-pop-up';
+import {resetText} from '../actions/index';
 import '../style/rikai.css';
+
+const mapDispatchToProps = (dispatch) => ({
+    resetText: () => {
+        dispatch(resetText());
+    }
+});
+
+const mapStateToProps = (state) => ({
+    text: state.yomi.text
+});
 
 class ViewYomimono extends React.Component {
     render() {
@@ -17,7 +29,7 @@ class ViewYomimono extends React.Component {
                 </div>
                 <div id="text-show">{this.props.text}</div>
                 <div id="reset-btn">
-                    <button onClick={this.props.reset}> Try a different text</button>
+                    <button onClick={this.resetText}> Try a different text</button>
                 </div>
                 <RikaiPopUp result={this.props.rikaiResult} update={this.props.updateRikaiResult}/>
             </div>
@@ -25,4 +37,4 @@ class ViewYomimono extends React.Component {
     }
 }
 
-export default ViewYomimono;
+export default connect(mapStateToProps, mapDispatchToProps)(ViewYomimono);

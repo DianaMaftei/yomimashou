@@ -179,7 +179,7 @@ class RikaiDict {
         for (i = 0; i < word.length; ++i) {
             u = v = word.charCodeAt(i);
 
-            if (u <= 0x3000) break;
+            if (u <= 0x3000) break; //space
 
             // full-width katakana to hiragana
             if ((u >= 0x30A1) && (u <= 0x30F3)) {
@@ -215,7 +215,6 @@ class RikaiDict {
         }
         word = r;
 
-
         let dict;
         let index;
         let maxTrim;
@@ -225,8 +224,6 @@ class RikaiDict {
         let maxLen = 0;
 
         if (doNames) {
-            // check: split this
-
             this.loadNames();
             dict = this.nameDict;
             index = this.nameIndex;

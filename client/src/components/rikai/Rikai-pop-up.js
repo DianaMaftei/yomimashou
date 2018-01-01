@@ -77,11 +77,7 @@ class RikaiPopUp extends Component {
         this.config = {};
         this.config.highlight = 'true';
         this.config.popupDelay = 0;
-        this.config.maxClipCopyEntries = 7;
-        this.config.lineEnding = 'n';
-        this.config.copySeparator = 'tab';
         this.config.disablekeys = 'false';
-        this.config.kanjicomponents = 'true';
         this.config.limit = 5;
 
         // Hack because SelEnd can't be sent in messages
