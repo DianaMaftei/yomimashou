@@ -8,7 +8,14 @@ export const popUpSetVisibility = visibility => {
 
 export const updateSearchResult = result => {
     return {
-        type: 'UPDATE_RESULT',
+        type: 'UPDATE_SEARCH_RESULT',
+        result
+    }
+};
+
+export const updateShowResult = result => {
+    return {
+        type: 'UPDATE_SHOW_RESULT',
         result
     }
 };

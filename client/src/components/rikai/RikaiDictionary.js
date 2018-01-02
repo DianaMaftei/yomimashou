@@ -527,7 +527,7 @@ class RikaiDict {
 
         result.resultList = resultList;
 
-        this.update(result);
+        return result;
     }
 
     getSeparateOnKun(kanji) {
