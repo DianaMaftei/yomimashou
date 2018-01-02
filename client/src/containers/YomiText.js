@@ -558,9 +558,12 @@ class YomiText extends React.Component {
             x = this.elemPosition.left;
             y = this.elemPosition.bottom;
 
+            let scroll = document.documentElement.scrollTop || document.body.scrollTop;
+            y += scroll;
+            
             // go left if necessary
             if ((x + pW) > (window.innerWidth - 20)) {
-                x = this.elemPosition.right - pW;
+                x -= window.innerWidth - 20 - pW;
             }
         } else {
             x += window.scrollX;
