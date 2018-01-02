@@ -1,6 +1,7 @@
 let defaultState = {
     visible: false,
-    result: {},
+    searchResult: {},
+    showResult: {},
     limitResults: true
 };
 
@@ -11,10 +12,15 @@ const popUp = (state = defaultState, action) => {
                 ...state,
                 visible: action.visibility
             };
-        case 'UPDATE_RESULT':
+        case 'UPDATE_SEARCH_RESULT':
             return {
                 ...state,
-                result: action.result
+                searchResult: action.result
+            };
+        case 'UPDATE_SHOW_RESULT':
+            return {
+                ...state,
+                showResult: action.result
             };
         case 'LIMIT_RESULTS':
             return {

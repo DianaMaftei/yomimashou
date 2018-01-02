@@ -10,28 +10,12 @@ const mapStateToProps = (state) => ({
 
 class App extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            rikaiResult: {}
-        };
-
-        this.updateRikaiResult = this.updateRikaiResult.bind(this);
-    }
-
-    updateRikaiResult(rikaiResult) {
-        this.setState(
-            {rikaiResult: rikaiResult}
-        );
-    }
-
     render() {
         let currentPage = '';
         if (!this.props.text) {
             currentPage = <AddYomimono/>;
         } else {
-            currentPage = <ViewYomimono rikaiResult={this.state.rikaiResult} updateRikaiResult={this.updateRikaiResult}/>;
+            currentPage = <ViewYomimono/>;
         }
 
         return (

@@ -1,8 +1,6 @@
 import React from "react";
 
 const Kanji = (props) => {
-    console.log(props.result);
-
     return (
         <div className="kanji-box">
             <div>

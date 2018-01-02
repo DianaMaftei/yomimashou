@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import RikaiPopUp from '../components/rikai/Rikai-pop-up';
+import YomiText from './YomiText';
 import {resetText} from '../actions/index';
 import '../style/rikai.css';
 
@@ -8,10 +8,6 @@ const mapDispatchToProps = (dispatch) => ({
     resetText: () => {
         dispatch(resetText());
     }
-});
-
-const mapStateToProps = (state) => ({
-    text: state.yomi.text
 });
 
 class ViewYomimono extends React.Component {
@@ -27,14 +23,13 @@ class ViewYomimono extends React.Component {
                         <li>Press 'S' to switch between available dictionaries (words / kanji).</li>
                     </ul>
                 </div>
-                <div id="text-show">{this.props.text}</div>
+                <YomiText/>
                 <div id="reset-btn">
-                    <button onClick={this.resetText}> Try a different text</button>
+                    <button onClick={this.props.resetText}> Try a different text</button>
                 </div>
-                <RikaiPopUp result={this.props.rikaiResult} update={this.props.updateRikaiResult}/>
             </div>
         )
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewYomimono);
+export default connect(null, mapDispatchToProps)(ViewYomimono);
