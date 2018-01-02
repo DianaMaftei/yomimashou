@@ -1,4 +1,4 @@
-function isInline(node) {
+export function isInline(node) {
     let inlineNames = {
         // text node
         '#text': true,
@@ -101,7 +101,7 @@ function getNext(node) {
     return null;
 };
 
-function getTextFromRange(rangeParent, offset, selEndList, maxLength) {
+export function getTextFromRange(rangeParent, offset, selEndList, maxLength) {
     let endIndex;
     if (rangeParent.nodeName === 'TEXTAREA' || rangeParent.nodeName === 'INPUT') {
         endIndex = Math.min(rangeParent.data.length, offset + maxLength);
@@ -141,5 +141,3 @@ function getTextFromRange(rangeParent, offset, selEndList, maxLength) {
 
     return text;
 };
-
-export default getTextFromRange;

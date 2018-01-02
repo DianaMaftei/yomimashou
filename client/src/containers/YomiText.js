@@ -6,7 +6,7 @@ import {popUpSetVisibility} from '../actions/index';
 import RikaiDict from "../components/rikai/RikaiDictionary";
 import Rikai from "../components/rikai/Rikai";
 import RikaiPopUp from '../components/rikai/Rikai-pop-up';
-import getTextFromRange from "../util/textParser";
+import {getTextFromRange, isInline} from "../util/textParser";
 
 const mapStateToProps = (state) => ({
     text: state.yomi.text,
@@ -402,7 +402,7 @@ class YomiText extends React.Component {
                 }
                 // If we're to the right of an inline character we can use the target.
                 // However, if we're just in a blank spot don't do anything.
-                else if (self.isInline(ev.target)) {
+                else if (isInline(ev.target)) {
                     if (rp.parentNode === ev.target)
                         ;
                     else if (rp.parentNode.innerText === ev.target.value)
@@ -553,17 +553,21 @@ class YomiText extends React.Component {
             // make the popup visible and gets its height and width
             popup.style.display = 'block';
             let pW = popup.offsetWidth;
-
+            
             // below the selection
             x = this.elemPosition.left;
             y = this.elemPosition.bottom;
 
-            let scroll = document.documentElement.scrollTop || document.body.scrollTop;
-            y += scroll;
-            
+            y += document.documentElement.scrollTop || document.body.scrollTop;
+
             // go left if necessary
             if ((x + pW) > (window.innerWidth - 20)) {
                 x -= window.innerWidth - 20 - pW;
+            }
+
+            let width = window.innerWidth - 20 - x;
+            if( width < 250) {
+                x -= 250 - width;
             }
         } else {
             x += window.scrollX;
