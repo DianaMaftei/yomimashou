@@ -1,9 +1,7 @@
 class Rikai {
     constructor(dict) {
 
-        this.haveNames = true;
         this.dictCount = 3;
-        this.enabled = 0;
         this.kanjiN = 1;
         // this.namesN = 2;
         this.showMode = 0;
