@@ -1,5 +1,5 @@
 import React from "react";
-import Example from './Example';
+import Example from "./Example";
 
 class ExampleList extends React.Component {
 
