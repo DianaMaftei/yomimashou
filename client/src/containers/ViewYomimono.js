@@ -1,8 +1,8 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import YomiText from './YomiText';
-import {resetText} from '../actions/index';
-import '../style/rikai.css';
+import React from "react";
+import {connect} from "react-redux";
+import YomiText from "./YomiText";
+import {resetText} from "../actions/index";
+import "../style/rikai.css";
 
 const mapDispatchToProps = (dispatch) => ({
     resetText: () => {
@@ -21,6 +21,7 @@ class ViewYomimono extends React.Component {
                             definition.
                         </li>
                         <li>Press 'S' to switch between available dictionaries (words / kanji).</li>
+                        <li>Click 'Ex' on word definitions to see example sentences.</li>
                     </ul>
                 </div>
                 <YomiText/>

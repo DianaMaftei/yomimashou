@@ -1,11 +1,9 @@
 import React from "react";
-import {connect} from 'react-redux';
-import {updateSearchResult} from '../actions/index';
-import {updateShowResult} from '../actions/index';
-import {popUpSetVisibility} from '../actions/index';
+import {connect} from "react-redux";
+import {popUpSetVisibility, updateSearchResult, updateShowResult} from "../actions/index";
 import RikaiDict from "../components/rikai/RikaiDictionary";
 import Rikai from "../components/rikai/Rikai";
-import RikaiPopUp from '../components/rikai/Rikai-pop-up';
+import RikaiPopUp from "../components/rikai/Rikai-pop-up";
 import {getTextFromRange, isInline} from "../util/textParser";
 
 const mapStateToProps = (state) => ({
@@ -63,6 +61,7 @@ class YomiText extends React.Component {
         this.isVisible = this.isVisible.bind(this);
         this.hidePopup = this.hidePopup.bind(this);
         this.showPopup = this.showPopup.bind(this);
+        this.showExamples = this.showExamples.bind(this);
 
         this.enable();
     }
@@ -193,6 +192,26 @@ class YomiText extends React.Component {
         tdata.prevSelView = null;
         tdata.kanjiChar = null;
         tdata.selText = null;
+    }
+
+    showExamples(word) {
+        let term1 = word.kanji !== undefined ? word.kanji : word.kana;
+        let term2 = word.kanji !== undefined ? word.kana : '';
+        let url = `http://nihongo.monash.edu/cgi-bin/wwwjdic?1ZEU${term1}=1=${term2}`;
+
+        let axios = require('axios');
+
+        let self = this;
+
+        axios.get(url)
+            .then(function (response) {
+                let data = response.data.substring(response.data.indexOf('<pre>') + 5, response.data.indexOf('</pre>'));
+                let resultList = data.split('\n').filter(entry => entry.substring(0, 2) === 'A:').map(entry => entry.substring(2, entry.indexOf('#')).trim());
+                self.props.updateShowResult({type: 'examples', resultList: resultList});
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     processEntry(e) {
@@ -588,7 +607,7 @@ class YomiText extends React.Component {
         return (
             <div>
                 <div id="text-show">{this.props.text}</div>
-                <RikaiPopUp hidePopup={this.hidePopup} result={this.props.showResult} limit={this.props.limit}/>
+                <RikaiPopUp hidePopup={this.hidePopup} result={this.props.showResult} limit={this.props.limit} showExamples={this.showExamples}/>
             </div>
         );
     }
