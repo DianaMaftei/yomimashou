@@ -1,11 +1,19 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {setText} from '../actions/index';
+
+const mapDispatchToProps = (dispatch) => ({
+    setText: text => {
+        dispatch(setText(text));
+    }
+});
 
 class AddYomimono extends React.Component {
     render() {
         return (
             <div>
                 <div id="text-box">
-                <textarea rows="5" cols="50" onChange={this.props.handleTextChange}
+                <textarea rows="5" cols="50" onChange={event => this.props.setText(event.target.value)}
                           placeholder="Paste here the Japanese text that you want to read."/>
                 </div>
                 <h4 id="example-header">Example</h4>
@@ -26,4 +34,4 @@ class AddYomimono extends React.Component {
     }
 }
 
-export default AddYomimono;
+export default connect(null, mapDispatchToProps)(AddYomimono);

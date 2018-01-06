@@ -1,5 +1,5 @@
 import React from "react";
-import Word from './Word';
+import Word from "./Word";
 
 class WordList extends React.Component {
 
