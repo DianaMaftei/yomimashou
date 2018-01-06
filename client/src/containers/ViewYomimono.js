@@ -1,8 +1,8 @@
-import React from 'react';
-import {connect} from 'react-redux';
-import YomiText from './YomiText';
-import {resetText} from '../actions/index';
-import '../style/rikai.css';
+import React from "react";
+import {connect} from "react-redux";
+import YomiText from "./YomiText";
+import {resetText} from "../actions/index";
+import "../style/rikai.css";
 
 const mapDispatchToProps = (dispatch) => ({
     resetText: () => {

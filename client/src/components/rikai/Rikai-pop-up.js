@@ -47,8 +47,9 @@ import React, {Component} from "react";
 import WordList from "./WordList";
 import NameList from "./NameList";
 import Kanji from "./Kanji";
+import ExampleList from "./ExampleList";
 
-import '../../style/rikai.css';
+import "../../style/rikai.css";
 
 class RikaiPopUp extends Component {
 
@@ -70,13 +71,17 @@ class RikaiPopUp extends Component {
 
         if (this.props.result.type === 'words') {
             title = 'Word Dictionary';
-            popUp = <WordList resultList={this.props.result.resultList} limit={this.props.limit}/>;
+            popUp = <WordList resultList={this.props.result.resultList} limit={this.props.limit}
+                              showExamples={this.props.showExamples}/>;
         } else if (this.props.result.type === 'kanji') {
             title = 'Kanji Dictionary';
             popUp = <Kanji result={this.props.result.resultList[0]}/>;
         } else if (this.props.result.type === 'names') {
             title = 'Names Dictionary';
             popUp = <NameList resultList={this.props.result.resultList} limit={this.props.limit}/>;
+        } else if (this.props.result.type === 'examples') {
+            title = 'Examples';
+            popUp = <ExampleList resultList={this.props.result.resultList}/>;
         }
 
         return (
