@@ -61,6 +61,18 @@
     font-size: 13px;
 }
 
+#rikai-window .example {
+    font-size: 13px;
+    padding: 5px;
+}
+
+#rikai-window .example-btn {
+    float: right;
+    cursor: pointer;
+    color: #1686e6;
+    padding: 5px 5px 0 15px;
+}
+
 
 /* used for kanji information */
 

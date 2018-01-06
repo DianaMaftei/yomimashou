@@ -1,21 +1,44 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React from "react";
 
-import AddYomimono from './containers/AddYomimono';
-import ViewYomimono from './containers/ViewYomimono';
-
-const mapStateToProps = (state) => ({
-    text: state.yomi.text
-});
+import AddYomimono from "./components/AddYomimono";
+import ViewYomimono from "./components/ViewYomimono";
 
 class App extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            rikaiResult: {},
+            text: null
+        };
+
+        this.handleTextChange = this.handleTextChange.bind(this);
+        this.updateRikaiResult = this.updateRikaiResult.bind(this);
+        this.resetText = this.resetText.bind(this);
+    }
+
+    handleTextChange(event) {
+        this.setState({text: event.target.value});
+    }
+
+    resetText() {
+        this.setState({text: null});
+    }
+
+    updateRikaiResult(rikaiResult) {
+        this.setState(
+            {rikaiResult: rikaiResult}
+        );
+    }
+
     render() {
+
         let currentPage = '';
-        if (!this.props.text) {
-            currentPage = <AddYomimono/>;
+        if (!this.state.text) {
+            currentPage = <AddYomimono handleTextChange={this.handleTextChange}/>;
         } else {
-            currentPage = <ViewYomimono/>;
+            currentPage = <ViewYomimono text={this.state.text} reset={this.resetText} rikaiResult={this.state.rikaiResult} updateRikaiResult={this.updateRikaiResult}/>;
         }
 
         return (
@@ -27,4 +50,4 @@ class App extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, null)(App);
+export default App;
