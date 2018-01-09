@@ -1,5 +1,6 @@
 let defaultState = {
-    text: null
+    text: null,
+    highlightTerm: null
 };
 
 const yomi = (state = defaultState, action) => {
@@ -13,6 +14,11 @@ const yomi = (state = defaultState, action) => {
             return {
                 ...state,
                 text: null
+            };
+        case 'UPDATE_HIGHLIGHT_TERM':
+            return {
+                ...state,
+                highlightTerm: action.result
             };
         default:
             return state

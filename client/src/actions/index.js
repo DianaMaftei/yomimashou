@@ -13,6 +13,13 @@ export const updateSearchResult = result => {
     }
 };
 
+export const updateHighlightTerm = result => {
+    return {
+        type: 'UPDATE_HIGHLIGHT_TERM',
+        result
+    }
+};
+
 export const updateShowResult = result => {
     return {
         type: 'UPDATE_SHOW_RESULT',

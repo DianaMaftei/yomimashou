@@ -1,47 +1,51 @@
-class RikaiDict {
-    constructor(config, update) {
-        this.config = config;
+let RikaiDict = (function () {
 
-        // katakana -> hiragana conversion tables
-        this.ch = [0x3092, 0x3041, 0x3043, 0x3045, 0x3047, 0x3049, 0x3083, 0x3085, 0x3087, 0x3063, 0x30FC, 0x3042, 0x3044, 0x3046, 0x3048, 0x304A, 0x304B, 0x304D, 0x304F, 0x3051, 0x3053, 0x3055, 0x3057, 0x3059, 0x305B, 0x305D, 0x305F, 0x3061, 0x3064, 0x3066, 0x3068, 0x306A, 0x306B, 0x306C, 0x306D, 0x306E, 0x306F, 0x3072, 0x3075, 0x3078, 0x307B, 0x307E, 0x307F, 0x3080, 0x3081, 0x3082, 0x3084, 0x3086, 0x3088, 0x3089, 0x308A, 0x308B, 0x308C, 0x308D, 0x308F, 0x3093];
-        this.cv = [0x30F4, 0xFF74, 0xFF75, 0x304C, 0x304E, 0x3050, 0x3052, 0x3054, 0x3056, 0x3058, 0x305A, 0x305C, 0x305E, 0x3060, 0x3062, 0x3065, 0x3067, 0x3069, 0xFF85, 0xFF86, 0xFF87, 0xFF88, 0xFF89, 0x3070, 0x3073, 0x3076, 0x3079, 0x307C];
-        this.cs = [0x3071, 0x3074, 0x3077, 0x307A, 0x307D];
-
-        // this.nameDictURL = require("../../data/names.dat");
-        // this.nameIndexURL = require("../../data/names.idx");
-
-        this.wordDictURL = require("../../data/dict.dat");
-        this.wordIndexURL = require("../../data/dict.idx");
-
-        this.kanjiDataURL = require("../../data/kanji.dat");
-        this.radDataURL = require("../../data/radicals.dat");
-
-        this.deinflectURL = require("../../data/deinflect.dat");
-
-        this.loadDictionary();
-        // this.loadNames();
-        this.loadDIF();
-
-        this.update = update;
-
+    let config = {
+        dictCount: 3,
+        kanjiN: 1,
+        namesN: 2,
+        showMode: 0,
+        forceKanji: '1',
+        defaultDict: '2',
+        nextDictionary: '3'
     };
 
-    fileRead(url, charset) {
+    // katakana -> hiragana conversion tables
+    config.ch = [0x3092, 0x3041, 0x3043, 0x3045, 0x3047, 0x3049, 0x3083, 0x3085, 0x3087, 0x3063, 0x30FC, 0x3042, 0x3044, 0x3046, 0x3048, 0x304A, 0x304B, 0x304D, 0x304F, 0x3051, 0x3053, 0x3055, 0x3057, 0x3059, 0x305B, 0x305D, 0x305F, 0x3061, 0x3064, 0x3066, 0x3068, 0x306A, 0x306B, 0x306C, 0x306D, 0x306E, 0x306F, 0x3072, 0x3075, 0x3078, 0x307B, 0x307E, 0x307F, 0x3080, 0x3081, 0x3082, 0x3084, 0x3086, 0x3088, 0x3089, 0x308A, 0x308B, 0x308C, 0x308D, 0x308F, 0x3093];
+    config.cv = [0x30F4, 0xFF74, 0xFF75, 0x304C, 0x304E, 0x3050, 0x3052, 0x3054, 0x3056, 0x3058, 0x305A, 0x305C, 0x305E, 0x3060, 0x3062, 0x3065, 0x3067, 0x3069, 0xFF85, 0xFF86, 0xFF87, 0xFF88, 0xFF89, 0x3070, 0x3073, 0x3076, 0x3079, 0x307C];
+    config.cs = [0x3071, 0x3074, 0x3077, 0x307A, 0x307D];
+
+    // let config.nameDictURL = require("../../data/names.dat");
+    // let config.nameIndexURL = require("../../data/names.idx");
+
+    config.wordDictURL = require("../../data/dict.dat");
+    config.wordIndexURL = require("../../data/dict.idx");
+
+    config.kanjiDataURL = require("../../data/kanji.dat");
+    config.radDataURL = require("../../data/radicals.dat");
+
+    config.deinflectURL = require("../../data/deinflect.dat");
+
+    loadDictionary();
+    // loadNames();
+    loadDIF();
+
+    function fileRead(url, charset) {
         let req = new XMLHttpRequest();
         req.open("GET", url, false);
         req.send(null);
         return req.responseText;
     };
 
-    fileReadArray(name, charset) {
-        let a = this.fileRead(name, charset).split('\n');
+    function fileReadArray(name, charset) {
+        let a = fileRead(name, charset).split('\n');
         // Is this just in case there is blank shit in the file.  It was writtin by Jon though.
         // I suppose this is more robust
         while ((a.length > 0) && (a[a.length - 1].length === 0)) a.pop();
         return a;
     };
 
-    find(data, text) {
+    function find(data, text) {
         const tlen = text.length;
         let beg = 0;
         let end = data.length - 1;
@@ -61,27 +65,27 @@ class RikaiDict {
         return null;
     };
 
-    loadNames() {
-        if ((this.nameDict) && (this.nameIndex)) return;
-        this.nameDict = this.fileRead(this.nameDictURL);
-        this.nameIndex = this.fileRead(this.nameIndexURL);
+    function loadNames() {
+        if ((config.nameDict) && (config.nameIndex)) return;
+        config.nameDict = fileRead(config.nameDictURL);
+        config.nameIndex = fileRead(config.nameIndexURL);
     };
 
     //	Note: These are mostly flat text files; loaded as one continuous string to reduce memory use
-    loadDictionary() {
-        if ((this.wordDict) && (this.wordIndex) && (this.kanjiData) && (this.radData)) return;
-        this.wordDict = this.fileRead(this.wordDictURL);
-        this.wordIndex = this.fileRead(this.wordIndexURL);
-        this.kanjiData = this.fileRead(this.kanjiDataURL, 'UTF-8');
-        this.radData = this.fileReadArray(this.radDataURL, 'UTF-8');
+    function loadDictionary() {
+        if ((config.wordDict) && (config.wordIndex) && (config.kanjiData) && (config.radData)) return;
+        config.wordDict = fileRead(config.wordDictURL);
+        config.wordIndex = fileRead(config.wordIndexURL);
+        config.kanjiData = fileRead(config.kanjiDataURL, 'UTF-8');
+        config.radData = fileReadArray(config.radDataURL, 'UTF-8');
     };
 
-    loadDIF() {
-        this.difReasons = [];
-        this.difRules = [];
-        this.difExact = [];
+    function loadDIF() {
+        config.difReasons = [];
+        config.difRules = [];
+        config.difExact = [];
 
-        let buffer = this.fileReadArray(this.deinflectURL, 'UTF-8');
+        let buffer = fileReadArray(config.deinflectURL, 'UTF-8');
         let prevLen = -1;
         let g, o;
 
@@ -90,7 +94,7 @@ class RikaiDict {
             let f = buffer[i].split('\t');
 
             if (f.length === 1) {
-                this.difReasons.push(f[0]);
+                config.difReasons.push(f[0]);
             }
             else if (f.length === 4) {
                 o = {};
@@ -103,14 +107,14 @@ class RikaiDict {
                     prevLen = o.from.length;
                     g = [];
                     g.flen = prevLen;
-                    this.difRules.push(g);
+                    config.difRules.push(g);
                 }
                 g.push(o);
             }
         }
     };
 
-    deinflect(word) {
+    function deinflect(word) {
         let r = [];
         let have = [];
         let o;
@@ -131,8 +135,8 @@ class RikaiDict {
             let wordLen = word.length;
             let type = r[i].type;
 
-            for (j = 0; j < this.difRules.length; ++j) {
-                let g = this.difRules[j];
+            for (j = 0; j < config.difRules.length; ++j) {
+                let g = config.difRules[j];
                 if (g.flen <= wordLen) {
                     let end = word.substr(-g.flen);
                     for (k = 0; k < g.length; ++k) {
@@ -145,13 +149,13 @@ class RikaiDict {
                                 o = r[have[newWord]];
                                 o.type |= (rule.type >> 8);
 
-                                //o.reason += ' / ' + r[i].reason + ' ' + this.difReasons[rule.reason];
+                                //o.reason += ' / ' + r[i].reason + ' ' + config.difReasons[rule.reason];
                                 //o.debug += ' @ ' + rule.debug;
                                 continue;
                             }
                             have[newWord] = r.length;
-                            if (r[i].reason && r[i].reason.length) o.reason = this.difReasons[rule.reason] + ' &lt; ' + r[i].reason;
-                            else o.reason = this.difReasons[rule.reason];
+                            if (r[i].reason && r[i].reason.length) o.reason = config.difReasons[rule.reason] + ' &lt; ' + r[i].reason;
+                            else o.reason = config.difReasons[rule.reason];
                             o.type = rule.type >> 8;
                             o.word = newWord;
                             //o.debug = r[i].debug + ' $ ' + rule.debug;
@@ -166,7 +170,7 @@ class RikaiDict {
         return r;
     };
 
-    wordSearch(word, doNames, max) {
+    function wordSearch(word, doNames, max) {
         let i, u, v, r, p;
         let trueLen = [0];
         let entry = {};
@@ -187,20 +191,20 @@ class RikaiDict {
             }
             // half-width katakana to hiragana
             else if ((u >= 0xFF66) && (u <= 0xFF9D)) {
-                u = this.ch[u - 0xFF66];
+                u = config.ch[u - 0xFF66];
             }
             // voiced (used in half-width katakana) to hiragana
             else if (u === 0xFF9E) {
                 if ((p >= 0xFF73) && (p <= 0xFF8E)) {
                     r = r.substr(0, r.length - 1);
-                    u = this.cv[p - 0xFF73];
+                    u = config.cv[p - 0xFF73];
                 }
             }
             // semi-voiced (used in half-width katakana) to hiragana
             else if (u === 0xFF9F) {
                 if ((p >= 0xFF8A) && (p <= 0xFF8E)) {
                     r = r.substr(0, r.length - 1);
-                    u = this.cs[p - 0xFF8A];
+                    u = config.cs[p - 0xFF8A];
                 }
             }
             // ignore J~
@@ -224,16 +228,16 @@ class RikaiDict {
         let maxLen = 0;
 
         if (doNames) {
-            this.loadNames();
-            dict = this.nameDict;
-            index = this.nameIndex;
-            maxTrim = 20;//this.config.namax;
+            loadNames();
+            dict = config.nameDict;
+            index = config.nameIndex;
+            maxTrim = 20;//config.config.namax;
             entry.names = 1;
         }
         else {
-            dict = this.wordDict;
-            index = this.wordIndex;
-            maxTrim = 7;//this.config.wmax;
+            dict = config.wordDict;
+            index = config.wordIndex;
+            maxTrim = 7;//config.config.wmax;
         }
 
         if (max !== null) maxTrim = max;
@@ -244,15 +248,15 @@ class RikaiDict {
             let showInf = (count !== 0);
             let trys;
 
-            if (doNames) trys = [{'word': word, 'type': 0xFF, 'reason': null}];
-            else trys = this.deinflect(word);
+            if (doNames) trys = [{ 'word': word, 'type': 0xFF, 'reason': null }];
+            else trys = deinflect(word);
 
             for (i = 0; i < trys.length; i++) {
                 u = trys[i];
 
                 let ix = cache[u.word];
                 if (!ix) {
-                    ix = this.find(index, u.word + ',');
+                    ix = find(index, u.word + ',');
                     if (!ix) {
                         cache[u.word] = [];
                         continue;
@@ -326,40 +330,7 @@ class RikaiDict {
         return entry;
     }
 
-    translate(text) {
-        let e, o;
-        let skip;
-
-        o = {};
-        o.data = [];
-        o.textLen = text.length;
-
-        while (text.length > 0) {
-            e = this.wordSearch(text, false, 1);
-            if (e !== null) {
-                if (o.data.length >= 7/* this.config.wmax */) {
-                    o.more = 1;
-                    break;
-                }
-//				o.data = o.data.concat(e.data);
-                o.data.push(e.data[0]);
-                skip = e.matchLen;
-            }
-            else {
-                skip = 1;
-            }
-            text = text.substr(skip, text.length - skip);
-        }
-
-        if (o.data.length === 0) {
-            return null;
-        }
-
-        o.textLen -= text.length;
-        return o;
-    }
-
-    kanjiSearch(kanji) {
+    function kanjiSearch(kanji) {
         const hex = '0123456789ABCDEF';
         let kde;
         let entry;
@@ -369,7 +340,7 @@ class RikaiDict {
         i = kanji.charCodeAt(0);
         if (i < 0x3000) return null;
 
-        kde = this.find(this.kanjiData, kanji);
+        kde = find(config.kanjiData, kanji);
 
         if (!kde) return null;
 
@@ -398,7 +369,7 @@ class RikaiDict {
         return entry;
     }
 
-    getResultFromEntry(entry) {
+    function getResultFromEntry(entry) {
         let result = {};
 
         let resultList = [];
@@ -417,7 +388,7 @@ class RikaiDict {
 
             // get on and kun readings
             kanji.onkun = entry.onkun;
-            this.getSeparateOnKun(kanji);
+            getSeparateOnKun(kanji);
 
             // get english definition
             kanji.eigo = entry.eigo;
@@ -435,7 +406,7 @@ class RikaiDict {
             // get kanji components and radical
             kanji.components = [];
 
-            let componentsData = this.radData;
+            let componentsData = config.radData;
 
             kanji.radical = componentsData[entry.misc['B'] - 1].charAt(0) + ' ' + entry.misc['B'];
             delete entry.misc['B'];
@@ -463,7 +434,7 @@ class RikaiDict {
                 }
             }
 
-            kanji.misc = this.getKanjiMiscDetails(entry);
+            kanji.misc =getKanjiMiscDetails(entry);
 
             resultList.push(kanji);
         }
@@ -530,7 +501,7 @@ class RikaiDict {
         return result;
     }
 
-    getSeparateOnKun(kanji) {
+    function getSeparateOnKun(kanji) {
         let onkun = kanji.onkun.split('、 ');
 
         if (onkun) {
@@ -562,7 +533,7 @@ class RikaiDict {
         }
     }
 
-    getKanjiMiscDetails(entry) {
+    function getKanjiMiscDetails(entry) {
         let kanjiMisc = entry.misc;
 
         let miscList = [];
@@ -593,6 +564,55 @@ class RikaiDict {
             return miscList;
         }
     }
-}
+
+    function search(text, dictOption) {
+        let e = null;
+
+        switch (dictOption) {
+            case config.forceKanji:
+                e = kanjiSearch(text.charAt(0));
+                return e;
+            case config.defaultDict:
+                config.showMode = 0;
+                break;
+            case config.nextDictionary:
+                config.showMode = (config.showMode + 1) % config.dictCount;
+                break;
+            default:
+                break;
+        }
+
+        const m = config.showMode;
+
+        do {
+            switch (config.showMode) {
+                case 0:
+                    e = wordSearch(text, false);
+                    break;
+                case config.kanjiN:
+                    e = kanjiSearch(text.charAt(0));
+                    break;
+                // case namesN:
+                //     e = wordSearch(text, true);
+                //     break;
+                default:
+                    break;
+            }
+            if (e) break;
+            config.showMode = (config.showMode + 1) % config.dictCount;
+        } while (config.showMode !== m);
+
+        return e;
+    }
+
+    return {
+        search: function (text, dictOption) {
+            return search(text, dictOption);
+        },
+        getResultFromEntry: function (entry) {
+            return getResultFromEntry(entry);
+        }
+    }
+})();
 
 export default RikaiDict;

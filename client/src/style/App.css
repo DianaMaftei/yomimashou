@@ -35,17 +35,17 @@
     margin: 20px 0;
 }
 
-#text-show {
+#yomi-text {
     margin: 20px 50px;
     font-size: 24px;
     line-height: 50px;
 }
 
-#text-show::-moz-selection {
+#yomi-text::-moz-selection {
     background-color: #f3f2f2;
 }
 
-#text-show::selection {
+#yomi-text::selection {
     background-color: #eeeded;
 }
 
