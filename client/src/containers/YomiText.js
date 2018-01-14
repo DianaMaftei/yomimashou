@@ -45,6 +45,8 @@ class YomiText extends React.Component {
             type: "words"
         };
 
+        this.mouseMoveWait = false;
+
         // Hack because ro was coming out always 0 for some reason.
         this.lastRo = 0;
 

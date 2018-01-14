@@ -8,3 +8,18 @@ How about when you encounter an interesting kanji that you don't know and are cu
 And if you want to hear the text being read aloud? You might copy-paste it into a website or install a browser exension. And if you want to save the words to practice later with your favorite RSS software/website? You have to copy-paste some more.
 
 Do you see where I'm going with this? What if you could have all this and more in one single place? No more copy-pasting, no more installing n brower extensions. Yomimashou tries to do exactly this. Solve all those "if"s for you.
+
+
+####Prerequisites: 
+At least jdk1.8.0_151 - older versions might throw errors when unmarshalling the xml files
+
+####How to run:
+Server:
+1. run fetchDictionariesScript.sh in resources/dictionaryXMLData
+2. uncomment in application.properties #spring.jpa.hibernate.ddl-auto=create
+3. uncomment in App.java  //dictionaryXMLtoPOJO.run();
+4. run App.java
+
+Client:
+1. npm install 
+2. npm start

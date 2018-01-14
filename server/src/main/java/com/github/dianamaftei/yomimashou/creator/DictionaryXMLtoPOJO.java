@@ -23,7 +23,10 @@ import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
 
@@ -38,12 +41,14 @@ public class DictionaryXMLtoPOJO {
     private final JPAQueryFactory jpaQueryFactory;
     private final WordEntryRepository wordEntryRepository;
     private final KanjiEntryRepository kanjiEntryRepository;
+    private final Map<String, String> partsOfSpeech;
 
     @Autowired
     public DictionaryXMLtoPOJO(JPAQueryFactory jpaQueryFactory, WordEntryRepository wordEntryRepository, KanjiEntryRepository kanjiEntryRepository) {
         this.jpaQueryFactory = jpaQueryFactory;
         this.wordEntryRepository = wordEntryRepository;
         this.kanjiEntryRepository = kanjiEntryRepository;
+        this.partsOfSpeech = getListOfPartsOfSpeech();
     }
 
     public void run() {
@@ -51,8 +56,8 @@ public class DictionaryXMLtoPOJO {
 
         try {
             fillWordTableFromXml();
-//          fillKanjiTableFromXml();
-//          fillNameTableFromXml();
+            fillKanjiTableFromXml();
+            fillNameTableFromXml();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,7 +65,7 @@ public class DictionaryXMLtoPOJO {
     }
 
     private Object unmarshalFile(String fileName, Class jClass) throws JAXBException {
-        File file = new File("src\\main\\resources\\dictionaryXMLData\\" + fileName);
+        File file = new File("server\\src\\main\\resources\\dictionaryXMLData\\" + fileName);
         JAXBContext jaxbContext = JAXBContext.newInstance(jClass);
 
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -124,7 +129,7 @@ public class DictionaryXMLtoPOJO {
 
         for (Sense sense : entry.getSense()) {
             WordMeaning meaning = new WordMeaning();
-            meaning.setPartOfSpeech(String.join("/", sense.getPos()));
+            meaning.setPartOfSpeech(String.join("/", sense.getPos().stream().map( item ->  partsOfSpeech.get(item)).filter( e -> e != null).collect(Collectors.toList())));
             meaning.setFieldOfApplication(String.join("/", sense.getField()));
             meaning.setAntonym(String.join("/", sense.getAnt()));
             List<String> glosses = new ArrayList<>();
@@ -148,13 +153,13 @@ public class DictionaryXMLtoPOJO {
             Kanjidic2 kanjiDict = (Kanjidic2) unmarshalFile("kanjidic2.xml", Kanjidic2.class);
             List<Character> characters = kanjiDict.getCharacter();
 
-            int limit = 100;
+//            int limit = 100;
             for (Character character : characters) {
-                if (limit > 0) {
-                    KanjiEntry kanjiEntry = getKanjiEntry(character);
-                    kanjiEntryRepository.save(kanjiEntry);
-                    limit--;
-                }
+//                if (limit > 0) {
+                KanjiEntry kanjiEntry = getKanjiEntry(character);
+                kanjiEntryRepository.save(kanjiEntry);
+//                    limit--;
+//                }
             }
 
 //            addKanjiVariants(characters);
@@ -250,6 +255,64 @@ public class DictionaryXMLtoPOJO {
                 }
             }
         }
+    }
+
+    private Map<String, String> getListOfPartsOfSpeech() {
+        Map<String, String> partsOfSpeech = new HashMap<>();
+        partsOfSpeech.put("adjective (keiyoushi)", "adj-i");
+        partsOfSpeech.put("adjectival nouns or quasi-adjectives (keiyodoshi)", "adj-na");
+        partsOfSpeech.put("nouns which may take the genitive case particle 'no'", "adj-no");
+        partsOfSpeech.put("pre-noun adjectival (rentaishi)", "adj-pn");
+        partsOfSpeech.put("'taru' adjective", "adj-t");
+        partsOfSpeech.put("noun or verb acting prenominally (other than the above)", "adj-f");
+        partsOfSpeech.put("former adjective classification (being removed)", "adj");
+        partsOfSpeech.put("adverb (fukushi)", "adv");
+        partsOfSpeech.put("adverbial noun", "adv-n");
+        partsOfSpeech.put("adverb taking the 'to' particle", "adv-to");
+        partsOfSpeech.put("auxiliary", "aux");
+        partsOfSpeech.put("auxiliary verb", "aux-v");
+        partsOfSpeech.put("auxiliary adjective", "aux-adj");
+        partsOfSpeech.put("conjunction", "conj");
+        partsOfSpeech.put("counter", "ctr");
+        partsOfSpeech.put("Expressions (phrases, clauses, etc.)", "exp");
+        partsOfSpeech.put("idiomatic expression", "id");
+        partsOfSpeech.put("interjection (kandoushi)", "int");
+        partsOfSpeech.put("irregular verb", "iv");
+        partsOfSpeech.put("noun (common) (futsuumeishi)", "n");
+        partsOfSpeech.put("adverbial noun (fukushitekimeishi)", "n-adv");
+        partsOfSpeech.put("noun, used as a prefix", "n-pref");
+        partsOfSpeech.put("noun (temporal) (jisoumeishi)", "n-t");
+        partsOfSpeech.put("numeric", "num");
+        partsOfSpeech.put("pronoun", "pn");
+        partsOfSpeech.put("prefix", "pref");
+        partsOfSpeech.put("particle", "prt");
+        partsOfSpeech.put("suffix", "suf");
+        partsOfSpeech.put("Ichidan verb", "v1");
+        partsOfSpeech.put("Godan verb (not completely classified)", "v5");
+        partsOfSpeech.put("Godan verb - -aru special class", "v5aru");
+        partsOfSpeech.put("Godan verb with 'bu' ending", "v5b");
+        partsOfSpeech.put("Godan verb with 'gu' ending", "v5g");
+        partsOfSpeech.put("Godan verb with 'ku' ending", "v5k");
+        partsOfSpeech.put("Godan verb - iku/yuku special class", "v5k-s");
+        partsOfSpeech.put("Godan verb with 'mu' ending", "v5m");
+        partsOfSpeech.put("Godan verb with 'nu' ending", "v5n");
+        partsOfSpeech.put("Godan verb with 'ru' ending", "v5r");
+        partsOfSpeech.put("Godan verb with 'ru' ending (irregular verb)", "v5r-i");
+        partsOfSpeech.put("Godan verb with 'su' ending", "v5s");
+        partsOfSpeech.put("Godan verb with 'tsu' ending", "v5t");
+        partsOfSpeech.put("Godan verb with 'u' ending", "v5u");
+        partsOfSpeech.put("Godan verb with 'u' ending (special class)", "v5u-s");
+        partsOfSpeech.put("Godan verb - uru old class verb (old form of Eru)", "v5uru");
+        partsOfSpeech.put("Godan verb with 'zu' ending", "v5z");
+        partsOfSpeech.put("Ichidan verb - zuru verb - (alternative form of -jiru verbs)", "vz");
+        partsOfSpeech.put("intransitive verb", "vi");
+        partsOfSpeech.put("kuru verb - special class", "vk");
+        partsOfSpeech.put("irregular nu verb", "vn");
+        partsOfSpeech.put("noun or participle which takes the aux. verb suru", "vs");
+        partsOfSpeech.put("suru verb - irregular", "vs-i");
+        partsOfSpeech.put("suru verb - special class", "vs-s");
+        partsOfSpeech.put("transitive verb", "vt");
+        return partsOfSpeech;
     }
 
     private String getKanjiVariant(Misc misc) {

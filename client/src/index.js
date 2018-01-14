@@ -11,8 +11,8 @@ import "./style/App.css";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 
-// const store = createStore(reducer);
-const store = createStore(reducer, composeWithDevTools(applyMiddleware(logger)));
+const store = createStore(reducer);
+// const store = createStore(reducer, composeWithDevTools(applyMiddleware(logger)));
 
 ReactDOM.render(
     <Provider store={store}>
