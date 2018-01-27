@@ -12,8 +12,8 @@ const Kanji = (props) => {
                 </div>
             </div>
             <h2 className="k-eigo">{props.result.eigo}</h2>
-            <h3>Kun: <span className="k-yomi">{props.result.kunReading.join(', ')}</span></h3>
-            <h3>On: <span className="k-yomi">{props.result.onReading.join(', ')}</span></h3>
+            <h3>Kun: <span className="k-yomi">{props.result.kunReading}</span></h3>
+            <h3>On: <span className="k-yomi">{props.result.onReading}</span></h3>
         </div>
     );
 };

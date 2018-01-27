@@ -20,7 +20,7 @@ public class KanjiEntryService {
     }
 
     @Transactional
-    public KanjiEntry get(long id) {
-        return (KanjiEntry) jpaQueryFactory.query().from(kanjiEntry).where(kanjiEntry.id.eq(id)).fetchOne();
+    public KanjiEntry get(String searchItem) {
+        return (KanjiEntry) jpaQueryFactory.query().from(kanjiEntry).where(kanjiEntry.kanji.eq(searchItem)).fetchOne();
     }
 }

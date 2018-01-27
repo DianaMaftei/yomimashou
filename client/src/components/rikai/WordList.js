@@ -33,12 +33,12 @@ class WordList extends React.Component {
 
             if(i < this.props.limit) {
                 limitedResults.push(<Word wordClassName={(i % 2 === 0) ? 'definition-light' : 'definition-dark'}
-                                          key={result.kana + result.kanji + result.conj + result.def} kanji={result.kanji}
-                                          kana={result.kana} conj={result.conj} def={result.def} showExamples={this.props.showExamples}/>)
+                                          key={result.kana + result.kanji + result.grammar + result.def} kanji={result.kanji}
+                                          kana={result.kana} grammar={result.grammar} longDef={result.longDef} shortDef ={result.showShortDef} showExamples={this.props.showExamples}/>)
             } else {
                 moreResults.push(<Word wordClassName={(i % 2 === 0) ? 'definition-light' : 'definition-dark'}
-                                       key={result.kana + result.kanji + result.conj + result.def} kanji={result.kanji}
-                                       kana={result.kana} conj={result.conj} def={result.def} showExamples={this.props.showExamples}/>);
+                                       key={result.kana + result.kanji + result.grammar + result.def} kanji={result.kanji}
+                                       kana={result.kana} grammar={result.grammar} longDef={result.longDef} shortDef ={result.showShortDef} showExamples={this.props.showExamples}/>);
             }
         }
 

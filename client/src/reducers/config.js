@@ -22,7 +22,3 @@ const config = (state = defaultState, action) => {
 };
 
 export default config;
-
-// search should go in the dictionary component, not in popUp, together with highlight
-// separate search from display popUp?
-// go backwards, forwards

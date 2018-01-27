@@ -20,12 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
@@ -55,9 +51,9 @@ public class DictionaryXMLtoPOJO {
         System.setProperty("jdk.xml.entityExpansionLimit", "0");
 
         try {
-            fillWordTableFromXml();
-            fillKanjiTableFromXml();
-            fillNameTableFromXml();
+            processWordEntriesFromXML();
+            processKanjiEntriesFromXML();
+//            fillNameTableFromXml();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,23 +70,44 @@ public class DictionaryXMLtoPOJO {
 
 
     /* WORD ENTRY METHODS */
-    private void fillWordTableFromXml() {
+    private void processWordEntriesFromXML() {
         try {
             JMdict jmDict = (JMdict) unmarshalFile("JMdict_e.xml", JMdict.class);
             List<Entry> dictionaryEntries = jmDict.getEntry();
 
-            // limit to a sample of 100 for testing purposes
-//            int limit = 100;
-            for (Entry entry : dictionaryEntries) {
-//                if (limit > 0) {
-                WordEntry wordEntry = getWordEntry(entry);
-                wordEntryRepository.save(wordEntry);
-//                    limit--;
-//                }
-            }
+            saveAllWordEntriesToFile(dictionaryEntries);
+            fillDatabaseWithWordEntries(dictionaryEntries);
 
         } catch (JAXBException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveAllWordEntriesToFile(List<Entry> dictionaryEntries) {
+        Set<String> wordEntries = new TreeSet<>();
+
+        for (Entry entry : dictionaryEntries) {
+            entry.getKEle().stream().forEach(kanji -> wordEntries.add(kanji.getKeb().toString()));
+            entry.getREle().stream().forEach(reading -> wordEntries.add(reading.getReb().toString()));
+        }
+
+        File file = new File("client\\src\\data\\wordEntries.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(wordEntries.stream().collect(Collectors.joining("|")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fillDatabaseWithWordEntries(List<Entry> dictionaryEntries) {
+        // limit to a sample of 100 for testing purposes
+//            int limit = 100;
+        for (Entry entry : dictionaryEntries) {
+//                if (limit > 0) {
+            WordEntry wordEntry = getWordEntry(entry);
+            wordEntryRepository.save(wordEntry);
+//                    limit--;
+//                }
         }
     }
 
@@ -111,7 +128,7 @@ public class DictionaryXMLtoPOJO {
             kanjiElements.add(kanjiEl.getKeb());
         }
 
-        return String.join("/", kanjiElements);
+        return String.join("|", kanjiElements);
     }
 
     private String getReadingElements(Entry entry) {
@@ -121,7 +138,7 @@ public class DictionaryXMLtoPOJO {
             readingElements.add(readingEl.getReb());
         }
 
-        return String.join("/", readingElements);
+        return String.join("|", readingElements);
     }
 
     private List<WordMeaning> getMeanings(Entry entry) {
@@ -129,15 +146,15 @@ public class DictionaryXMLtoPOJO {
 
         for (Sense sense : entry.getSense()) {
             WordMeaning meaning = new WordMeaning();
-            meaning.setPartOfSpeech(String.join("/", sense.getPos().stream().map( item ->  partsOfSpeech.get(item)).filter( e -> e != null).collect(Collectors.toList())));
-            meaning.setFieldOfApplication(String.join("/", sense.getField()));
-            meaning.setAntonym(String.join("/", sense.getAnt()));
+            meaning.setPartOfSpeech(String.join("|", sense.getPos().stream().map(item -> partsOfSpeech.get(item)).filter(e -> e != null).collect(Collectors.toList())));
+            meaning.setFieldOfApplication(String.join("|", sense.getField()));
+            meaning.setAntonym(String.join("|", sense.getAnt()));
             List<String> glosses = new ArrayList<>();
             for (Gloss gloss : sense.getGloss()) {
                 for (Serializable item : gloss.getContent())
                     glosses.add(item.toString());
             }
-            meaning.setGlosses(String.join("/", glosses));
+            meaning.setGlosses(String.join("|", glosses));
 
             meanings.add(meaning);
         }
@@ -148,23 +165,45 @@ public class DictionaryXMLtoPOJO {
 
     /* KANJI ENTRY METHODS */
 
-    private void fillKanjiTableFromXml() {
+    private void processKanjiEntriesFromXML() {
         try {
             Kanjidic2 kanjiDict = (Kanjidic2) unmarshalFile("kanjidic2.xml", Kanjidic2.class);
             List<Character> characters = kanjiDict.getCharacter();
 
-//            int limit = 100;
-            for (Character character : characters) {
-//                if (limit > 0) {
-                KanjiEntry kanjiEntry = getKanjiEntry(character);
-                kanjiEntryRepository.save(kanjiEntry);
-//                    limit--;
-//                }
-            }
-
-//            addKanjiVariants(characters);
+//            saveAllKanjiToFile(characters);
+            fillDatabaseWithKanji(characters);
 
         } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fillDatabaseWithKanji(List<Character> characters) {
+        //            int limit = 100;
+        for (Character character : characters) {
+//                if (limit > 0) {
+            KanjiEntry kanjiEntry = getKanjiEntry(character);
+            kanjiEntryRepository.save(kanjiEntry);
+//                    limit--;
+//                }
+        }
+
+//            addKanjiVariants(characters);
+    }
+
+
+    private void saveAllKanjiToFile(List<Character> characters) {
+        Set<String> kanjiEntries = new TreeSet<>();
+
+        for (Character character : characters) {
+            KanjiEntry kanjiEntry = getKanjiEntry(character);
+            kanjiEntries.add(kanjiEntry.getKanji());
+        }
+
+        File file = new File("client\\src\\data\\kanjiEntries.txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(kanjiEntries.stream().collect(Collectors.joining("|")));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -188,7 +227,7 @@ public class DictionaryXMLtoPOJO {
                         codepoints.add(cpValue.getContent() + ";" + cpValue.getCpType());
                     }
 
-                    kanjiEntry.setCodepoint(String.join("/", codepoints));
+                    kanjiEntry.setCodepoint(String.join("|", codepoints));
                     break;
                 case RADICAL:
                     // only one main radical
@@ -230,7 +269,6 @@ public class DictionaryXMLtoPOJO {
         return kanjiEntry;
     }
 
-    @Transactional
     private void addKanjiVariants(List<Character> characters) {
         for (Character character : characters) {
             List<Object> kanjiInfo = character.getLiteralAndCodepointAndRadical();
@@ -331,7 +369,7 @@ public class DictionaryXMLtoPOJO {
             for (KanjiEntry kanjiEntry : kanjiList) {
                 variants.add(kanjiEntry.getKanji());
             }
-            kanjiVariant = String.join("/", variants);
+            kanjiVariant = String.join("|", variants);
         }
         return kanjiVariant;
     }
@@ -362,9 +400,9 @@ public class DictionaryXMLtoPOJO {
 
         }
 
-        kanjiEntry.setOnReading(String.join("/", onReadings));
-        kanjiEntry.setKunReading(String.join("/", kunReadings));
-        kanjiEntry.setMeaning(String.join("/", meanings));
+        kanjiEntry.setOnReading(String.join("|", onReadings));
+        kanjiEntry.setKunReading(String.join("|", kunReadings));
+        kanjiEntry.setMeaning(String.join("|", meanings));
     }
 
     private void addListReferences(KanjiReferences references, DicNumber component) {
@@ -444,6 +482,9 @@ public class DictionaryXMLtoPOJO {
             }
         }
     }
+
+
+    /* NAME ENTRY METHODS */
 
     private void fillNameTableFromXml() {
         try {

@@ -28,7 +28,7 @@
     left: 5px;
     width: auto;
     height: auto;
-    max-width: 350px;
+    max-width: 300px;
     display: none;
     border: 2px solid #694A52;
     border-radius: 15px 15px 5px 5px;
@@ -48,17 +48,24 @@
 }
 
 #rikai-window .w-kana {
-    font-size: 18px;
+    font-size: 14px;
     color: #c53d62;
+    margin-right: 0.7em;
 }
 
-#rikai-window .w-conj {
+#rikai-window .w-grammar {
     color: #dc9c05;
     font-size: 12px;
 }
 
 #rikai-window .w-def {
     font-size: 13px;
+}
+
+#rikai-window .w-def span {
+    font-weight: 700;
+    color: #1686e6;
+    cursor: pointer;
 }
 
 #rikai-window .example {
@@ -153,4 +160,9 @@
 
 #rikai-window .definition-light {
 background-color: #fbfafa;
+}
+
+#spinner {
+    margin: 15px 0;
+    transform: translate(55%, 0%);
 }

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 // pop-up
 export const popUpSetVisibility = visibility => {
     return {
@@ -34,6 +36,13 @@ export const setResultsLimitation = limitResults => {
     }
 };
 
+export const fetchData = (list, url) => {
+    return {
+        type: 'FETCH_DATA',
+        payload: axios.get('http://localhost:8080/api/' + url + '?searchItem=' + list.toString())
+    }
+};
+
 // yomi
 export const setText = text => {
     return {
@@ -44,7 +53,8 @@ export const setText = text => {
 
 export const resetText = () => {
     return {
-        type: 'RESET_TEXT'}
+        type: 'RESET_TEXT'
+    }
 };
 
 

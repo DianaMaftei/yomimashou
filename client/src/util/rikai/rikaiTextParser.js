@@ -133,9 +133,9 @@ export function search(tdata, dictOption, updateSearchResult) {
     let lastSelEnd = selEndList;
     let lastRo = ro;
 
-    let answer = RikaiDict.search(text, String(dictOption));
+    let entries = RikaiDict.search(text, String(dictOption));
 
-    processEntry(answer, lastRo, lastSelEnd, updateSearchResult);
+    processEntry(entries, lastRo, lastSelEnd, updateSearchResult);
 
     return 1;
 }
@@ -162,16 +162,16 @@ function processEntry(e, lastRo, lastSelEnd, updateSearchResult) {
             clearHi();
             return 0;
         }
-        highlightMatch(doc, rp, ro, e.matchLen, selEndList, tdata);
+        highlightMatch(doc, rp, ro, e.result.matchLen, selEndList, tdata);
         window.rikaiR.elemPosition = document.getSelection().getRangeAt(0).getClientRects()[0];
         tdata.prevSelView = doc.defaultView;
     }
 
-    updateSearchResult(RikaiDict.getResultFromEntry(e));
+    updateSearchResult(e);
     return 1;
 };
 
-function highlightMatch(doc, sn, so, matchLen, selEndList, tdata) {
+function highlightMatch(doc, sn, so, matchLen = 1, selEndList, tdata) {
     let sel = doc.defaultView.getSelection();
 
     // If selEndList is empty then we're dealing with a textarea/input situation

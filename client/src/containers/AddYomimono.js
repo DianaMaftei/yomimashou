@@ -13,7 +13,7 @@ class AddYomimono extends React.Component {
         return (
             <div>
                 <div id="text-box">
-                <textarea rows="5" cols="50" onChange={event => this.props.setText(event.target.value)}
+                    <textarea rows="5" cols="50" onChange={event => this.props.setText(event.target.value)}
                           placeholder="Paste here the Japanese text that you want to read."/>
                 </div>
                 <h4 id="example-header">Example</h4>

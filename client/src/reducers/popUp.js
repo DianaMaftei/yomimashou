@@ -27,6 +27,23 @@ const popUp = (state = defaultState, action) => {
                 ...state,
                 limitResults: action.limitResults
             };
+        case 'FETCH_DATA_PENDING':
+            return {
+                ...state,
+                showResult: {result: null, type: state.searchResult.type}
+            };
+
+        case 'FETCH_DATA_FULFILLED':
+            return {
+                ...state,
+                showResult: {result: action.payload.data, type: state.searchResult.type}
+            };
+
+        case 'FETCH_DATA_REJECTED':
+            return {
+                ...state,
+                error: action.payload
+            };
         default:
             return state
     }

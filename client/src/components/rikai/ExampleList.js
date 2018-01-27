@@ -16,7 +16,7 @@ class ExampleList extends React.Component {
                                    key={result} example={result}/>);
         }
 
-        if(examples.length === 0) examples.push(<span>No examples found.</span>);
+        if(examples.length === 0) examples.push(<span key={"noResult"}>No examples found.</span>);
         return (
             <div>
                 {examples}

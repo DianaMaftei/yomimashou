@@ -26,9 +26,9 @@ public class WordEntryService {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         for (String word : words) {
             booleanBuilder.or(wordEntry.readingElements.like(word)).or(wordEntry.kanjiElements.like(word));
-            booleanBuilder.or(wordEntry.readingElements.like(word + "/%")).or(wordEntry.kanjiElements.like(word + "/%"));
-            booleanBuilder.or(wordEntry.readingElements.like("%/" + word + "/%")).or(wordEntry.kanjiElements.like("%/" + word + "/%"));
-            booleanBuilder.or(wordEntry.readingElements.like("%/" + word)).or(wordEntry.kanjiElements.like("%/" + word));
+            booleanBuilder.or(wordEntry.readingElements.like(word + "|%")).or(wordEntry.kanjiElements.like(word + "|%"));
+            booleanBuilder.or(wordEntry.readingElements.like("%|" + word + "|%")).or(wordEntry.kanjiElements.like("%|" + word + "|%"));
+            booleanBuilder.or(wordEntry.readingElements.like("%|" + word)).or(wordEntry.kanjiElements.like("%|" + word));
         }
         return (List<WordEntry>) jpaQueryFactory.query().from(wordEntry).where(booleanBuilder).distinct().leftJoin(wordEntry.meanings).fetchJoin().fetch();
     }

@@ -22,9 +22,9 @@ public class WordEntryController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<WordEntry> get(@RequestParam("word") String word) {
-        if(word != null && word.length() > 0){
-            return wordEntryService.get(word.split(","));
+    public List<WordEntry> get(@RequestParam("searchItem") String searchItem) {
+        if(searchItem != null && searchItem.length() > 0){
+            return wordEntryService.get(searchItem.split(","));
         }
         return null;
     }
