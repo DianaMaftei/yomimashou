@@ -75,7 +75,7 @@ public class DictionaryXMLtoPOJO {
             JMdict jmDict = (JMdict) unmarshalFile("JMdict_e.xml", JMdict.class);
             List<Entry> dictionaryEntries = jmDict.getEntry();
 
-            saveAllWordEntriesToFile(dictionaryEntries);
+//            saveAllWordEntriesToFile(dictionaryEntries);
             fillDatabaseWithWordEntries(dictionaryEntries);
 
         } catch (JAXBException e) {
