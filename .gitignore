@@ -1,1 +1,11 @@
-# *.iml
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Node.js
+node_modules/
+node/
+build/
+dist/
