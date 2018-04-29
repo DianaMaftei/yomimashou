@@ -61,7 +61,7 @@ public class DictionaryXMLtoPOJO {
     }
 
     private Object unmarshalFile(String fileName, Class jClass) throws JAXBException {
-        File file = new File("backend" + File.pathSeparator + "main" + File.pathSeparator + "resources" + File.pathSeparator + "dictionaryXMLData" + File.pathSeparator + fileName);
+        File file = new File("backend" + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "dictionaryXMLData" + File.separator + fileName);
         JAXBContext jaxbContext = JAXBContext.newInstance(jClass);
 
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -91,7 +91,7 @@ public class DictionaryXMLtoPOJO {
             entry.getREle().stream().forEach(reading -> wordEntries.add(reading.getReb().toString()));
         }
 
-        File file = new File("frontend" + File.pathSeparator+ "src" + File.pathSeparator+ "data" + File.pathSeparator + "wordEntries.txt");
+        File file = new File("frontend" + File.separator + "src" + File.separator + "data" + File.separator + "wordEntries.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(wordEntries.stream().collect(Collectors.joining("|")));
         } catch (IOException e) {
@@ -200,7 +200,7 @@ public class DictionaryXMLtoPOJO {
             kanjiEntries.add(kanjiEntry.getKanji());
         }
 
-        File file = new File("frontend" + File.pathSeparator + "src" + File.pathSeparator + "data" + File.pathSeparator + "kanjiEntries.txt");
+        File file = new File("frontend" + File.separator + "src" + File.separator + "data" + File.separator + "kanjiEntries.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(kanjiEntries.stream().collect(Collectors.joining("|")));
         } catch (IOException e) {
