@@ -4,6 +4,9 @@ module.exports = {
             {
                 test: /\.(jpe?g|gif|png|svg|wav|mp3|txt|dat|idx)$/,
                 loader: "file"
+            }, {
+                test: /\/App\.js$/, // regex to match files to receive react-hot-loader functionality
+                loader: require.resolve('react-hot-loader-loader'),
             }
         ]
     }

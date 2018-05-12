@@ -10,30 +10,20 @@ import "./style/App.css";
 
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
-import { AppContainer } from 'react-hot-loader';
 
-// const store = createStore(reducer, applyMiddleware(logger, promiseMiddleware()));
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(promiseMiddleware())));
 
-const render = Component => {
+const render = () => {
     ReactDOM.render(
-        <AppContainer>
-            <Provider store={store}>
-                <Component/>
-            </Provider>
-        </AppContainer>,
-        document.getElementById('root'));
+        <Provider store={store}>
+            <App/>
+        </Provider>,
+        document.getElementById('root')
+    );
 };
 
 registerServiceWorker();
+render();
 
-render(App);
-
-if (module.hot) {
-    module.hot.accept('./App', () => {
-        render(App);
-    });
-}
-
-
-
+if (module.hot)
+    module.hot.accept();
