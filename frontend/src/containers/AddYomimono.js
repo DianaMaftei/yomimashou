@@ -1,11 +1,16 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {setText} from '../actions/index';
+import { connect } from 'react-redux';
+import { setText } from '../actions/index';
+import { Link } from 'react-router-dom';
 
 const mapDispatchToProps = (dispatch) => ({
     setText: text => {
         dispatch(setText(text));
     }
+});
+
+const mapStateToProps = (state) => ({
+    text: state.yomi.text
 });
 
 class AddYomimono extends React.Component {
@@ -14,7 +19,9 @@ class AddYomimono extends React.Component {
             <div>
                 <div id="text-box">
                     <textarea rows="5" cols="50" onChange={event => this.props.setText(event.target.value)}
-                          placeholder="Paste here the Japanese text that you want to read."/>
+                              placeholder="Paste here the Japanese text that you want to read."/>
+                    <br/>
+                    <Link to={this.props.text ? "/view" : "/add"}><button className="btn btn-info"> Start Reading </button></Link>
                 </div>
                 <h4 id="example-header">Example</h4>
                 <p id="example-text">
@@ -34,4 +41,4 @@ class AddYomimono extends React.Component {
     }
 }
 
-export default connect(null, mapDispatchToProps)(AddYomimono);
+export default connect(mapStateToProps, mapDispatchToProps)(AddYomimono);

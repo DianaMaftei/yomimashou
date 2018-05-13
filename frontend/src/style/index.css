@@ -5,3 +5,88 @@ html, body {
   overflow-x: hidden;
   width: 100vw;
 }
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#text-box, #reset-btn {
+  text-align: center;
+}
+
+#text-box {
+  margin: 20px 0;
+}
+
+#yomi-text {
+  margin: 20px 50px;
+  font-size: 24px;
+  line-height: 50px;
+}
+
+#yomi-text::-moz-selection {
+  background-color: #f3f2f2;
+}
+
+#yomi-text::selection {
+  background-color: #eeeded;
+}
+
+#app-header {
+  background-color: #694A52;
+  color: #FFC4B2;
+  font-weight: bold;
+  font-family: Georgia, serif;
+  font-size: 2em;
+  padding: 10px;
+  text-align: center;
+}
+
+#example-header {
+  text-align: center;
+}
+
+#example-text {
+  margin: 20px;
+}
+
+#user-options li {
+  list-style: none;
+  font-size: smaller;
+}
+
+#user-options {
+  text-align: center;
+}
+
+#reset-btn button {
+  background-color: #5A9A99;
+  border-color: #518a89;
+  cursor: pointer;
+}
+

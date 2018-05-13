@@ -1,8 +1,9 @@
-import React from "react";
-import {connect} from "react-redux";
-import YomiText from "./YomiText";
-import {resetText} from "../actions/index";
-import "../style/rikai.css";
+import React from 'react';
+import {connect} from 'react-redux';
+import YomiText from './YomiText';
+import {resetText} from '../actions/index';
+import '../style/rikai.css';
+import { Link } from 'react-router-dom';
 
 const mapDispatchToProps = (dispatch) => ({
     resetText: () => {
@@ -26,7 +27,7 @@ class ViewYomimono extends React.Component {
                 </div>
                 <YomiText/>
                 <div id="reset-btn">
-                    <button onClick={this.props.resetText}> Try a different text</button>
+                    <Link to="/add"><button onClick={this.props.resetText}> Try a different text</button></Link>
                 </div>
             </div>
         )
