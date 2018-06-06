@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/kanji")
+@RequestMapping("/api/kanji")
 public class KanjiEntryController {
 
     private final KanjiEntryService kanjiEntryService;

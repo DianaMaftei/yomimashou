@@ -43,25 +43,15 @@ class Trie {
     };
 
     getAllValidWordsInLine(line) {
-        let node = this.root;
         let words = [];
 
-        for(let i = 0; i < line.length; i++) {
-            if (node.keys[line[i]] !== null) {
-                if(node.end) {
-                    words.push(line.substring(0, i+1));
-                }
-            } else {
-                break;
-            }
-            this.root = node;
-        }
-        this.root = new Node();
-        return words;
-    }
+        for (let i = line.length; i > 0; i--) {
 
-    resetNode() {
-        this.root = new Node();
+            if (this.isWord(line.substring(0, i))) {
+                words.push(line.substring(0, i));
+            }
+        }
+        return words;
     }
 }
 

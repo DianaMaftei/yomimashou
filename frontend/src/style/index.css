@@ -1,92 +1,92 @@
 html, body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  overflow-x: hidden;
-  width: 100vw;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    overflow-x: hidden;
+    width: 100vw;
 }
 
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+    background-color: #222;
+    height: 150px;
+    padding: 20px;
+    color: white;
 }
 
 .App-intro {
-  font-size: large;
+    font-size: large;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 #text-box, #reset-btn {
-  text-align: center;
+    text-align: center;
 }
 
 #text-box {
-  margin: 20px 0;
+    margin: 20px 0;
 }
 
-#yomi-text {
-  margin: 20px 50px;
-  font-size: 24px;
-  line-height: 50px;
+#yomi-text-container {
+    margin: 20px 50px;
+    font-size: 24px;
+    line-height: 50px;
 }
 
-#yomi-text::-moz-selection {
-  background-color: #f3f2f2;
+#yomi-text-container::-moz-selection {
+    background-color: #f3f2f2;
 }
 
-#yomi-text::selection {
-  background-color: #eeeded;
+#yomi-text-container::selection {
+    background-color: #eeeded;
 }
 
 #app-header {
-  background-color: #694A52;
-  color: #FFC4B2;
-  font-weight: bold;
-  font-family: Georgia, serif;
-  font-size: 2em;
-  padding: 10px;
-  text-align: center;
+    background-color: #694A52;
+    color: #FFC4B2;
+    font-weight: bold;
+    font-family: Georgia, serif;
+    font-size: 2em;
+    padding: 10px;
+    text-align: center;
 }
 
 #example-header {
-  text-align: center;
+    text-align: center;
 }
 
 #example-text {
-  margin: 20px;
+    margin: 20px;
 }
 
 #user-options li {
-  list-style: none;
-  font-size: smaller;
+    list-style: none;
+    font-size: smaller;
 }
 
 #user-options {
-  text-align: center;
+    text-align: center;
 }
 
 #reset-btn button {
-  background-color: #5A9A99;
-  border-color: #518a89;
-  cursor: pointer;
+    background-color: #5A9A99;
+    border-color: #518a89;
+    cursor: pointer;
 }
 

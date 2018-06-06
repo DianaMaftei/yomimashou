@@ -15,21 +15,17 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
 
 import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
-
-/*
-    run fetchDictionariesScript.sh to get the xml files TODO - run from inside this class
-    check out xsd file comments for explanation of entity structure
-*/
 
 @Component
 public class DictionaryXMLtoPOJO {
@@ -38,6 +34,10 @@ public class DictionaryXMLtoPOJO {
     private final WordEntryRepository wordEntryRepository;
     private final KanjiEntryRepository kanjiEntryRepository;
     private final Map<String, String> partsOfSpeech;
+
+    private final String JMDICT_URL = "http://ftp.monash.edu/pub/nihongo/JMdict_e.gz";
+    private final String JMNEDICT_URL = "http://ftp.monash.edu/pub/nihongo/JMnedict.xml.gz";
+    private final String KANJIDICT_URL = "http://ftp.monash.edu/pub/nihongo/kanjidic2.xml.gz";
 
     @Autowired
     public DictionaryXMLtoPOJO(JPAQueryFactory jpaQueryFactory, WordEntryRepository wordEntryRepository, KanjiEntryRepository kanjiEntryRepository) {
@@ -60,24 +60,32 @@ public class DictionaryXMLtoPOJO {
         }
     }
 
-    private Object unmarshalFile(String fileName, Class jClass) throws JAXBException {
-        File file = new File("backend" + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "dictionaryXMLData" + File.separator + fileName);
-        JAXBContext jaxbContext = JAXBContext.newInstance(jClass);
+    private Object unmarshalFile(String url, Class jClass) throws JAXBException {
+        Object result = null;
+        try (InputStream is = new URL(url).openStream(); InputStream gis = new GZIPInputStream(is);) {
+            JAXBContext jaxbContext = JAXBContext.newInstance(jClass);
 
-        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        return jaxbUnmarshaller.unmarshal(file);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            result = jaxbUnmarshaller.unmarshal(gis);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 
     /* WORD ENTRY METHODS */
     private void processWordEntriesFromXML() {
         try {
-            JMdict jmDict = (JMdict) unmarshalFile("JMdict_e.xml", JMdict.class);
-            List<Entry> dictionaryEntries = jmDict.getEntry();
-
-//            saveAllWordEntriesToFile(dictionaryEntries);
-            fillDatabaseWithWordEntries(dictionaryEntries);
-
+            Object unmarshalledFile = unmarshalFile(JMDICT_URL, JMdict.class);
+            if (unmarshalledFile != null) {
+                JMdict jmDict = (JMdict) unmarshalledFile;
+                List<Entry> dictionaryEntries = jmDict.getEntry();
+                //saveAllWordEntriesToFile(dictionaryEntries);
+                fillDatabaseWithWordEntries(dictionaryEntries);
+            }
         } catch (JAXBException e) {
             e.printStackTrace();
         }
@@ -100,15 +108,12 @@ public class DictionaryXMLtoPOJO {
     }
 
     private void fillDatabaseWithWordEntries(List<Entry> dictionaryEntries) {
-        // limit to a sample of 100 for testing purposes
-//            int limit = 100;
-        for (Entry entry : dictionaryEntries) {
-//                if (limit > 0) {
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "20");
+
+        dictionaryEntries.stream().parallel().forEach(entry -> {
             WordEntry wordEntry = getWordEntry(entry);
             wordEntryRepository.save(wordEntry);
-//                    limit--;
-//                }
-        }
+        });
     }
 
     private WordEntry getWordEntry(Entry entry) {
@@ -167,28 +172,27 @@ public class DictionaryXMLtoPOJO {
 
     private void processKanjiEntriesFromXML() {
         try {
-            Kanjidic2 kanjiDict = (Kanjidic2) unmarshalFile("kanjidic2.xml", Kanjidic2.class);
-            List<Character> characters = kanjiDict.getCharacter();
+            Object unmarshalledFile = unmarshalFile(KANJIDICT_URL, Kanjidic2.class);
+            if (unmarshalledFile != null) {
+                Kanjidic2 kanjiDict = (Kanjidic2) unmarshalledFile;
+                List<Character> characters = kanjiDict.getCharacter();
 
 //            saveAllKanjiToFile(characters);
-            fillDatabaseWithKanji(characters);
-
+                fillDatabaseWithKanji(characters);
+            }
         } catch (JAXBException e) {
             e.printStackTrace();
         }
     }
 
     private void fillDatabaseWithKanji(List<Character> characters) {
-        //            int limit = 100;
-        for (Character character : characters) {
-//                if (limit > 0) {
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "20");
+
+        characters.stream().parallel().forEach(character -> {
             KanjiEntry kanjiEntry = getKanjiEntry(character);
             kanjiEntryRepository.save(kanjiEntry);
-//                    limit--;
-//                }
-        }
-
-//            addKanjiVariants(characters);
+        });
+            addKanjiVariants(characters);
     }
 
 
@@ -488,7 +492,10 @@ public class DictionaryXMLtoPOJO {
 
     private void fillNameTableFromXml() {
         try {
-            JMnedict nameDict = (JMnedict) unmarshalFile("JMnedict.xml", JMnedict.class);
+            Object unmarshalledFile = unmarshalFile(JMNEDICT_URL, JMnedict.class);
+            if (unmarshalledFile != null) {
+                JMnedict nameDict = (JMnedict) unmarshalledFile;
+            }
 
         } catch (JAXBException e) {
             e.printStackTrace();

@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/words")
+@RequestMapping("/api/words")
 public class WordEntryController {
 
     private final WordEntryService wordEntryService;
@@ -23,9 +24,9 @@ public class WordEntryController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<WordEntry> get(@RequestParam("searchItem") String searchItem) {
-        if(searchItem != null && searchItem.length() > 0){
+        if (searchItem != null && searchItem.length() > 0) {
             return wordEntryService.get(searchItem.split(","));
         }
-        return null;
+        return Collections.emptyList();
     }
 }

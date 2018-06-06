@@ -1,15 +1,12 @@
 
 package com.github.dianamaftei.yomimashou.model.xmlOriginalModels.Kanjidic;
 
-import com.github.dianamaftei.yomimashou.model.xmlOriginalModels.Kanjidic.Meaning;
-import com.github.dianamaftei.yomimashou.model.xmlOriginalModels.Kanjidic.Reading;
-
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

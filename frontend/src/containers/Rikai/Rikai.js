@@ -1,0 +1,192 @@
+import React from "react";
+import { connect } from "react-redux";
+import axios from "axios";
+import RikaiLoading from './RikaiLoading';
+import RikaiWords from './RikaiWords';
+import RikaiKanji from './RikaiKanji';
+import RikaiNames from './RikaiNames';
+import RikaiExamples from './RikaiExamples';
+import './Rikai.css';
+
+const mapStateToProps = (state) => ({
+    ...state.popUp,
+    limit: state.config.popUp.limit,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    setPopupInfo: popupInfo => {
+        dispatch({
+            type: 'SET_POPUP_INFO',
+            popupInfo: popupInfo
+        });
+    }, updateShowResult: result => {
+        dispatch({
+            type: 'UPDATE_SHOW_RESULT',
+            result
+        });
+    }
+});
+
+const getPopupStyle = (popupInfo) => {
+
+    let x, y;
+
+    let popup = window.document.getElementById('rikai-window');
+
+    if (!popupInfo || !popup) {
+        return;
+    }
+
+    let styles = {};
+
+    // calculate position
+    if (popupInfo) {
+        styles.top = '-1000px';
+        styles.left = '0px';
+
+        // make the popup visible and gets its height and width
+        let pW = popup.offsetWidth;
+
+        // below the selection
+        if (popupInfo.position) {
+            x = popupInfo.position.x;
+            y = popupInfo.position.y;
+        }
+
+        y += document.documentElement.scrollTop || document.body.scrollTop;
+
+        //go left if necessary
+        if ((x + pW) > (window.innerWidth - 100)) {
+            x -= Math.abs(window.innerWidth - x - 100 - pW);
+        }
+    } else {
+        x += window.scrollX;
+        y += window.scrollY;
+    }
+
+    styles.left = x + 'px';
+    styles.top = y + 'px';
+    styles.display = popupInfo.visibility ? 'block' : 'none';
+
+    return styles;
+};
+
+const showExamples = (word, updateShowResult) => {
+    let term1 = word.kanji !== undefined ? word.kanji : word.kana;
+    let term2 = word.kanji !== undefined ? word.kana : '';
+    let url = `http://nihongo.monash.edu/cgi-bin/wwwjdic?1ZEU${term1}=1=${term2}`;
+
+    axios.get(url)
+        .then(function (response) {
+            let data = response.data.substring(response.data.indexOf('<pre>') + 5, response.data.indexOf('</pre>'));
+            let resultList = data.split('\n').filter(entry => entry.substring(0, 2) === 'A:').map(entry => entry.substring(2, entry.indexOf('#')).trim());
+            updateShowResult({ type: 'examples', result: resultList });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+};
+
+const hidePopup = (popUpSetVisibility) => {
+    popUpSetVisibility({ visibility: false });
+};
+
+const sortResultsByRelevanceAndAddConjugation = (searchedElements, fetchedList) => {
+    if (!searchedElements) return;
+
+    let sortedList = [];
+    let words = searchedElements.map(item => item.word);
+    let conjugations = searchedElements.map(item => item.grammarPoint);
+
+    let fetchedListCopy = [...fetchedList];
+
+    for (let i = 0; i < words.length; i++) {
+        for (let j = 0; j < fetchedListCopy.length; j++) {
+            if (fetchedListCopy[j].kanjiElements.indexOf(words[i]) > -1 || fetchedListCopy[j].readingElements.indexOf(words[i]) > -1) {
+
+                let item = { ...fetchedListCopy[j] };
+                item.grammarPoint = conjugations[i];
+                sortedList.push(item);
+                fetchedListCopy.splice(j, 1);
+                j--;
+            }
+        }
+    }
+
+    return sortedList
+};
+
+const getResultFromKanjiEntry = (entry) => {
+    let kanji = {};
+    kanji.frequency = entry.frequency;
+    kanji.grade = entry.grade;
+    kanji.strokes = entry.strokeCount;
+    kanji.eigo = entry.meaning ? entry.meaning.replace(/\|/g, ", ") : null;
+    kanji.kanji = entry.kanji;
+    kanji.kunReading = entry.kunReading ? entry.kunReading.replace(/\|/g, ", ") : null;
+    kanji.onReading = entry.onReading ? entry.onReading.replace(/\|/g, ", ") : null;
+    return kanji;
+};
+
+const getResultFromWordEntry = (data, slicedResult) => {
+    let result = [];
+
+    let resultList = sortResultsByRelevanceAndAddConjugation(data, slicedResult);
+
+    if (!resultList) return;
+
+    for (let i = 0; i < resultList.length; i++) {
+        let word = {};
+        word.kanji = resultList[i].kanjiElements !== "" ? resultList[i].kanjiElements.split("|") : null;
+        word.kana = resultList[i].readingElements.split("|");
+        word.longDef = resultList[i].meanings.map(meaning => ((meaning.partOfSpeech ? "(" + meaning.partOfSpeech + ") " : "") + meaning.glosses.replace(/\|/g, ", "))).join("; ");
+        word.showShortDef = word.longDef.length > 140 ? word.longDef.substring(0, 140) : null;
+        word.grammar = resultList[i].grammarPoint !== "" ? resultList[i].grammarPoint : null;
+        result.push(word);
+    }
+    return result;
+};
+
+const getResultFromEntry = (searchResult, fetchedResult) => {
+    if (fetchedResult.result === null) return;
+
+    if (fetchedResult.type === "words") {
+        return { type: 'words', result: getResultFromWordEntry(searchResult.data, fetchedResult.result.slice()) };
+    }
+
+    if (fetchedResult.type === "kanji") {
+        return { type: 'kanji', result: getResultFromKanjiEntry(fetchedResult.result) };
+    }
+};
+
+export const getResult = (searchResult, showResult) => {
+    if (!searchResult) {
+        return;
+    }
+    if (showResult.type === "examples") {
+        return showResult;
+    }
+
+    if (searchResult.result) {
+        return getResultFromEntry(searchResult.result, showResult);
+    }
+};
+
+export class Rikai extends React.Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return (this.props.showResult !== nextProps.showResult) || (this.props.popupInfo.visibility !== nextProps.popupInfo.visibility);
+    }
+
+    render() {
+        let style = getPopupStyle(this.props.popupInfo);
+        let result = getResult(this.props.searchResult, this.props.showResult);
+
+        if (!result) return RikaiLoading(() => hidePopup(this.props.setPopupInfo), style);
+        else if (result.type === 'words') return RikaiWords(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit, (word) => showExamples(word, this.props.updateShowResult));
+        else if (result.type === 'kanji') return RikaiKanji(() => hidePopup(this.props.setPopupInfo), style, result);
+        else if (result.type === 'names') return RikaiNames(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit);
+        else if (result.type === 'examples') return RikaiExamples(() => hidePopup(this.props.setPopupInfo), style, result);
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Rikai);
