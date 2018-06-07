@@ -1,4 +1,5 @@
 import Trie from "./Trie";
+import LZString from "lz-string";
 
 let RikaiDict = (function () {
 
@@ -12,20 +13,7 @@ let RikaiDict = (function () {
         nextDictionary: '3'
     };
 
-    // let config.nameDictURL = require("../../data/names.dat");
-    // let config.nameIndexURL = require("../../data/names.idx");
-
-    config.wordIndexTxtURL = require("../../data/wordEntries.txt");
-
-    config.wordDictURL = require("../../data/dict.dat");
-    config.wordIndexURL = require("../../data/dict.idx");
-
-    config.kanjiDataURL = require("../../data/kanji.dat");
-    config.radDataURL = require("../../data/radicals.dat");
-
-    config.deinflectURL = require("../../data/deinflect.dat");
-
-    loadDictionary();
+    loadDictionaries();
     // loadNames();
     loadDIF();
 
@@ -40,20 +28,31 @@ let RikaiDict = (function () {
         return myTrie;
     }
 
-    function fileRead(url, charset) {
+    function fileRead(url, callback) {
         let req = new XMLHttpRequest();
-        req.open("GET", url, false);
+        req.open("GET", url, true);
+        req.onload = function (e) {
+            if (req.readyState === 4) {
+                if (req.status === 200) {
+                    callback(req.responseText);
+                } else {
+                    console.error(req.statusText, e);
+                }
+            }
+        };
+        req.onerror = function (e) {
+            console.error(req.statusText, e);
+        };
         req.send(null);
-        return req.responseText;
-    };
+    }
 
-    function fileReadArray(name, charset) {
-        let a = fileRead(name, charset).split('\n');
-        // Is this just in case there is blank shit in the file.  It was writtin by Jon though.
-        // I suppose this is more robust
-        while ((a.length > 0) && (a[a.length - 1].length === 0)) a.pop();
-        return a;
-    };
+    function fileReadArray(name, callback) {
+        fileRead(name, (result => {
+            let a = result.split('\n');
+            while ((a.length > 0) && (a[a.length - 1].length === 0)) a.pop();
+            callback(a);
+        }));
+    }
 
     // function loadNames() {
     //     if ((config.nameDict) && (config.nameIndex)) return;
@@ -62,50 +61,91 @@ let RikaiDict = (function () {
     // };
 
     //	Note: These are mostly flat text files; loaded as one continuous string to reduce memory use
-    function loadDictionary() {
-        if ((config.wordDict) && (config.wordIndex) && (config.kanjiData) && (config.radData)) return;
-        config.wordDict = fileRead(config.wordDictURL);
-        config.wordIndex = fileRead(config.wordIndexURL);
-        config.kanjiData = fileRead(config.kanjiDataURL, 'UTF-8');
-        config.radData = fileReadArray(config.radDataURL, 'UTF-8');
+    function loadDictionaries() {
+        // let config.nameDictURL = require("../../data/names.dat");
+        // let config.nameIndexURL = require("../../data/names.idx");
 
-        config.wordTrie = loadTrie(fileRead(config.wordIndexTxtURL));
+        if ((config.wordEntries) && (config.kanjiEntries) && (config.radicals)) return;
+        loadOrSaveDictionary("kanjiEntries");
+        loadOrSaveDictionary("wordEntries");
+        loadOrSaveDictionary("radicals");
+    }
 
-    };
+    function loadOrSaveDictionary(dictionaryName) {
+        let localDictionary = localStorage.getItem(dictionaryName);
+        if (!localDictionary) {
+            if (dictionaryName === "radicals") {
+                fileReadArray(require("../../data/radicals.dat"), result => {
+                    doAfterDictionaryIsFetched("radicals", result)
+                });
+                return;
+            }
+            fileRead(require("../../data/" + dictionaryName + ".txt"), result => doAfterDictionaryIsFetched(dictionaryName, result));
+        } else {
+            localDictionary = JSON.parse(LZString.decompressFromUTF16(localDictionary));
+            loadDictionary(dictionaryName, localDictionary);
+        }
+    }
+
+    function loadDictionary(dictionaryName, dictionary) {
+        if (dictionaryName === "kanjiEntries") {
+            dictionary = dictionary.split("|");
+        } else if (dictionaryName === "wordEntries") {
+            dictionary = loadTrie(dictionary);
+        }
+        config[dictionaryName] = dictionary;
+    }
+
+    function doAfterDictionaryIsFetched(dictionaryName, dictionary) {
+        saveDictionaryLocally(dictionaryName, dictionary);
+        loadDictionary(dictionaryName, dictionary);
+    }
+
+    function saveDictionaryLocally(dictionaryName, dictionary) {
+        try {
+            localStorage.setItem(dictionaryName, LZString.compressToUTF16(JSON.stringify(dictionary)));
+        } catch (e) {
+            console.error("Local Storage is full, could not save " + dictionaryName);
+        }
+    }
 
     function loadDIF() {
         config.difReasons = [];
         config.difRules = [];
         config.difExact = [];
 
-        let buffer = fileReadArray(config.deinflectURL, 'UTF-8');
-        let prevLen = -1;
-        let g, o;
+        let callback = (result => {
+            let buffer = result;
+            let prevLen = -1;
+            let g, o;
 
-        // i = 1: skip header
-        for (let i = 1; i < buffer.length; ++i) {
-            let f = buffer[i].split('\t');
+            // i = 1: skip header
+            for (let i = 1; i < buffer.length; ++i) {
+                let f = buffer[i].split('\t');
 
-            if (f.length === 1) {
-                config.difReasons.push(f[0]);
-            }
-            else if (f.length === 4) {
-                o = {};
-                o.from = f[0];
-                o.to = f[1];
-                o.type = f[2];
-                o.reason = f[3];
-
-                if (prevLen !== o.from.length) {
-                    prevLen = o.from.length;
-                    g = [];
-                    g.flen = prevLen;
-                    config.difRules.push(g);
+                if (f.length === 1) {
+                    config.difReasons.push(f[0]);
                 }
-                g.push(o);
+                else if (f.length === 4) {
+                    o = {};
+                    o.from = f[0];
+                    o.to = f[1];
+                    o.type = f[2];
+                    o.reason = f[3];
+
+                    if (prevLen !== o.from.length) {
+                        prevLen = o.from.length;
+                        g = [];
+                        g.flen = prevLen;
+                        config.difRules.push(g);
+                    }
+                    g.push(o);
+                }
             }
-        }
-    };
+        });
+
+        fileReadArray(require("../../data/deinflect.dat"), callback);
+    }
 
     function deinflect(word) {
         let r = [];
@@ -161,7 +201,7 @@ let RikaiDict = (function () {
         } while (++i < r.length);
 
         return r;
-    };
+    }
 
     function findValidWordsInString(string) {
         let validEntries = [];
@@ -178,7 +218,7 @@ let RikaiDict = (function () {
             for (let i = 0; i < deinflectionResult.length; i++) {
                 deinflectedWord = deinflectionResult[i];
 
-                let isWord = config.wordTrie.isWord(deinflectedWord.word);
+                let isWord = config.wordEntries.isWord(deinflectedWord.word);
                 if (isWord) {
                     if (alreadyFound.indexOf(deinflectedWord.word) === -1) {
                         alreadyFound.push(deinflectedWord.word);
