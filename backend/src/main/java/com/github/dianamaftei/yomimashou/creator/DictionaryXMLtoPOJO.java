@@ -13,6 +13,8 @@ import com.github.dianamaftei.yomimashou.repository.WordEntryRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,14 +32,15 @@ import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
 @Component
 public class DictionaryXMLtoPOJO {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(DictionaryXMLtoPOJO.class);
     private final JPAQueryFactory jpaQueryFactory;
     private final WordEntryRepository wordEntryRepository;
     private final KanjiEntryRepository kanjiEntryRepository;
     private final Map<String, String> partsOfSpeech;
 
-    private final String JMDICT_URL = "http://ftp.monash.edu/pub/nihongo/JMdict_e.gz";
-    private final String JMNEDICT_URL = "http://ftp.monash.edu/pub/nihongo/JMnedict.xml.gz";
-    private final String KANJIDICT_URL = "http://ftp.monash.edu/pub/nihongo/kanjidic2.xml.gz";
+    private static final String JMDICT_URL = "http://ftp.monash.edu/pub/nihongo/JMdict_e.gz";
+    private static final String JMNEDICT_URL = "http://ftp.monash.edu/pub/nihongo/JMnedict.xml.gz";
+    private static final String KANJIDICT_URL = "http://ftp.monash.edu/pub/nihongo/kanjidic2.xml.gz";
 
     @Autowired
     public DictionaryXMLtoPOJO(JPAQueryFactory jpaQueryFactory, WordEntryRepository wordEntryRepository, KanjiEntryRepository kanjiEntryRepository) {
@@ -56,7 +59,7 @@ public class DictionaryXMLtoPOJO {
 //            fillNameTableFromXml();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("could not process entries from xml", e);
         }
     }
 
@@ -69,7 +72,7 @@ public class DictionaryXMLtoPOJO {
             result = jaxbUnmarshaller.unmarshal(gis);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("could not unmarshal file: " + url, e);
         }
 
         return result;
@@ -87,7 +90,7 @@ public class DictionaryXMLtoPOJO {
                 fillDatabaseWithWordEntries(dictionaryEntries);
             }
         } catch (JAXBException e) {
-            e.printStackTrace();
+            LOGGER.error("could not process word entries from XML", e);
         }
     }
 
@@ -95,15 +98,15 @@ public class DictionaryXMLtoPOJO {
         Set<String> wordEntries = new TreeSet<>();
 
         for (Entry entry : dictionaryEntries) {
-            entry.getKEle().stream().forEach(kanji -> wordEntries.add(kanji.getKeb().toString()));
-            entry.getREle().stream().forEach(reading -> wordEntries.add(reading.getReb().toString()));
+            entry.getKEle().forEach(kanji -> wordEntries.add(kanji.getKeb()));
+            entry.getREle().forEach(reading -> wordEntries.add(reading.getReb()));
         }
 
         File file = new File("frontend" + File.separator + "src" + File.separator + "data" + File.separator + "wordEntries.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(wordEntries.stream().collect(Collectors.joining("|")));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("could not save word entries to file", e);
         }
     }
 
@@ -151,7 +154,7 @@ public class DictionaryXMLtoPOJO {
 
         for (Sense sense : entry.getSense()) {
             WordMeaning meaning = new WordMeaning();
-            meaning.setPartOfSpeech(String.join("|", sense.getPos().stream().map(item -> partsOfSpeech.get(item)).filter(e -> e != null).collect(Collectors.toList())));
+            meaning.setPartOfSpeech(String.join("|", sense.getPos().stream().map(partsOfSpeech::get).filter(Objects::nonNull).collect(Collectors.toList())));
             meaning.setFieldOfApplication(String.join("|", sense.getField()));
             meaning.setAntonym(String.join("|", sense.getAnt()));
             List<String> glosses = new ArrayList<>();
@@ -181,7 +184,7 @@ public class DictionaryXMLtoPOJO {
                 fillDatabaseWithKanji(characters);
             }
         } catch (JAXBException e) {
-            e.printStackTrace();
+            LOGGER.error("could not process kanji entries from XML", e);
         }
     }
 
@@ -192,7 +195,7 @@ public class DictionaryXMLtoPOJO {
             KanjiEntry kanjiEntry = getKanjiEntry(character);
             kanjiEntryRepository.save(kanjiEntry);
         });
-            addKanjiVariants(characters);
+        addKanjiVariants(characters);
     }
 
 
@@ -208,7 +211,7 @@ public class DictionaryXMLtoPOJO {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(kanjiEntries.stream().collect(Collectors.joining("|")));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("could not save kanji entries to file", e);
         }
     }
 
@@ -300,68 +303,68 @@ public class DictionaryXMLtoPOJO {
     }
 
     private Map<String, String> getListOfPartsOfSpeech() {
-        Map<String, String> partsOfSpeech = new HashMap<>();
-        partsOfSpeech.put("adjective (keiyoushi)", "adj-i");
-        partsOfSpeech.put("adjectival nouns or quasi-adjectives (keiyodoshi)", "adj-na");
-        partsOfSpeech.put("nouns which may take the genitive case particle 'no'", "adj-no");
-        partsOfSpeech.put("pre-noun adjectival (rentaishi)", "adj-pn");
-        partsOfSpeech.put("'taru' adjective", "adj-t");
-        partsOfSpeech.put("noun or verb acting prenominally (other than the above)", "adj-f");
-        partsOfSpeech.put("former adjective classification (being removed)", "adj");
-        partsOfSpeech.put("adverb (fukushi)", "adv");
-        partsOfSpeech.put("adverbial noun", "adv-n");
-        partsOfSpeech.put("adverb taking the 'to' particle", "adv-to");
-        partsOfSpeech.put("auxiliary", "aux");
-        partsOfSpeech.put("auxiliary verb", "aux-v");
-        partsOfSpeech.put("auxiliary adjective", "aux-adj");
-        partsOfSpeech.put("conjunction", "conj");
-        partsOfSpeech.put("counter", "ctr");
-        partsOfSpeech.put("Expressions (phrases, clauses, etc.)", "exp");
-        partsOfSpeech.put("idiomatic expression", "id");
-        partsOfSpeech.put("interjection (kandoushi)", "int");
-        partsOfSpeech.put("irregular verb", "iv");
-        partsOfSpeech.put("noun (common) (futsuumeishi)", "n");
-        partsOfSpeech.put("adverbial noun (fukushitekimeishi)", "n-adv");
-        partsOfSpeech.put("noun, used as a prefix", "n-pref");
-        partsOfSpeech.put("noun (temporal) (jisoumeishi)", "n-t");
-        partsOfSpeech.put("numeric", "num");
-        partsOfSpeech.put("pronoun", "pn");
-        partsOfSpeech.put("prefix", "pref");
-        partsOfSpeech.put("particle", "prt");
-        partsOfSpeech.put("suffix", "suf");
-        partsOfSpeech.put("Ichidan verb", "v1");
-        partsOfSpeech.put("Godan verb (not completely classified)", "v5");
-        partsOfSpeech.put("Godan verb - -aru special class", "v5aru");
-        partsOfSpeech.put("Godan verb with 'bu' ending", "v5b");
-        partsOfSpeech.put("Godan verb with 'gu' ending", "v5g");
-        partsOfSpeech.put("Godan verb with 'ku' ending", "v5k");
-        partsOfSpeech.put("Godan verb - iku/yuku special class", "v5k-s");
-        partsOfSpeech.put("Godan verb with 'mu' ending", "v5m");
-        partsOfSpeech.put("Godan verb with 'nu' ending", "v5n");
-        partsOfSpeech.put("Godan verb with 'ru' ending", "v5r");
-        partsOfSpeech.put("Godan verb with 'ru' ending (irregular verb)", "v5r-i");
-        partsOfSpeech.put("Godan verb with 'su' ending", "v5s");
-        partsOfSpeech.put("Godan verb with 'tsu' ending", "v5t");
-        partsOfSpeech.put("Godan verb with 'u' ending", "v5u");
-        partsOfSpeech.put("Godan verb with 'u' ending (special class)", "v5u-s");
-        partsOfSpeech.put("Godan verb - uru old class verb (old form of Eru)", "v5uru");
-        partsOfSpeech.put("Godan verb with 'zu' ending", "v5z");
-        partsOfSpeech.put("Ichidan verb - zuru verb - (alternative form of -jiru verbs)", "vz");
-        partsOfSpeech.put("intransitive verb", "vi");
-        partsOfSpeech.put("kuru verb - special class", "vk");
-        partsOfSpeech.put("irregular nu verb", "vn");
-        partsOfSpeech.put("noun or participle which takes the aux. verb suru", "vs");
-        partsOfSpeech.put("suru verb - irregular", "vs-i");
-        partsOfSpeech.put("suru verb - special class", "vs-s");
-        partsOfSpeech.put("transitive verb", "vt");
-        return partsOfSpeech;
+        Map<String, String> partsOfSpeechMap = new HashMap<>();
+        partsOfSpeechMap.put("adjective (keiyoushi)", "adj-i");
+        partsOfSpeechMap.put("adjectival nouns or quasi-adjectives (keiyodoshi)", "adj-na");
+        partsOfSpeechMap.put("nouns which may take the genitive case particle 'no'", "adj-no");
+        partsOfSpeechMap.put("pre-noun adjectival (rentaishi)", "adj-pn");
+        partsOfSpeechMap.put("'taru' adjective", "adj-t");
+        partsOfSpeechMap.put("noun or verb acting prenominally (other than the above)", "adj-f");
+        partsOfSpeechMap.put("former adjective classification (being removed)", "adj");
+        partsOfSpeechMap.put("adverb (fukushi)", "adv");
+        partsOfSpeechMap.put("adverbial noun", "adv-n");
+        partsOfSpeechMap.put("adverb taking the 'to' particle", "adv-to");
+        partsOfSpeechMap.put("auxiliary", "aux");
+        partsOfSpeechMap.put("auxiliary verb", "aux-v");
+        partsOfSpeechMap.put("auxiliary adjective", "aux-adj");
+        partsOfSpeechMap.put("conjunction", "conj");
+        partsOfSpeechMap.put("counter", "ctr");
+        partsOfSpeechMap.put("Expressions (phrases, clauses, etc.)", "exp");
+        partsOfSpeechMap.put("idiomatic expression", "id");
+        partsOfSpeechMap.put("interjection (kandoushi)", "int");
+        partsOfSpeechMap.put("irregular verb", "iv");
+        partsOfSpeechMap.put("noun (common) (futsuumeishi)", "n");
+        partsOfSpeechMap.put("adverbial noun (fukushitekimeishi)", "n-adv");
+        partsOfSpeechMap.put("noun, used as a prefix", "n-pref");
+        partsOfSpeechMap.put("noun (temporal) (jisoumeishi)", "n-t");
+        partsOfSpeechMap.put("numeric", "num");
+        partsOfSpeechMap.put("pronoun", "pn");
+        partsOfSpeechMap.put("prefix", "pref");
+        partsOfSpeechMap.put("particle", "prt");
+        partsOfSpeechMap.put("suffix", "suf");
+        partsOfSpeechMap.put("Ichidan verb", "v1");
+        partsOfSpeechMap.put("Godan verb (not completely classified)", "v5");
+        partsOfSpeechMap.put("Godan verb - -aru special class", "v5aru");
+        partsOfSpeechMap.put("Godan verb with 'bu' ending", "v5b");
+        partsOfSpeechMap.put("Godan verb with 'gu' ending", "v5g");
+        partsOfSpeechMap.put("Godan verb with 'ku' ending", "v5k");
+        partsOfSpeechMap.put("Godan verb - iku/yuku special class", "v5k-s");
+        partsOfSpeechMap.put("Godan verb with 'mu' ending", "v5m");
+        partsOfSpeechMap.put("Godan verb with 'nu' ending", "v5n");
+        partsOfSpeechMap.put("Godan verb with 'ru' ending", "v5r");
+        partsOfSpeechMap.put("Godan verb with 'ru' ending (irregular verb)", "v5r-i");
+        partsOfSpeechMap.put("Godan verb with 'su' ending", "v5s");
+        partsOfSpeechMap.put("Godan verb with 'tsu' ending", "v5t");
+        partsOfSpeechMap.put("Godan verb with 'u' ending", "v5u");
+        partsOfSpeechMap.put("Godan verb with 'u' ending (special class)", "v5u-s");
+        partsOfSpeechMap.put("Godan verb - uru old class verb (old form of Eru)", "v5uru");
+        partsOfSpeechMap.put("Godan verb with 'zu' ending", "v5z");
+        partsOfSpeechMap.put("Ichidan verb - zuru verb - (alternative form of -jiru verbs)", "vz");
+        partsOfSpeechMap.put("intransitive verb", "vi");
+        partsOfSpeechMap.put("kuru verb - special class", "vk");
+        partsOfSpeechMap.put("irregular nu verb", "vn");
+        partsOfSpeechMap.put("noun or participle which takes the aux. verb suru", "vs");
+        partsOfSpeechMap.put("suru verb - irregular", "vs-i");
+        partsOfSpeechMap.put("suru verb - special class", "vs-s");
+        partsOfSpeechMap.put("transitive verb", "vt");
+        return partsOfSpeechMap;
     }
 
     private String getKanjiVariant(Misc misc) {
         List<String> variants = new ArrayList<>();
         String kanjiVariant = null;
 
-        if (misc.getVariant() != null && misc.getVariant().size() > 0) {
+        if (misc.getVariant() != null && !misc.getVariant().isEmpty()) {
             JPAQuery<KanjiEntry> query = jpaQueryFactory.selectFrom(kanjiEntry);
             BooleanBuilder builder = new BooleanBuilder();
 
@@ -413,80 +416,79 @@ public class DictionaryXMLtoPOJO {
         List<DicRef> dicRefs = component.getDicRef();
 
         for (DicRef dicRef : dicRefs) {
-            switch (dicRef.getDrType()) {
-                case "nelson_c":
+            switch (DictionaryType.valueOf(dicRef.getDrType().toUpperCase())) {
+                case NELSON_C:
                     references.setNelsonC(dicRef.getContent());
                     break;
-                case "nelson_n":
+                case NELSON_N:
                     references.setNelsonN(dicRef.getContent());
                     break;
-                case "halpern_njecd":
+                case HALPERN_NJECD:
                     references.setHalpernNjecd(dicRef.getContent());
                     break;
-                case "halpern_kkd":
+                case HALPERN_KKD:
                     references.setHalpernKkd(dicRef.getContent());
                     break;
-                case "halpern_kkld":
+                case HALPERN_KKLD:
                     references.setHalpernKkld(dicRef.getContent());
                     break;
-                case "halpern_kkld_2ed":
+                case HALPERN_KKLD_2ED:
                     references.setHalpernKkld2ed(dicRef.getContent());
                     break;
-                case "heisig":
+                case HEISIG:
                     references.setHeisig(dicRef.getContent());
                     break;
-                case "heisig6":
+                case HEISIG6:
                     references.setHeisig6(dicRef.getContent());
                     break;
-                case "gakken":
+                case GAKKEN:
                     references.setGakken(dicRef.getContent());
                     break;
-                case "oneill_names":
+                case ONEILL_NAMES:
                     references.setOneillNames(dicRef.getContent());
                     break;
-                case "oneill_kk":
+                case ONEILL_KK:
                     references.setOneillKk(dicRef.getContent());
                     break;
-                case "moro":
+                case MORO:
                     references.setMoro(dicRef.getContent());
                     break;
-                case "henshall":
+                case HENSHALL:
                     references.setHenshall(dicRef.getContent());
                     break;
-                case "henshall3":
+                case HENSHALL3:
                     references.setHenshall3(dicRef.getContent());
                     break;
-                case "sh_kk":
+                case SH_KK:
                     references.setShKk(dicRef.getContent());
                     break;
-                case "sh_kk2":
+                case SH_KK2:
                     references.setShKk2(dicRef.getContent());
                     break;
-                case "jf_cards":
+                case JF_CARDS:
                     references.setJfCards(dicRef.getContent());
                     break;
-                case "tutt_cards":
+                case TUTT_CARDS:
                     references.setTuttCards(dicRef.getContent());
                     break;
-                case "crowley":
+                case CROWLEY:
                     references.setCrowley(dicRef.getContent());
                     break;
-                case "kanji_in_context":
+                case KANJI_IN_CONTEXT:
                     references.setKanjiInContext(dicRef.getContent());
                     break;
-                case "busy_people":
+                case BUSY_PEOPLE:
                     references.setBusyPeople(dicRef.getContent());
                     break;
-                case "kodansha_compact":
+                case KODANSHA_COMPACT:
                     references.setKodanshaCompact(dicRef.getContent());
                     break;
-                case "maniette":
+                case MANIETTE:
                     references.setManiette(dicRef.getContent());
                     break;
             }
         }
     }
-
 
     /* NAME ENTRY METHODS */
 
@@ -498,11 +500,15 @@ public class DictionaryXMLtoPOJO {
             }
 
         } catch (JAXBException e) {
-            e.printStackTrace();
+            LOGGER.error("could not process name entries from XML", e);
         }
     }
 
     private enum KanjiComponentClass {
         STRING, CODEPOINT, RADICAL, MISC, DICNUMBER, QUERYCODE, READINGMEANING
+    }
+
+    private enum DictionaryType {
+        NELSON_C, NELSON_N, HALPERN_NJECD, HALPERN_KKD, HALPERN_KKLD, HALPERN_KKLD_2ED, HEISIG, HEISIG6, GAKKEN, ONEILL_NAMES, ONEILL_KK, MORO, HENSHALL, HENSHALL3, SH_KK, SH_KK2, JF_CARDS, TUTT_CARDS, CROWLEY, KANJI_IN_CONTEXT, BUSY_PEOPLE, KODANSHA_COMPACT, MANIETTE;
     }
 }
