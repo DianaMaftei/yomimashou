@@ -2,6 +2,7 @@ import React from "react";
 import { configure, shallow } from "enzyme";
 import Adapter from 'enzyme-adapter-react-15';
 import '../../../__mocks__/xhr-mock.js';
+import '../../../__mocks__/LocalStorageMock.js';
 import { ViewYomimono } from "../../../containers/ViewYomimono/ViewYomimono";
 import { Link } from "react-router-dom";
 

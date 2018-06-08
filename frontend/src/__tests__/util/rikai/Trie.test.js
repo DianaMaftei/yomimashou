@@ -1,4 +1,4 @@
-import Trie from "../../util/rikai/Trie";
+import Trie from "../../../util/rikai/Trie";
 
 describe("Trie", () => {
     let trie;
