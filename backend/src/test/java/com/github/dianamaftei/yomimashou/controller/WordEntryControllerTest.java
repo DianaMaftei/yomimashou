@@ -41,8 +41,8 @@ public class WordEntryControllerTest {
         // given
         WordEntry wordEntry = new WordEntry();
         wordEntry.setKanjiElements("猫");
-
-        given(wordEntryService.get(new String[]{"猫"})).willReturn(Collections.singletonList(wordEntry));
+        String searchItem = "猫";
+        given(wordEntryService.get(new String[]{searchItem})).willReturn(Collections.singletonList(wordEntry));
 
         // when
         MockHttpServletResponse response = mvc.perform(get("/api/words?searchItem={attribute_uri}", "猫")

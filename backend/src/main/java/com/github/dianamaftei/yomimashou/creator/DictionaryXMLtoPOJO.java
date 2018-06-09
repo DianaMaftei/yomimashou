@@ -32,7 +32,7 @@ import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
 @Component
 public class DictionaryXMLtoPOJO {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(DictionaryXMLtoPOJO.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DictionaryXMLtoPOJO.class);
     private final JPAQueryFactory jpaQueryFactory;
     private final WordEntryRepository wordEntryRepository;
     private final KanjiEntryRepository kanjiEntryRepository;
@@ -86,8 +86,8 @@ public class DictionaryXMLtoPOJO {
             if (unmarshalledFile != null) {
                 JMdict jmDict = (JMdict) unmarshalledFile;
                 List<Entry> dictionaryEntries = jmDict.getEntry();
-                //saveAllWordEntriesToFile(dictionaryEntries);
-                fillDatabaseWithWordEntries(dictionaryEntries);
+                saveAllWordEntriesToFile(dictionaryEntries);
+//                fillDatabaseWithWordEntries(dictionaryEntries);
             }
         } catch (JAXBException e) {
             LOGGER.error("could not process word entries from XML", e);
@@ -97,10 +97,10 @@ public class DictionaryXMLtoPOJO {
     private void saveAllWordEntriesToFile(List<Entry> dictionaryEntries) {
         Set<String> wordEntries = new TreeSet<>();
 
-        for (Entry entry : dictionaryEntries) {
+        dictionaryEntries.stream().parallel().forEach(entry -> {
             entry.getKEle().forEach(kanji -> wordEntries.add(kanji.getKeb()));
             entry.getREle().forEach(reading -> wordEntries.add(reading.getReb()));
-        }
+        });
 
         File file = new File("frontend" + File.separator + "src" + File.separator + "data" + File.separator + "wordEntries.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -180,8 +180,8 @@ public class DictionaryXMLtoPOJO {
                 Kanjidic2 kanjiDict = (Kanjidic2) unmarshalledFile;
                 List<Character> characters = kanjiDict.getCharacter();
 
-//            saveAllKanjiToFile(characters);
-                fillDatabaseWithKanji(characters);
+            saveAllKanjiToFile(characters);
+//                fillDatabaseWithKanji(characters);
             }
         } catch (JAXBException e) {
             LOGGER.error("could not process kanji entries from XML", e);
@@ -202,10 +202,10 @@ public class DictionaryXMLtoPOJO {
     private void saveAllKanjiToFile(List<Character> characters) {
         Set<String> kanjiEntries = new TreeSet<>();
 
-        for (Character character : characters) {
+        characters.stream().parallel().forEach(character -> {
             KanjiEntry kanjiEntry = getKanjiEntry(character);
             kanjiEntries.add(kanjiEntry.getKanji());
-        }
+        });
 
         File file = new File("frontend" + File.separator + "src" + File.separator + "data" + File.separator + "kanjiEntries.txt");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -509,6 +509,6 @@ public class DictionaryXMLtoPOJO {
     }
 
     private enum DictionaryType {
-        NELSON_C, NELSON_N, HALPERN_NJECD, HALPERN_KKD, HALPERN_KKLD, HALPERN_KKLD_2ED, HEISIG, HEISIG6, GAKKEN, ONEILL_NAMES, ONEILL_KK, MORO, HENSHALL, HENSHALL3, SH_KK, SH_KK2, JF_CARDS, TUTT_CARDS, CROWLEY, KANJI_IN_CONTEXT, BUSY_PEOPLE, KODANSHA_COMPACT, MANIETTE;
+        NELSON_C, NELSON_N, HALPERN_NJECD, HALPERN_KKD, HALPERN_KKLD, HALPERN_KKLD_2ED, HEISIG, HEISIG6, GAKKEN, ONEILL_NAMES, ONEILL_KK, MORO, HENSHALL, HENSHALL3, SH_KK, SH_KK2, SAKADE, JF_CARDS, TUTT_CARDS, CROWLEY, KANJI_IN_CONTEXT, BUSY_PEOPLE, KODANSHA_COMPACT, MANIETTE;
     }
 }
