@@ -1,15 +1,13 @@
 package com.github.dianamaftei.yomimashou.controller;
 
 import com.github.dianamaftei.yomimashou.model.ExampleSentence;
-import com.github.dianamaftei.yomimashou.model.KanjiEntry;
 import com.github.dianamaftei.yomimashou.service.ExampleSentenceService;
-import com.github.dianamaftei.yomimashou.service.KanjiEntryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;

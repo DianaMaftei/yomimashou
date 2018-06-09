@@ -65,7 +65,7 @@ public class DictionaryXMLtoPOJO {
 
     private Object unmarshalFile(String url, Class jClass) throws JAXBException {
         Object result = null;
-        try (InputStream is = new URL(url).openStream(); InputStream gis = new GZIPInputStream(is);) {
+        try (InputStream is = new URL(url).openStream(); InputStream gis = new GZIPInputStream(is)) {
             JAXBContext jaxbContext = JAXBContext.newInstance(jClass);
 
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -509,6 +509,6 @@ public class DictionaryXMLtoPOJO {
     }
 
     private enum DictionaryType {
-        NELSON_C, NELSON_N, HALPERN_NJECD, HALPERN_KKD, HALPERN_KKLD, HALPERN_KKLD_2ED, HEISIG, HEISIG6, GAKKEN, ONEILL_NAMES, ONEILL_KK, MORO, HENSHALL, HENSHALL3, SH_KK, SH_KK2, SAKADE, JF_CARDS, TUTT_CARDS, CROWLEY, KANJI_IN_CONTEXT, BUSY_PEOPLE, KODANSHA_COMPACT, MANIETTE;
+        NELSON_C, NELSON_N, HALPERN_NJECD, HALPERN_KKD, HALPERN_KKLD, HALPERN_KKLD_2ED, HEISIG, HEISIG6, GAKKEN, ONEILL_NAMES, ONEILL_KK, MORO, HENSHALL, HENSHALL3, SH_KK, SH_KK2, SAKADE, JF_CARDS, TUTT_CARDS, CROWLEY, KANJI_IN_CONTEXT, BUSY_PEOPLE, KODANSHA_COMPACT, MANIETTE
     }
 }

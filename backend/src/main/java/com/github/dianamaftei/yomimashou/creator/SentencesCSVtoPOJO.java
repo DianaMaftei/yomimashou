@@ -29,6 +29,7 @@ public class SentencesCSVtoPOJO {
         String line;
         List<ExampleSentence> exampleSentenceList = new ArrayList<>();
 
+        //Structure:  Sentence id [tab] Language [tab] Sentence [tab] Translation(s) [tab] Breakdown
         try (BufferedReader sentenceReader = Files.newBufferedReader(new File("src/main/resources/sentencesWithTranslationAndBreakdown.csv").toPath(), Charset.forName("UTF-8"))) {
             while ((line = sentenceReader.readLine()) != null) {
                 String[] columns = line.split("\t");

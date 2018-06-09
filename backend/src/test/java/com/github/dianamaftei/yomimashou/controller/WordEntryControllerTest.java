@@ -1,5 +1,6 @@
 package com.github.dianamaftei.yomimashou.controller;
 
+import com.github.dianamaftei.yomimashou.controller.WordEntryController;
 import com.github.dianamaftei.yomimashou.model.WordEntry;
 import com.github.dianamaftei.yomimashou.service.WordEntryService;
 import org.junit.Before;
@@ -7,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
