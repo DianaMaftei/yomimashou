@@ -27,12 +27,14 @@ describe("ExampleItem", () => {
     });
 
     it("should render a div", () => {
+        props.example = {};
         expect(wrapper().find(".example").length).toBe(1);
     });
 
     it("should include the example provided", () => {
-        props.example = "foo bar example";
-        expect(wrapper().find("p").text()).toEqual("foo bar example");
+        props.example = {id: 0, sentence: "sentence example", meaning: "meaning example"};
+        expect(wrapper().find("p").first().text()).toEqual("sentence example");
+        expect(wrapper().find("p").last().text()).toEqual("meaning example");
     });
 
 });

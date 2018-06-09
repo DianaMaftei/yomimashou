@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/example")
+@RequestMapping("/api/examples")
 public class ExampleSentenceController {
 
     private final ExampleSentenceService exampleSentenceService;
@@ -25,7 +25,7 @@ public class ExampleSentenceController {
     @RequestMapping(method = RequestMethod.GET)
     public List<ExampleSentence> get(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
-            return exampleSentenceService.get(searchItem);
+            return exampleSentenceService.get(searchItem.split(","));
         }
         return Collections.emptyList();
     }

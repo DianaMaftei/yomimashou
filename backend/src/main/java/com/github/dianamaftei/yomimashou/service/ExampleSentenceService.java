@@ -22,10 +22,11 @@ public class ExampleSentenceService {
     }
 
     @Transactional
-    public List<ExampleSentence> get(String searchItem) {
+    public List<ExampleSentence> get(String[] searchItems) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.or(exampleSentence.sentence.like("%" + searchItem + "%").or(exampleSentence.textBreakdown.like("%" + searchItem + "%")));
-
+        for (String searchItem : searchItems) {
+            booleanBuilder.or(exampleSentence.sentence.contains(searchItem)).or(exampleSentence.textBreakdown.contains(searchItem));
+        }
         return (List<ExampleSentence>) jpaQueryFactory.query().from(exampleSentence).where(booleanBuilder).distinct().limit(10).fetch();
     }
 }

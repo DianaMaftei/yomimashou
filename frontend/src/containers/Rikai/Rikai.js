@@ -7,6 +7,7 @@ import RikaiKanji from './RikaiKanji';
 import RikaiNames from './RikaiNames';
 import RikaiExamples from './RikaiExamples';
 import './Rikai.css';
+import apiUrl from "../../AppUrl";
 
 const mapStateToProps = (state) => ({
     ...state.popUp,
@@ -19,9 +20,14 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_POPUP_INFO',
             popupInfo: popupInfo
         });
-    }, updateShowResult: result => {
+    }, fetchData: (list, url) => {
         dispatch({
-            type: 'UPDATE_SHOW_RESULT',
+            type: 'FETCH_DATA',
+            payload: axios.get(apiUrl + '/api/' + url + '?searchItem=' + list.toString())
+        });
+    }, updateSearchResult: result => {
+        dispatch({
+            type: 'UPDATE_SEARCH_RESULT',
             result
         });
     }
@@ -71,20 +77,13 @@ const getPopupStyle = (popupInfo) => {
     return styles;
 };
 
-const showExamples = (word, updateShowResult) => {
-    let term1 = word.kanji !== undefined ? word.kanji : word.kana;
-    let term2 = word.kanji !== undefined ? word.kana : '';
-    let url = `http://nihongo.monash.edu/cgi-bin/wwwjdic?1ZEU${term1}=1=${term2}`;
+const showExamples = (word, fetchData, updateSearchResult) => {
+    let kanji = word.kanji ? word.kanji : [];
+    let kana = word.kana ? word.kana : [];
+    let searchItems = [...kanji, ...kana];
 
-    axios.get(url)
-        .then(function (response) {
-            let data = response.data.substring(response.data.indexOf('<pre>') + 5, response.data.indexOf('</pre>'));
-            let resultList = data.split('\n').filter(entry => entry.substring(0, 2) === 'A:').map(entry => entry.substring(2, entry.indexOf('#')).trim());
-            updateShowResult({ type: 'examples', result: resultList });
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+    updateSearchResult({type: "examples", result: searchItems});
+    fetchData(searchItems, "examples");
 };
 
 const hidePopup = (popUpSetVisibility) => {
@@ -173,7 +172,7 @@ export const getResult = (searchResult, showResult) => {
 };
 
 export class Rikai extends React.Component {
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         return (this.props.showResult !== nextProps.showResult) || (this.props.popupInfo.visibility !== nextProps.popupInfo.visibility);
     }
 
@@ -182,7 +181,7 @@ export class Rikai extends React.Component {
         let result = getResult(this.props.searchResult, this.props.showResult);
 
         if (!result) return RikaiLoading(() => hidePopup(this.props.setPopupInfo), style);
-        else if (result.type === 'words') return RikaiWords(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit, (word) => showExamples(word, this.props.updateShowResult));
+        else if (result.type === 'words') return RikaiWords(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit, (word) => showExamples(word, this.props.fetchData, this.props.updateSearchResult));
         else if (result.type === 'kanji') return RikaiKanji(() => hidePopup(this.props.setPopupInfo), style, result);
         else if (result.type === 'names') return RikaiNames(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit);
         else if (result.type === 'examples') return RikaiExamples(() => hidePopup(this.props.setPopupInfo), style, result);

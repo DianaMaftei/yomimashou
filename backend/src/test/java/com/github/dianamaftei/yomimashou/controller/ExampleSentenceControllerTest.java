@@ -42,10 +42,10 @@ public class ExampleSentenceControllerTest {
         ExampleSentence exampleSentence = new ExampleSentence();
         exampleSentence.setSentence("test sentence by search");
         String searchItem = "test sentence";
-        given(exampleSentenceService.get(searchItem)).willReturn(Collections.singletonList(exampleSentence));
+        given(exampleSentenceService.get(new String[]{searchItem})).willReturn(Collections.singletonList(exampleSentence));
 
         // when
-        MockHttpServletResponse response = mvc.perform(get("/api/example?searchItem={attribute_uri}", searchItem)
+        MockHttpServletResponse response = mvc.perform(get("/api/examples?searchItem={attribute_uri}", searchItem)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -60,7 +60,7 @@ public class ExampleSentenceControllerTest {
         String searchItem = null;
 
         // when
-        MockHttpServletResponse response = mvc.perform(get("/api/example?searchItem={non_existent_variable}", searchItem)
+        MockHttpServletResponse response = mvc.perform(get("/api/examples?searchItem={non_existent_variable}", searchItem)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -75,7 +75,7 @@ public class ExampleSentenceControllerTest {
         String searchItem = "";
 
         // when
-        MockHttpServletResponse response = mvc.perform(get("/api/example?searchItem={attribute_uri}", searchItem)
+        MockHttpServletResponse response = mvc.perform(get("/api/examples?searchItem={attribute_uri}", searchItem)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
