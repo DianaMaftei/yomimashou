@@ -42,7 +42,7 @@ describe("YomiText", () => {
             searchResult: undefined,
             showResult: undefined,
             limit: undefined,
-            defaultDict: undefined,
+            currentDictionary: undefined,
             popupInfo: undefined,
             updateTextSelectInfo: undefined,
             fetchData: undefined,

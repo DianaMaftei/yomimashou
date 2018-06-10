@@ -5,7 +5,7 @@ describe('config', function () {
 
     const initialState = deepFreeze({
         popUp: {
-            defaultDict: 2,
+            currentDictionary: 2,
             limit: 5
         }
     });

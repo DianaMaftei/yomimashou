@@ -12,7 +12,7 @@ const mapStateToProps = (state) => ({
     searchResult: state.popUp.searchResult,
     showResult: state.popUp.showResult,
     limit: state.config.popUp.limit,
-    defaultDict: state.config.popUp.defaultDict,
+    currentDictionary: state.config.popUp.currentDictionary,
     popupInfo: state.popUp.popupInfo
 });
 
@@ -40,16 +40,25 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_POPUP_INFO',
             popupInfo: popupInfo
         });
+    },
+    switchDictionary: () => {
+        dispatch({
+            type: 'SWITCH_DICTIONARY'
+        });
     }
 });
 
 export class YomiText extends React.Component {
+    constructor(props) {
+        super(props);
+        window.addEventListener('keydown', this.onKeyDown.bind(this), true);
+    }
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.text !== nextProps.text;
     }
 
-    onMouseClick (searchResult, fetchData, setPopupInfo) {
+    onMouseClick(searchResult, fetchData, setPopupInfo) {
         if (searchResult.type === "words") {
             fetchData(searchResult.result.data.map(item => item.word), searchResult.type);
         } else if (searchResult.type === "kanji") {
@@ -64,10 +73,10 @@ export class YomiText extends React.Component {
         });
     };
 
-    onMouseMove (ev, updateSearchResult, defaultDict, updateTextSelectInfo) {
+    onMouseMove(ev, updateSearchResult, currentDictionary, updateTextSelectInfo) {
         let textSelectInfo = tryToFindTextAtMouse(ev);
 
-        let searchResult = search(textSelectInfo, defaultDict, updateSearchResult);
+        let searchResult = search(textSelectInfo, currentDictionary, updateSearchResult);
 
         if (searchResult) {
             let entries = searchResult.entries;
@@ -90,12 +99,29 @@ export class YomiText extends React.Component {
         }
     };
 
+    onKeyDown(ev) {
+        switch (ev.keyCode) {
+            case 83:	// s - switch dictionaries (kanji, names, words, examples)
+                this.props.switchDictionary();
+                break;
+            case 81:	// q - hide popup
+                this.props.setPopupInfo({
+                    visibility: false
+                });
+                break;
+            default:
+                return;
+        }
+
+        // don't eat shift
+        ev.preventDefault();
+    };
+
     render() {
         return <div id="yomi-text">
             <div id="yomi-text-container"
                  onClick={(ev) => this.onMouseClick(this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
-                 onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.defaultDict, this.props.updateTextSelectInfo)}>
-
+                 onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo)}>
                 {this.props.text}
 
             </div>

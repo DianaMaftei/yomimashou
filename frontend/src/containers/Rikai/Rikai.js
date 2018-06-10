@@ -82,7 +82,7 @@ const showExamples = (word, fetchData, updateSearchResult) => {
     let kana = word.kana ? word.kana : [];
     let searchItems = [...kanji, ...kana];
 
-    updateSearchResult({type: "examples", result: searchItems});
+    updateSearchResult({ type: "examples", result: searchItems });
     fetchData(searchItems, "examples");
 };
 
@@ -163,6 +163,9 @@ export const getResult = (searchResult, showResult) => {
         return;
     }
     if (showResult.type === "examples") {
+        if (!showResult.result) {
+            return;
+        }
         return showResult;
     }
 

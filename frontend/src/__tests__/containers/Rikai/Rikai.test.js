@@ -2,7 +2,7 @@ import React from "react";
 import { configure, shallow } from "enzyme";
 import Adapter from 'enzyme-adapter-react-15';
 import deepFreeze from "deepfreeze";
-import { Rikai, getResult } from "../../../containers/Rikai/Rikai";
+import { getResult, Rikai } from "../../../containers/Rikai/Rikai";
 
 configure({ adapter: new Adapter() });
 
@@ -58,7 +58,7 @@ describe("Rikai", () => {
 
     it("should render RikaiWords when a result of type 'words' is passed as prop", () => {
         props.searchResult = { type: "words", result: {} };
-        props.showResult = { type: "words", result: "" };
+        props.showResult = { type: "words", result: [] };
 
         expect(wrapper().find("#title-words").length).toBe(1);
     });
