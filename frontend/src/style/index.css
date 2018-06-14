@@ -57,6 +57,10 @@ html, body {
     background-color: #eeeded;
 }
 
+#highlight-selection {
+    background-color: #9f76b7;
+}
+
 #app-header {
     background-color: #694A52;
     color: #FFC4B2;

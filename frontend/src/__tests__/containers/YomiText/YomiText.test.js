@@ -3,12 +3,13 @@ import { configure, shallow } from "enzyme";
 import Adapter from 'enzyme-adapter-react-15';
 import '../../../__mocks__/xhr-mock.js';
 import { YomiText } from "../../../containers/YomiText/YomiText";
-import { highlightMatch, search, tryToFindTextAtMouse } from "../../../util/rikai/RikaiTextParser";
+import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../../util/rikai/RikaiTextParser";
 import deepFreeze from "deepfreeze";
 
 configure({ adapter: new Adapter() });
 jest.mock('../../../util/rikai/RikaiTextParser', () => ({
     highlightMatch: jest.fn(),
+    isVisible: jest.fn(),
     search: jest.fn().mockReturnValue({ entries: { result: { matchLen: 3 } } }),
     tryToFindTextAtMouse: jest.fn().mockReturnValue({ prevRangeNode: { ownerDocument: "mock value" } })
 }));
@@ -90,6 +91,7 @@ describe("YomiText", () => {
 
         wrapper().find("#yomi-text-container").simulate('mousemove', { target: { value: 'mock text' } });
 
+        expect(isVisible).toHaveBeenCalledTimes(1);
         expect(tryToFindTextAtMouse).toHaveBeenCalledTimes(1);
         expect(search).toHaveBeenCalledTimes(1);
         expect(highlightMatch).toHaveBeenCalledTimes(1);

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import axios from "axios";
 import RikaiPopUp from "../Rikai/Rikai";
 import '../Rikai/Rikai.css';
-import { highlightMatch, search, tryToFindTextAtMouse } from "../../util/rikai/RikaiTextParser";
+import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../util/rikai/RikaiTextParser";
 import apiUrl from "../../AppUrl";
 
 const mapStateToProps = (state) => ({
@@ -54,7 +54,7 @@ export class YomiText extends React.Component {
         window.addEventListener('keydown', this.onKeyDown.bind(this), true);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         return this.props.text !== nextProps.text;
     }
 
@@ -74,27 +74,29 @@ export class YomiText extends React.Component {
     };
 
     onMouseMove(ev, updateSearchResult, currentDictionary, updateTextSelectInfo) {
-        let textSelectInfo = tryToFindTextAtMouse(ev);
+        if (!isVisible() && !this.mouseDown) {
+            let textSelectInfo = tryToFindTextAtMouse(ev);
 
-        let searchResult = search(textSelectInfo, currentDictionary, updateSearchResult);
+            let searchResult = search(textSelectInfo, currentDictionary, updateSearchResult);
 
-        if (searchResult) {
-            let entries = searchResult.entries;
+            if (searchResult) {
+                let entries = searchResult.entries;
 
-            if (entries) {
-                updateSearchResult(entries);
-            }
+                if (entries) {
+                    updateSearchResult(entries);
+                }
 
-            if (textSelectInfo && entries) {
-                textSelectInfo.uofsNext = entries.matchLen;
-                textSelectInfo.uofs = (textSelectInfo.prevRangeOfs + textSelectInfo.uofs - textSelectInfo.prevRangeOfs);
-                textSelectInfo.prevSelView = textSelectInfo.prevRangeNode.ownerDocument.defaultView;
-                textSelectInfo.lastRo = searchResult.lastRo;
-                textSelectInfo.lastSelEnd = searchResult.lastSelEnd;
+                if (textSelectInfo && entries) {
+                    textSelectInfo.uofsNext = entries.matchLen;
+                    textSelectInfo.uofs = (textSelectInfo.prevRangeOfs + textSelectInfo.uofs - textSelectInfo.prevRangeOfs);
+                    textSelectInfo.prevSelView = textSelectInfo.prevRangeNode.ownerDocument.defaultView;
+                    textSelectInfo.lastRo = searchResult.lastRo;
+                    textSelectInfo.lastSelEnd = searchResult.lastSelEnd;
 
-                updateTextSelectInfo(textSelectInfo);
+                    updateTextSelectInfo(textSelectInfo);
 
-                highlightMatch(textSelectInfo.lastRo, entries.result.matchLen, textSelectInfo.lastSelEnd, textSelectInfo);
+                    highlightMatch(textSelectInfo.totalOffset, entries.result.matchLen, textSelectInfo.lastSelEnd);
+                }
             }
         }
     };
@@ -120,8 +122,11 @@ export class YomiText extends React.Component {
     render() {
         return <div id="yomi-text">
             <div id="yomi-text-container"
+                 onMouseDown={ev => this.mouseDown = true}
+                 onMouseUp={ev => this.mouseDown = false}
                  onClick={(ev) => this.onMouseClick(this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
                  onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo)}>
+
                 {this.props.text}
 
             </div>
