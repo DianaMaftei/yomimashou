@@ -164,3 +164,19 @@
     margin: 15px 0;
     transform: translate(55%, 0%);
 }
+
+#rikai-window .example-words-search {
+    display: flex;
+    justify-content: space-around;
+}
+
+#rikai-window .example-words-search span {
+    color: #497c7b;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#rikai-window .example-words-search .asterisk {
+    vertical-align: sub;
+}

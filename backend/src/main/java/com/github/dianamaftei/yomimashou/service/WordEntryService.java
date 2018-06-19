@@ -32,4 +32,32 @@ public class WordEntryService {
         }
         return (List<WordEntry>) jpaQueryFactory.query().from(wordEntry).where(booleanBuilder).distinct().leftJoin(wordEntry.meanings).fetchJoin().fetch();
     }
+
+    public List<WordEntry> getByStartingKanji(String searchItem) {
+        return (List<WordEntry>) jpaQueryFactory.query().from(wordEntry)
+                .where(wordEntry.kanjiElements.like("%|" + searchItem)
+                        .or(wordEntry.kanjiElements.like(searchItem + "%"))
+                ).orderBy(wordEntry.priority.asc())
+                .distinct().limit(10).fetch();
+    }
+
+    public List<WordEntry> getByEndingKanji(String searchItem) {
+        return (List<WordEntry>) jpaQueryFactory.query().from(wordEntry)
+                .where(wordEntry.kanjiElements.like(searchItem + "|%")
+                        .or(wordEntry.kanjiElements.like("%" + searchItem))
+                ).orderBy(wordEntry.priority.asc())
+                .distinct().limit(10).fetch();
+    }
+
+    public List<WordEntry> getByContainingKanji(String searchItem) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.or(wordEntry.kanjiElements.like("%" + searchItem + "%"));
+        booleanBuilder.andNot(wordEntry.kanjiElements.like("%|" + searchItem + "%"));
+        booleanBuilder.andNot(wordEntry.kanjiElements.like("%" + searchItem));
+        booleanBuilder.andNot(wordEntry.kanjiElements.like(searchItem + "%"));
+        booleanBuilder.andNot(wordEntry.kanjiElements.like("%" + searchItem + "|%"));
+
+        return (List<WordEntry>) jpaQueryFactory.query().from(wordEntry)
+                .where(booleanBuilder).distinct().orderBy(wordEntry.priority.asc()).limit(10).fetch();
+    }
 }

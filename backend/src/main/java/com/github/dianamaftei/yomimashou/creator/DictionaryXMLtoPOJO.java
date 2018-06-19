@@ -42,6 +42,10 @@ public class DictionaryXMLtoPOJO {
     private static final String JMNEDICT_URL = "http://ftp.monash.edu/pub/nihongo/JMnedict.xml.gz";
     private static final String KANJIDICT_URL = "http://ftp.monash.edu/pub/nihongo/kanjidic2.xml.gz";
 
+    private static final int HIGHEST_PRIORITY = 1;
+    private static final int MODERATE_PRIORITY = 2;
+    private static final int LOW_PRIORITY = 3;
+
     @Autowired
     public DictionaryXMLtoPOJO(JPAQueryFactory jpaQueryFactory, WordEntryRepository wordEntryRepository, KanjiEntryRepository kanjiEntryRepository) {
         this.jpaQueryFactory = jpaQueryFactory;
@@ -125,8 +129,39 @@ public class DictionaryXMLtoPOJO {
         wordEntry.setKanjiElements(getKanjiElements(entry));
         wordEntry.setReadingElements(getReadingElements(entry));
         wordEntry.setMeanings(getMeanings(entry));
+        wordEntry.setPriority(getHighestPriority(entry));
 
         return wordEntry;
+    }
+
+    private Integer getHighestPriority(Entry entry) {
+        Set<Integer> priorities = new HashSet<>();
+        entry.getKEle().forEach(kEle -> {
+            if (!kEle.getKePri().isEmpty()) {
+                kEle.getKePri().forEach(priority -> priorities.add(getPriorityNumber(priority)));
+            }
+        });
+        entry.getREle().forEach(rEle -> {
+            if (!rEle.getRePri().isEmpty()) {
+                rEle.getRePri().forEach(priority -> priorities.add(getPriorityNumber(priority)));
+            }
+        });
+
+        if (priorities.isEmpty()) {
+            return LOW_PRIORITY;
+        }
+
+        return Collections.min(priorities);
+
+    }
+
+    private int getPriorityNumber(String priority) {
+        List<String> highestPriorities = Arrays.asList("news1", "ichi1", "spec1", "spec2", "gai1");
+
+        if (highestPriorities.contains(priority)) {
+            return HIGHEST_PRIORITY;
+        }
+        return MODERATE_PRIORITY;
     }
 
     private String getKanjiElements(Entry entry) {
@@ -180,7 +215,7 @@ public class DictionaryXMLtoPOJO {
                 Kanjidic2 kanjiDict = (Kanjidic2) unmarshalledFile;
                 List<Character> characters = kanjiDict.getCharacter();
 
-            saveAllKanjiToFile(characters);
+                saveAllKanjiToFile(characters);
 //                fillDatabaseWithKanji(characters);
             }
         } catch (JAXBException e) {

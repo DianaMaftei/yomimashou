@@ -19,6 +19,8 @@ public class WordEntry {
     @JoinColumn(name = "word_id")
     private List<WordMeaning> meanings;
 
+    private int priority;
+
     public Long getId() {
         return id;
     }
@@ -49,5 +51,13 @@ public class WordEntry {
 
     public void setMeanings(List<WordMeaning> meanings) {
         this.meanings = meanings;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }
