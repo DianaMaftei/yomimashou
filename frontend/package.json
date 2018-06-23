@@ -38,9 +38,7 @@
   },
   "jest": {
     "coverageReporters": [
-      "cobertura",
-      "lcov",
-      "text"
+      "cobertura", "lcov", "text"
     ]
   },
   "jest-junit": {

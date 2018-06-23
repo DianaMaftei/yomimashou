@@ -4,7 +4,7 @@ import Example from "../ExampleItem/ExampleItem";
 const getExamplesFromResultList = (resultList) => {
     return resultList.map((result, i) => <Example
         exampleClassName={(i % 2 === 0) ? 'definition-light' : 'definition-dark'}
-        key={result.id} example={result}/>);
+        key={result.id + result.sentence} example={result}/>);
 };
 
 export default (resultList) => (
