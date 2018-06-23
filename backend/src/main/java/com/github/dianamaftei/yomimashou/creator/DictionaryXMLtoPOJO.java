@@ -23,6 +23,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
@@ -152,7 +154,6 @@ public class DictionaryXMLtoPOJO {
         }
 
         return Collections.min(priorities);
-
     }
 
     private int getPriorityNumber(String priority) {
@@ -250,18 +251,40 @@ public class DictionaryXMLtoPOJO {
         }
     }
 
+    private Map<String, String> kanjiJLPTLevelMap(String pathToFile) {
+        Map<String, String> kanjiJLPTLevel = new HashMap<>();
+        String line;
+        String kanji;
+        String level;
+        try (BufferedReader reader = Files.newBufferedReader(new File(pathToFile).toPath(), Charset.forName("UTF-8"))) {
+            while ((line = reader.readLine()) != null) {
+                kanji = line.split("\t")[0];
+                level = line.split("\t")[1];
+                kanjiJLPTLevel.put(kanji, level);
+            }
+        } catch (IOException e) {
+            LOGGER.error("Could not get kanji and JLPT levels", e);
+        }
+
+        return kanjiJLPTLevel;
+    }
+
     private KanjiEntry getKanjiEntry(Character character) {
         KanjiEntry kanjiEntry = new KanjiEntry();
         kanjiEntry.setReferences(new KanjiReferences());
 
         List<Object> kanjiComponents = character.getLiteralAndCodepointAndRadical();
+        Map<String, String> kanjiJLPTLevelMap = kanjiJLPTLevelMap("src/main/resources/kanjiByJLPTLevel.csv");
+
+        String kanji = "";
 
         for (Object component : kanjiComponents) {
             KanjiComponentClass kanjiComponentClass = KanjiComponentClass.valueOf(component.getClass().getSimpleName().toUpperCase());
 
             switch (kanjiComponentClass) {
                 case STRING:
-                    kanjiEntry.setKanji((String) component);
+                    kanji = (String) component;
+                    kanjiEntry.setKanji(kanji);
                     break;
                 case CODEPOINT:
                     List<String> codepoints = new ArrayList<>();
@@ -306,6 +329,10 @@ public class DictionaryXMLtoPOJO {
                     addReadingsAndMeanings(kanjiEntry, (ReadingMeaning) component);
                     break;
             }
+        }
+
+        if (kanjiJLPTLevelMap.get(kanji) != null) {
+            kanjiEntry.getReferences().setJlptNewLevel(kanjiJLPTLevelMap.get(kanji));
         }
 
         return kanjiEntry;

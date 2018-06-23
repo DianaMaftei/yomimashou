@@ -18,14 +18,16 @@ export default ({ result, showWordExamples }) => {
                         <button className="btn" id="p" onClick={() => dmak.eraseLastStrokes(1)}><MaterialIcon icon="skip_previous" size='tiny'/></button>
                         <button className="btn" id="s" onClick={() => dmak.pause()}><MaterialIcon icon="pause_circle_outline" size='tiny'/></button>
                         <button className="btn" id="g" onClick={() => dmak.render()}><MaterialIcon icon="play_circle_outline" size='tiny'/></button>
-                        <button className="btn" id="n" onClick={() => dmak.renderNextStrokes(1)}><MaterialIcon icon="skip_next" size='tiny'/></button>
                         <button className="btn" id="r" onClick={() => dmak.erase()}><MaterialIcon icon="replay" size='tiny'/></button>
+                        <button className="btn" id="n" onClick={() => dmak.renderNextStrokes(1)}><MaterialIcon icon="skip_next" size='tiny'/></button>
                     </div>
                 </div>
                 <div className="k-main-data">
-                    <span className="k-main-data-line">Frequency: {result.frequency}</span>
-                    <span className="k-main-data-line">Grade: {result.grade}</span>
-                    <span className="k-main-data-line">Strokes: {result.strokes}</span>
+                    {result.frequency && <span className="k-main-data-line">Frequency: {result.frequency}</span>}
+                    {result.grade && <span className="k-main-data-line">Grade: {result.grade}</span>}
+                    {result.strokes && <span className="k-main-data-line">Strokes: {result.strokes}</span>}
+                    {result.oldJLPT && <span className="k-main-data-line">Old JLPT: {result.oldJLPT}</span>}
+                    {result.newJLPT && <span className="k-main-data-line">New JLPT: {result.newJLPT}</span>}
                 </div>
             </div>
             <h2 className="k-eigo">{result.eigo}</h2>

@@ -62,8 +62,8 @@ const getPopupStyle = (popupInfo) => {
         y += document.documentElement.scrollTop || document.body.scrollTop;
 
         //go left if necessary
-        if ((x + pW) > (window.innerWidth - 100)) {
-            x -= Math.abs(window.innerWidth - x - 100 - pW);
+        if ((x + pW) > (window.innerWidth - 130)) {
+            x -= Math.abs(window.innerWidth - x - 130 - pW);
         }
     } else {
         x += window.scrollX;
@@ -129,6 +129,8 @@ const getResultFromKanjiEntry = (entry) => {
     kanji.kanji = entry.kanji;
     kanji.kunReading = entry.kunReading ? entry.kunReading.replace(/\|/g, ", ") : null;
     kanji.onReading = entry.onReading ? entry.onReading.replace(/\|/g, ", ") : null;
+    kanji.oldJLPT = entry.references ? entry.references.jlptOldLevel : null;
+    kanji.newJLPT = entry.references ? entry.references.jlptNewLevel : null;
     return kanji;
 };
 
