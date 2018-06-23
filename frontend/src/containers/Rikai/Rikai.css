@@ -96,6 +96,11 @@
 #rikai-window .k-main-data {
     display: inline-block;
     padding-left: 15px;
+    margin-top: 15px;
+}
+
+#rikai-window .kanji-info {
+    display: flex;
 }
 
 #rikai-window .k-main-data-line {
@@ -179,4 +184,11 @@
 
 #rikai-window .example-words-search .asterisk {
     vertical-align: sub;
+}
+
+#sample-btn .btn i {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 18px;
 }

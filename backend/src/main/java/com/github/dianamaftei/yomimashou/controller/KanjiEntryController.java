@@ -3,11 +3,8 @@ package com.github.dianamaftei.yomimashou.controller;
 import com.github.dianamaftei.yomimashou.model.KanjiEntry;
 import com.github.dianamaftei.yomimashou.service.KanjiEntryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import javax.ws.rs.core.MediaType;
 @RestController
 @RequestMapping("/api/kanji")
 public class KanjiEntryController {
@@ -22,5 +19,11 @@ public class KanjiEntryController {
     @RequestMapping(method = RequestMethod.GET)
     public KanjiEntry get(@RequestParam("searchItem") String searchItem) {
         return kanjiEntryService.get(searchItem);
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/svg/{kanji}", produces = MediaType.APPLICATION_SVG_XML)
+    public byte[] getKanjiPath(@PathVariable String kanji) {
+        return kanjiEntryService.getKanjiSVG(kanji);
     }
 }
