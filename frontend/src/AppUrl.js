@@ -1,3 +1,3 @@
-const apiUrl = 'http://ec2-13-59-230-6.us-east-2.compute.amazonaws.com:8081';
+const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
 
 export default apiUrl;
