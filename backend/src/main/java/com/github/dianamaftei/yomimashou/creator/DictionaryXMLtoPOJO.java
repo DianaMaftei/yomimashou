@@ -1,14 +1,14 @@
 package com.github.dianamaftei.yomimashou.creator;
 
-import com.github.dianamaftei.yomimashou.model.KanjiEntry;
-import com.github.dianamaftei.yomimashou.model.KanjiReferences;
-import com.github.dianamaftei.yomimashou.model.WordEntry;
-import com.github.dianamaftei.yomimashou.model.WordMeaning;
+import com.github.dianamaftei.yomimashou.model.*;
 import com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMdict.*;
 import com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.JMnedict;
+import com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.NameType;
+import com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.TransDet;
 import com.github.dianamaftei.yomimashou.model.xmlOriginalModels.Kanjidic.Character;
 import com.github.dianamaftei.yomimashou.model.xmlOriginalModels.Kanjidic.*;
 import com.github.dianamaftei.yomimashou.repository.KanjiEntryRepository;
+import com.github.dianamaftei.yomimashou.repository.NameEntryRepository;
 import com.github.dianamaftei.yomimashou.repository.WordEntryRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -38,6 +38,7 @@ public class DictionaryXMLtoPOJO {
     private final JPAQueryFactory jpaQueryFactory;
     private final WordEntryRepository wordEntryRepository;
     private final KanjiEntryRepository kanjiEntryRepository;
+    private final NameEntryRepository nameEntryRepository;
     private final Map<String, String> partsOfSpeech;
 
     private static final String JMDICT_URL = "http://ftp.monash.edu/pub/nihongo/JMdict_e.gz";
@@ -49,10 +50,11 @@ public class DictionaryXMLtoPOJO {
     private static final int LOW_PRIORITY = 3;
 
     @Autowired
-    public DictionaryXMLtoPOJO(JPAQueryFactory jpaQueryFactory, WordEntryRepository wordEntryRepository, KanjiEntryRepository kanjiEntryRepository) {
+    public DictionaryXMLtoPOJO(JPAQueryFactory jpaQueryFactory, WordEntryRepository wordEntryRepository, KanjiEntryRepository kanjiEntryRepository, NameEntryRepository nameEntryRepository) {
         this.jpaQueryFactory = jpaQueryFactory;
         this.wordEntryRepository = wordEntryRepository;
         this.kanjiEntryRepository = kanjiEntryRepository;
+        this.nameEntryRepository = nameEntryRepository;
         this.partsOfSpeech = getListOfPartsOfSpeech();
     }
 
@@ -60,9 +62,9 @@ public class DictionaryXMLtoPOJO {
         System.setProperty("jdk.xml.entityExpansionLimit", "0");
 
         try {
-            processWordEntriesFromXML();
-            processKanjiEntriesFromXML();
-//            fillNameTableFromXml();
+//            processWordEntriesFromXML();
+//            processKanjiEntriesFromXML();
+            processNameEntriesFromXML();
 
         } catch (Exception e) {
             LOGGER.error("could not process entries from xml", e);
@@ -84,7 +86,6 @@ public class DictionaryXMLtoPOJO {
         return result;
     }
 
-
     /* WORD ENTRY METHODS */
     private void processWordEntriesFromXML() {
         try {
@@ -93,7 +94,7 @@ public class DictionaryXMLtoPOJO {
                 JMdict jmDict = (JMdict) unmarshalledFile;
                 List<Entry> dictionaryEntries = jmDict.getEntry();
                 saveAllWordEntriesToFile(dictionaryEntries);
-//                fillDatabaseWithWordEntries(dictionaryEntries);
+                fillDatabaseWithWordEntries(dictionaryEntries);
             }
         } catch (JAXBException e) {
             LOGGER.error("could not process word entries from XML", e);
@@ -217,7 +218,7 @@ public class DictionaryXMLtoPOJO {
                 List<Character> characters = kanjiDict.getCharacter();
 
                 saveAllKanjiToFile(characters);
-//                fillDatabaseWithKanji(characters);
+                fillDatabaseWithKanji(characters);
             }
         } catch (JAXBException e) {
             LOGGER.error("could not process kanji entries from XML", e);
@@ -233,7 +234,6 @@ public class DictionaryXMLtoPOJO {
         });
         addKanjiVariants(characters);
     }
-
 
     private void saveAllKanjiToFile(List<Character> characters) {
         Set<String> kanjiEntries = new TreeSet<>();
@@ -530,6 +530,9 @@ public class DictionaryXMLtoPOJO {
                 case JF_CARDS:
                     references.setJfCards(dicRef.getContent());
                     break;
+                case SAKADE:
+                    references.setSakade(dicRef.getContent());
+                    break;
                 case TUTT_CARDS:
                     references.setTuttCards(dicRef.getContent());
                     break;
@@ -554,16 +557,80 @@ public class DictionaryXMLtoPOJO {
 
     /* NAME ENTRY METHODS */
 
-    private void fillNameTableFromXml() {
+    private void processNameEntriesFromXML() {
         try {
             Object unmarshalledFile = unmarshalFile(JMNEDICT_URL, JMnedict.class);
             if (unmarshalledFile != null) {
                 JMnedict nameDict = (JMnedict) unmarshalledFile;
+                List<com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.Entry> nameDictEntries = nameDict.getEntry();
+                saveAllNamesToFile(nameDictEntries);
+//                fillDatabaseWithNames(nameDictEntries);
             }
 
         } catch (JAXBException e) {
             LOGGER.error("could not process name entries from XML", e);
         }
+    }
+
+    private void fillDatabaseWithNames(List<com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.Entry> nameDictEntries) {
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "20");
+        nameDictEntries.stream().parallel().forEach(name -> {
+            NameEntry nameEntry = getNameEntry(name);
+            nameEntryRepository.save(nameEntry);
+        });
+    }
+
+    private void saveAllNamesToFile(List<com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.Entry> nameDictEntries) {
+        Set<String> nameEntries = new HashSet<>();
+
+        if (nameDictEntries != null) {
+            nameDictEntries.stream().parallel().forEach(name -> {
+                NameEntry nameEntry = getNameEntry(name);
+                if (nameEntry.getKanji() != null) {
+                    nameEntries.add(nameEntry.getKanji());
+                }
+
+                if (nameEntry.getReading() != null) {
+                    nameEntries.add(nameEntry.getReading());
+                }
+            });
+
+            File file = new File("../frontend" + File.separator + "src" + File.separator + "data" + File.separator + "nameEntries.txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(nameEntries.stream().collect(Collectors.joining("|")));
+            } catch (IOException e) {
+                LOGGER.error("could not save name entries to file", e);
+            }
+        }
+    }
+
+    private NameEntry getNameEntry(com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.Entry name) {
+        NameEntry nameEntry = new NameEntry();
+        List<Object> entSeqOrKEleOrREleOrTrans = name.getEntSeqOrKEleOrREleOrTrans();
+        for (Object component : entSeqOrKEleOrREleOrTrans) {
+            String componentClass = component.getClass().getSimpleName();
+
+            switch (componentClass) {
+                case "KEle":
+                    com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.KEle kanjiElement = (com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.KEle) component;
+                    nameEntry.setKanji(kanjiElement.getKeb());
+                    break;
+                case "REle":
+                    com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.REle readingElement = (com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.REle) component;
+                    nameEntry.setReading(readingElement.getReb());
+                    break;
+                case "Trans":
+                    com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.Trans translationElement = (com.github.dianamaftei.yomimashou.model.xmlOriginalModels.JMnedict.Trans) component;
+                    List<String> nameTypeList = translationElement.getNameType().stream().map(NameType::getvalue).collect(Collectors.toList());
+                    List<String> transList = translationElement.getTransDet().stream().map(TransDet::getvalue).collect(Collectors.toList());
+
+                    nameEntry.setType(String.join("|", nameTypeList));
+                    nameEntry.setTranslations(String.join("|", transList));
+                    break;
+            }
+        }
+
+        return nameEntry;
     }
 
     private enum KanjiComponentClass {

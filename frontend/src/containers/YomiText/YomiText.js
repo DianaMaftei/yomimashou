@@ -59,18 +59,22 @@ export class YomiText extends React.Component {
     }
 
     onMouseClick(searchResult, fetchData, setPopupInfo) {
-        if (searchResult.type === "words") {
-            fetchData(searchResult.result.data.map(item => item.word), searchResult.type);
-        } else if (searchResult.type === "kanji") {
-            fetchData(searchResult.result, searchResult.type);
-        }
-
-        setPopupInfo({
-            visibility: true, position: {
-                x: document.getSelection().getRangeAt(0).getClientRects()[0].left,
-                y: document.getSelection().getRangeAt(0).getClientRects()[0].bottom
+        if (!isVisible()){
+            if (searchResult.type === "words") {
+                fetchData(searchResult.result.data.map(item => item.word), searchResult.type);
+            } else if (searchResult.type === "kanji") {
+                fetchData(searchResult.result, searchResult.type);
+            } else if (searchResult.type === "names") {
+                fetchData(searchResult.result.data, searchResult.type);
             }
-        });
+
+            setPopupInfo({
+                visibility: true, position: {
+                    x: document.getSelection().getRangeAt(0).getClientRects()[0].left,
+                    y: document.getSelection().getRangeAt(0).getClientRects()[0].bottom
+                }
+            });
+        }
     };
 
     onMouseMove(ev, updateSearchResult, currentDictionary, updateTextSelectInfo) {
@@ -95,7 +99,13 @@ export class YomiText extends React.Component {
 
                     updateTextSelectInfo(textSelectInfo);
 
-                    highlightMatch(textSelectInfo.totalOffset, entries.result.matchLen, textSelectInfo.lastSelEnd);
+                    let highlightColors = {
+                        1: "red",
+                        2: "green",
+                        3: "purple"
+                    };
+
+                    highlightMatch(textSelectInfo.totalOffset, entries.result.matchLen, textSelectInfo.lastSelEnd, highlightColors[currentDictionary]);
                 }
             }
         }
@@ -105,6 +115,7 @@ export class YomiText extends React.Component {
         switch (ev.keyCode) {
             case 83:	// s - switch dictionaries (kanji, names, words, examples)
                 this.props.switchDictionary();
+                //TODO remove hightlight? or do a new search with the new dict option
                 break;
             case 81:	// q - hide popup
                 this.props.setPopupInfo({

@@ -93,7 +93,7 @@ export function search(tdata, dictOption) {
 
     //selection end data
     let selEndList = [];
-    let maxLength = 13;
+    let maxLength = dictOption !== 3 ? 13 : 25;
     let end = ro + maxLength;
     selEndList.push({ node: rp, offset: Math.min(rp.data.length, end) });
 
@@ -113,7 +113,7 @@ export function isVisible() {
     return popup && popup.style.display === 'block';
 }
 
-export function highlightMatch(so, matchLen = 1, selEndList) {
+export function highlightMatch(so, matchLen = 1, selEndList, color) {
     if (!selEndList) {
         return;
     }
@@ -125,8 +125,7 @@ export function highlightMatch(so, matchLen = 1, selEndList) {
     let text = parentNode.textContent;
 
     let highlight = text.substring(so, offset);
-
-    let newText = text.substring(0, so) + "<span id='highlight-selection'>" + highlight + "</span>" + text.substring(offset, text.length);
+    let newText = text.substring(0, so) + "<span id='highlight-selection' style='background-color: " + color + "'>" + highlight + "</span>" + text.substring(offset, text.length);
 
     parentNode.innerHTML = newText;
 }

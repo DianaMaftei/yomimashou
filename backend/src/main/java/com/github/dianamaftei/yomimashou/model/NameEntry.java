@@ -14,6 +14,7 @@ public class NameEntry {
     private String kanji;
     private String reading;
     private String type;
+    private String translations;
 
     public Long getId() {
         return id;
@@ -45,5 +46,13 @@ public class NameEntry {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getTranslations() {
+        return translations;
+    }
+
+    public void setTranslations(String translations) {
+        this.translations = translations;
     }
 }

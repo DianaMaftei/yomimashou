@@ -5,16 +5,14 @@ let RikaiDict = (function () {
 
     let config = {
         dictCount: 3,
-        kanjiN: 1,
-        namesN: 2,
-        showMode: 0,
-        forceKanji: '1',
-        defaultDict: '2',
-        nextDictionary: '3'
+        kanji: '1',
+        words: '2',
+        names: '3',
+        wordEntries: [],
+        nameEntries: []
     };
 
     loadDictionaries();
-    // loadNames();
     loadDIF();
 
     function loadTrie(text) {
@@ -54,20 +52,12 @@ let RikaiDict = (function () {
         }));
     }
 
-    // function loadNames() {
-    //     if ((config.nameDict) && (config.nameIndex)) return;
-    //     config.nameDict = fileRead(config.nameDictURL);
-    //     config.nameIndex = fileRead(config.nameIndexURL);
-    // };
-
     //	Note: These are mostly flat text files; loaded as one continuous string to reduce memory use
     function loadDictionaries() {
-        // let config.nameDictURL = require("../../data/names.dat");
-        // let config.nameIndexURL = require("../../data/names.idx");
 
-        if ((config.wordEntries) && (config.kanjiEntries) && (config.radicals)) return;
-        loadOrSaveDictionary("kanjiEntries");
+        if ((config.wordEntries) && (config.nameEntries) && (config.radicals)) return;
         loadOrSaveDictionary("wordEntries");
+        loadOrSaveDictionary("nameEntries");
         loadOrSaveDictionary("radicals");
     }
 
@@ -88,9 +78,7 @@ let RikaiDict = (function () {
     }
 
     function loadDictionary(dictionaryName, dictionary) {
-        if (dictionaryName === "kanjiEntries") {
-            dictionary = dictionary.split("|");
-        } else if (dictionaryName === "wordEntries") {
+        if (dictionaryName === "nameEntries" || dictionaryName === "wordEntries") {
             dictionary = loadTrie(dictionary);
         }
         config[dictionaryName] = dictionary;
@@ -233,55 +221,55 @@ let RikaiDict = (function () {
         return { data: validEntries, matchLen: maxLengthOfWord };
     }
 
+    function findValidNamesInString(string) {
+        let validEntries = [];
+        let maxLengthOfName = 0;
+
+        while (string.length > 0) {
+
+            for (let i = 0; i < string.length; i++) {
+
+                if (isName(string)) {
+                    if (validEntries.indexOf(string) === -1) {
+                        validEntries.push(string);
+                        maxLengthOfName = string.length > maxLengthOfName ? string.length : maxLengthOfName;
+                    }
+                }
+            }
+            string = string.substr(0, string.length - 1);
+        }
+
+        return { data: validEntries, matchLen: maxLengthOfName };
+    }
+
     function isKanji(character) {
         //common and uncommon kanji
         return (character >= "\u4e00" && character <= "\u9faf") ||
             (character >= "\u3400" && character <= "\u4dbf");
     }
 
+    function isName(string) {
+        return config.nameEntries.isWord(string);
+    }
+
     function search(text, dictOption) {
         let e = null;
-
         switch (dictOption) {
-            case config.forceKanji:
+            case config.kanji:
                 if (!isKanji(text.charAt(0))) {
                     return e = null;
                 }
                 e = { result: [text.charAt(0)], type: "kanji" };
                 return e;
-            case config.defaultDict:
-                config.showMode = 0;
+            case config.words:
+                e = { result: findValidWordsInString(text), type: "words" };
                 break;
-            case config.nextDictionary:
-                config.showMode = (config.showMode + 1) % config.dictCount;
+            case config.names:
+                e = { result: findValidNamesInString(text), type: "names" };
                 break;
             default:
                 break;
         }
-
-        const m = config.showMode;
-
-        do {
-            switch (config.showMode) {
-                case 0:
-                    e = { result: findValidWordsInString(text), type: "words" };
-                    break;
-                case config.kanjiN:
-                    if (!isKanji(text.charAt(0))) {
-                        return e = null;
-                    }
-                    e = { result: [text.charAt(0)], type: "kanji" };
-                    break;
-                // case namesN:
-                //     e = wordSearch(text, true);
-                //     break;
-                default:
-                    break;
-            }
-            if (e) break;
-            config.showMode = (config.showMode + 1) % config.dictCount;
-        } while (config.showMode !== m);
-
         return e;
     }
 
