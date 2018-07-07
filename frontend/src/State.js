@@ -4,10 +4,12 @@ import config from "./reducers/config";
 import viewYomi from "./containers/ViewYomimono";
 import yomiText from "./containers/YomiText";
 import promiseMiddleware from 'redux-promise-middleware';
+import addYomi from "./containers/AddYomimono";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(combineReducers({
     viewYomi,
+    addYomi,
     yomiText,
     popUp,
     config

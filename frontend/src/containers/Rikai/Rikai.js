@@ -134,10 +134,10 @@ const getResultFromKanjiEntry = (entry) => {
     return kanji;
 };
 
-const getResultFromWordEntry = (data, slicedResult) => {
+const getResultFromWordEntry = (searchTerms, results) => {
     let result = [];
 
-    let resultList = sortResultsByRelevanceAndAddConjugation(data, slicedResult);
+    let resultList = sortResultsByRelevanceAndAddConjugation(searchTerms, results);
 
     if (!resultList) return;
 
@@ -151,6 +151,24 @@ const getResultFromWordEntry = (data, slicedResult) => {
         result.push(word);
     }
     return result;
+};
+
+const sortResultsByRelevance = (searchTerms, results) => {
+    let resultList = [];
+
+    searchTerms.forEach(searchTerm => {
+        results.forEach(result => {
+            if(result.kanji === searchTerm || result.reading === searchTerm) {
+                resultList.push(result);
+            }
+        });
+    });
+
+    return resultList;
+};
+
+const getResultFromNameEntry = (searchTerms, results) => {
+    return sortResultsByRelevance(searchTerms, results);
 };
 
 const getResultFromEntry = (searchResult, fetchedResult) => {
@@ -167,6 +185,10 @@ const getResultFromEntry = (searchResult, fetchedResult) => {
 
     if (fetchedResult.type === "kanji") {
         return { type: 'kanji', result: getResultFromKanjiEntry(fetchedResult.result) };
+    }
+
+    if (fetchedResult.type === "names") {
+        return { type: 'names', result: getResultFromNameEntry(searchResult.data, fetchedResult.result.slice())};
     }
 };
 

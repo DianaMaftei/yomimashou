@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
+import apiUrl from "../../AppUrl";
+import axios from "axios/index";
 
 const mapStateToProps = (state) => ({
     text: state.viewYomi.text
@@ -12,6 +14,18 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_TEXT',
             text
         });
+    },
+    getWordsForText: (text) => {
+        dispatch({
+            type: 'PARSE_TEXT_WORDS',
+            payload: axios.get(apiUrl + '/api/text/parse/words?text=' + text)
+        })
+    },
+    getNamesForText: (text) => {
+        dispatch({
+            type: 'PARSE_TEXT_NAMES',
+            payload: axios.get(apiUrl + '/api/text/parse/names?text=' + text)
+        })
     }
 });
 
@@ -31,7 +45,7 @@ export class AddYomimono extends React.Component {
                               placeholder="Paste here the Japanese text that you want to read."/>
                     <br/>
                     <Link to={this.props.text ? "/view" : "/add"}>
-                        <button className="btn btn-info"> Start Reading</button>
+                        <button className="btn btn-info" onClick={() => {this.props.getWordsForText(this.props.text); this.props.getNamesForText(this.props.text)}}> Start Reading</button>
                     </Link>
                 </div>
                 <h4 id="example-header">Example</h4>

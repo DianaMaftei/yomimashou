@@ -68,6 +68,12 @@
     cursor: pointer;
 }
 
+#rikai-window .w-type {
+    color: #f19755;
+    font-size: 11px;
+    padding: 0 10px;
+}
+
 #rikai-window .example {
     font-size: 13px;
     padding: 5px;

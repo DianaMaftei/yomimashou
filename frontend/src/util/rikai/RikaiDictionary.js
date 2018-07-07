@@ -1,6 +1,32 @@
-import Trie from "./Trie";
-import LZString from "lz-string";
+/*
+	Originally based on Rikaikun
+	Copyright (C) 2010 Erek Speed
+	http://code.google.com/p/rikaikun/
 
+	---
+	Originally based on Rikaichan 1.07
+	by Jonathan Zarate
+	http://www.polarcloud.com/
+	---
+	Originally based on RikaiXUL 0.4 by Todd Rudick
+	http://www.rikai.com/
+	http://rikaixul.mozdev.org/
+	---
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	---
+	Please do not change or remove any of the copyrights or links to web pages
+	when modifying any of the files. - Jon
+*/
 let RikaiDict = (function () {
 
     let config = {
@@ -12,19 +38,7 @@ let RikaiDict = (function () {
         nameEntries: []
     };
 
-    loadDictionaries();
     loadDIF();
-
-    function loadTrie(text) {
-        let myTrie = new Trie();
-
-        let items = text.split('|');
-        for (let itemIdx = 0; itemIdx < items.length; itemIdx++) {
-            myTrie.add(items[itemIdx]);
-        }
-
-        return myTrie;
-    }
 
     function fileRead(url, callback) {
         let req = new XMLHttpRequest();
@@ -50,51 +64,6 @@ let RikaiDict = (function () {
             while ((a.length > 0) && (a[a.length - 1].length === 0)) a.pop();
             callback(a);
         }));
-    }
-
-    //	Note: These are mostly flat text files; loaded as one continuous string to reduce memory use
-    function loadDictionaries() {
-
-        if ((config.wordEntries) && (config.nameEntries) && (config.radicals)) return;
-        loadOrSaveDictionary("wordEntries");
-        loadOrSaveDictionary("nameEntries");
-        loadOrSaveDictionary("radicals");
-    }
-
-    function loadOrSaveDictionary(dictionaryName) {
-        let localDictionary = localStorage.getItem(dictionaryName);
-        if (!localDictionary) {
-            if (dictionaryName === "radicals") {
-                fileReadArray(require("../../data/radicals.dat"), result => {
-                    doAfterDictionaryIsFetched("radicals", result)
-                });
-                return;
-            }
-            fileRead(require("../../data/" + dictionaryName + ".txt"), result => doAfterDictionaryIsFetched(dictionaryName, result));
-        } else {
-            localDictionary = JSON.parse(LZString.decompressFromUTF16(localDictionary));
-            loadDictionary(dictionaryName, localDictionary);
-        }
-    }
-
-    function loadDictionary(dictionaryName, dictionary) {
-        if (dictionaryName === "nameEntries" || dictionaryName === "wordEntries") {
-            dictionary = loadTrie(dictionary);
-        }
-        config[dictionaryName] = dictionary;
-    }
-
-    function doAfterDictionaryIsFetched(dictionaryName, dictionary) {
-        saveDictionaryLocally(dictionaryName, dictionary);
-        loadDictionary(dictionaryName, dictionary);
-    }
-
-    function saveDictionaryLocally(dictionaryName, dictionary) {
-        try {
-            localStorage.setItem(dictionaryName, LZString.compressToUTF16(JSON.stringify(dictionary)));
-        } catch (e) {
-            console.error("Local Storage is full, could not save " + dictionaryName);
-        }
     }
 
     function loadDIF() {
@@ -191,7 +160,9 @@ let RikaiDict = (function () {
         return r;
     }
 
-    function findValidWordsInString(string) {
+    function findValidWordsInString(string, wordList) {
+        if (!wordList) return;
+
         let validEntries = [];
         let alreadyFound = [];
         let deinflectionResult = [];
@@ -205,8 +176,7 @@ let RikaiDict = (function () {
 
             for (let i = 0; i < deinflectionResult.length; i++) {
                 deinflectedWord = deinflectionResult[i];
-
-                let isWord = config.wordEntries.isWord(deinflectedWord.word);
+                let isWord = wordList.includes(deinflectedWord.word);
                 if (isWord) {
                     if (alreadyFound.indexOf(deinflectedWord.word) === -1) {
                         alreadyFound.push(deinflectedWord.word);
@@ -221,7 +191,9 @@ let RikaiDict = (function () {
         return { data: validEntries, matchLen: maxLengthOfWord };
     }
 
-    function findValidNamesInString(string) {
+    function findValidNamesInString(string, nameList) {
+        if (!nameList) return;
+
         let validEntries = [];
         let maxLengthOfName = 0;
 
@@ -229,7 +201,8 @@ let RikaiDict = (function () {
 
             for (let i = 0; i < string.length; i++) {
 
-                if (isName(string)) {
+                let isName = nameList.includes(string);
+                if (isName) {
                     if (validEntries.indexOf(string) === -1) {
                         validEntries.push(string);
                         maxLengthOfName = string.length > maxLengthOfName ? string.length : maxLengthOfName;
@@ -248,11 +221,7 @@ let RikaiDict = (function () {
             (character >= "\u3400" && character <= "\u4dbf");
     }
 
-    function isName(string) {
-        return config.nameEntries.isWord(string);
-    }
-
-    function search(text, dictOption) {
+    function search(text, dictOption, wordList, nameList) {
         let e = null;
         switch (dictOption) {
             case config.kanji:
@@ -262,10 +231,10 @@ let RikaiDict = (function () {
                 e = { result: [text.charAt(0)], type: "kanji" };
                 return e;
             case config.words:
-                e = { result: findValidWordsInString(text), type: "words" };
+                e = { result: findValidWordsInString(text, wordList), type: "words" };
                 break;
             case config.names:
-                e = { result: findValidNamesInString(text), type: "names" };
+                e = { result: findValidNamesInString(text, nameList), type: "names" };
                 break;
             default:
                 break;
@@ -274,8 +243,8 @@ let RikaiDict = (function () {
     }
 
     return {
-        search: function (text, dictOption) {
-            return search(text, dictOption);
+        search: function (text, dictOption, wordList, nameList) {
+            return search(text, dictOption, wordList, nameList);
         }
     }
 })();

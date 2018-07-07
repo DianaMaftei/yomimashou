@@ -8,6 +8,8 @@ import apiUrl from "../../AppUrl";
 
 const mapStateToProps = (state) => ({
     text: state.viewYomi.text,
+    words: state.addYomi.words,
+    names: state.addYomi.names,
     textSelectInfo: state.yomiText.textSelectInfo,
     searchResult: state.popUp.searchResult,
     showResult: state.popUp.showResult,
@@ -77,18 +79,20 @@ export class YomiText extends React.Component {
         }
     };
 
-    onMouseMove(ev, updateSearchResult, currentDictionary, updateTextSelectInfo) {
+    onMouseMove(ev, updateSearchResult, currentDictionary, updateTextSelectInfo, wordList, nameList) {
         if (!isVisible() && !this.mouseDown) {
             let textSelectInfo = tryToFindTextAtMouse(ev);
 
-            let searchResult = search(textSelectInfo, currentDictionary, updateSearchResult);
+            let searchResult = search(textSelectInfo, currentDictionary, wordList, nameList);
 
             if (searchResult) {
                 let entries = searchResult.entries;
 
-                if (entries) {
-                    updateSearchResult(entries);
+                if (!entries || !entries.result) {
+                    return;
                 }
+
+                updateSearchResult(entries);
 
                 if (textSelectInfo && entries) {
                     textSelectInfo.uofsNext = entries.matchLen;
@@ -136,7 +140,7 @@ export class YomiText extends React.Component {
                  onMouseDown={ev => this.mouseDown = true}
                  onMouseUp={ev => this.mouseDown = false}
                  onClick={(ev) => this.onMouseClick(this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
-                 onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo)}>
+                 onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}>
 
                 {this.props.text}
 

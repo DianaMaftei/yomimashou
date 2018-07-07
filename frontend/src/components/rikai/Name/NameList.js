@@ -1,11 +1,13 @@
 import React from "react";
-import Name from './Name';
+import NameListFull from "./NameListFull";
+import NameListLimited from "./NameListLimited";
 
 class NameList extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            limit: true,
+            limit: true
         };
     }
 
@@ -21,41 +23,15 @@ class NameList extends React.Component {
 
     render() {
         if (!this.props.resultList) {
-            return <div></div>;
+            return <div/>;
         }
-
-        let limitedResults = [];
-        let moreResults = [];
-
-
-        for (let i = 0; i < this.props.resultList.length; i++) {
-            let result = this.props.resultList[i];
-
-            if (i < this.props.limit) {
-                limitedResults.push(<Name wordClassName={(i % 2 === 0) ? 'definition-light' : 'definition-dark'}
-                                          key={result.kana + result.kanji + result.def} kanji={result.kanji}
-                                          kana={result.kana} def={result.def}/>);
-            } else {
-                moreResults.push(<Name wordClassName={(i % 2 === 0) ? 'definition-light' : 'definition-dark'}
-                                       key={result.kana + result.kanji + result.def} kanji={result.kanji}
-                                       kana={result.kana} def={result.def}/>);
-            }
+        else if (!this.state.limit || this.props.resultList.length < this.props.limit) {
+            return NameListFull(this.props.resultList)
         }
-
-        const { limit } = this.state;
-
-        return (
-            <div>
-                {limitedResults}
-                {(moreResults.length > 0 && limit) ?
-                    <div className="more-btn"><span id="more-btn" onClick={this.showMoreResults.bind(this)}>&#9660;
-                        More</span></div> : ''}
-                {!limit ? <div>{moreResults}</div> : <div></div>}
-            </div>
-        );
+        else if (this.state.limit) {
+            return NameListLimited(this.props.resultList, this.props.limit, this.showMoreResults.bind(this))
+        }
     }
-
-
 }
 
 export default NameList;
