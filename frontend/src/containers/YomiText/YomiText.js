@@ -104,9 +104,9 @@ export class YomiText extends React.Component {
                     updateTextSelectInfo(textSelectInfo);
 
                     let highlightColors = {
-                        1: "red",
-                        2: "green",
-                        3: "purple"
+                        1: "#f0a0a8",
+                        2: "#68b4ee",
+                        3: "#6fbca7"
                     };
 
                     highlightMatch(textSelectInfo.totalOffset, entries.result.matchLen, textSelectInfo.lastSelEnd, highlightColors[currentDictionary]);
