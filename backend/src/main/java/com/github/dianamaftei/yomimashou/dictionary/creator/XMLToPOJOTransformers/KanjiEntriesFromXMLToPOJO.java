@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
+import static com.github.dianamaftei.yomimashou.dictionary.kanji.QKanji.kanji;
 
 @Component
 public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
@@ -67,7 +67,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
             Set<String> kanjiEntries = ((List<Character>) characters).parallelStream()
                     .filter(Objects::nonNull)
                     .map(this::getKanjiEntry)
-                    .map(Kanji::getKanji)
+                    .map(Kanji::getCharacter)
                     .collect(Collectors.toSet());
 
             writeToFile(kanjiEntries, "kanjiEntries.txt");
@@ -111,7 +111,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
             switch (kanjiComponentClass) {
                 case STRING:
                     kanji = (String) component;
-                    kanjiEntry.setKanji(kanji);
+                    kanjiEntry.setCharacter(kanji);
                     break;
                 case CODEPOINT:
                     List<String> codepoints = new ArrayList<>();
@@ -181,7 +181,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
             }
 
             if (kanjiCharacter != null && misc != null) {
-                Kanji kanji = kanjiRepository.findByKanji(kanjiCharacter);
+                Kanji kanji = kanjiRepository.findByCharacter(kanjiCharacter);
                 if (kanji != null) {
                     kanji.setVariant(getKanjiVariant(misc));
                     kanjiRepository.save(kanji);
@@ -196,16 +196,16 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         String kanjiVariant = null;
 
         if (misc.getVariant() != null && !misc.getVariant().isEmpty()) {
-            JPAQuery<Kanji> query = jpaQueryFactory.selectFrom(kanjiEntry);
+            JPAQuery<Kanji> query = jpaQueryFactory.selectFrom(kanji);
             BooleanBuilder builder = new BooleanBuilder();
 
             for (Variant variant : misc.getVariant()) {
-                builder.or((kanjiEntry.codepoint.like('%' + variant.getContent() + ";" + variant.getVarType() + '%')));
+                builder.or((kanji.codepoint.like('%' + variant.getContent() + ";" + variant.getVarType() + '%')));
             }
 
             List<Kanji> kanjiList = query.where(builder).fetch();
             for (Kanji kanji : kanjiList) {
-                variants.add(kanji.getKanji());
+                variants.add(kanji.getCharacter());
             }
             kanjiVariant = String.join("|", variants);
         }

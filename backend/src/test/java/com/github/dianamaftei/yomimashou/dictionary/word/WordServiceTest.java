@@ -14,7 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.dianamaftei.yomimashou.model.QWordEntry.wordEntry;
+import static com.github.dianamaftei.yomimashou.dictionary.word.QWord.word;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -43,10 +43,10 @@ public class WordServiceTest {
         List<Word> words = Collections.emptyList();
 
         when(jpaQueryFactory.query()).thenReturn(jpaQuery);
-        when(jpaQuery.from(wordEntry)).thenReturn(jpaQuery);
+        when(jpaQuery.from(word)).thenReturn(jpaQuery);
         when(jpaQuery.where(any(Predicate.class))).thenReturn(jpaQuery);
         when(jpaQuery.distinct()).thenReturn(jpaQuery);
-        when(jpaQuery.leftJoin(wordEntry.meanings)).thenReturn(jpaQuery);
+        when(jpaQuery.leftJoin(word.meanings)).thenReturn(jpaQuery);
         when(jpaQuery.fetchJoin()).thenReturn(jpaQuery);
         when(jpaQuery.fetch()).thenReturn(words);
 

@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static com.github.dianamaftei.yomimashou.model.QExampleSentence.exampleSentence;
+import static com.github.dianamaftei.yomimashou.dictionary.example.QExampleSentence.exampleSentence;
 
 
 @RunWith(MockitoJUnitRunner.class)

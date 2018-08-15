@@ -9,7 +9,7 @@ public class Kanji {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String kanji;
+    private String character;
     private String radical;
     private Integer grade;
     private Integer strokeCount;
@@ -32,12 +32,12 @@ public class Kanji {
         this.id = id;
     }
 
-    public String getKanji() {
-        return kanji;
+    public String getCharacter() {
+        return character;
     }
 
-    public void setKanji(String kanji) {
-        this.kanji = kanji;
+    public void setCharacter(String character) {
+        this.character = character;
     }
 
     public String getRadical() {

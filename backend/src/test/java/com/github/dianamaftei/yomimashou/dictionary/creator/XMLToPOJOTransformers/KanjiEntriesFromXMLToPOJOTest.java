@@ -16,11 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -66,7 +62,7 @@ public class KanjiEntriesFromXMLToPOJOTest {
 
         verify(kanjiRepository).save(kanjiArgumentCaptor.capture());
         Kanji kanji = kanjiArgumentCaptor.getValue();
-        assertEquals("kanji literal", kanji.getKanji());
+        assertEquals("kanji literal", kanji.getCharacter());
         assertEquals("meaning", kanji.getMeaning());
         assertEquals("ja_kun reading", kanji.getKunReading());
         assertEquals("ja_on reading", kanji.getOnReading());
@@ -308,12 +304,12 @@ public class KanjiEntriesFromXMLToPOJOTest {
         misc.getStrokeCount().add("42");
         literalAndCodepointAndRadical.add(misc);
         characters.add(mockCharacter);
-        when(kanjiRepository.findByKanji(any())).thenReturn(new Kanji());
+        when(kanjiRepository.findByCharacter(any())).thenReturn(new Kanji());
 
         kanjiEntriesFromXMLToPOJO.fillDatabase(characters);
 
         verify(kanjiRepository, times(2)).save(any());
-        verify(kanjiRepository, times(1)).findByKanji("kanji");
+        verify(kanjiRepository, times(1)).findByCharacter("kanji");
     }
 
     @Test

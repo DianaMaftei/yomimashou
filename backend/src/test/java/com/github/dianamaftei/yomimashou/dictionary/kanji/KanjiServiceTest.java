@@ -11,9 +11,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Collections;
-
-import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
+import static com.github.dianamaftei.yomimashou.dictionary.kanji.QKanji.kanji;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,11 +40,11 @@ public class KanjiServiceTest {
     @Test
     public void get() {
         String searchItem = "searchItem";
-        Kanji kanji = new Kanji();
-        kanji.setKanji("kanji");
+        Kanji kanjiEntry = new Kanji();
+        kanjiEntry.setCharacter("kanji");
         when(jpaQueryFactory.query()).thenReturn(jpaQuery);
-        when(jpaQuery.from(kanjiEntry)).thenReturn(jpaQuery);
-        when(jpaQuery.fetchOne()).thenReturn(kanji);
+        when(jpaQuery.from(kanji)).thenReturn(jpaQuery);
+        when(jpaQuery.fetchOne()).thenReturn(kanjiEntry);
         when(jpaQuery.where(any(Predicate.class))).thenReturn(jpaQuery);
 
         Kanji result = kanjiService.get(searchItem);
@@ -54,9 +52,9 @@ public class KanjiServiceTest {
         verify(jpaQuery).where(predicateArgumentCaptor.capture());
         Predicate value = predicateArgumentCaptor.getValue();
         assertEquals("kanji.kanji = searchItem", value.toString());
-        verify(jpaQuery, times(1)).from(kanjiEntry);
+        verify(jpaQuery, times(1)).from(kanji);
         verify(jpaQueryFactory, times(1)).query();
-        assertEquals("kanji", result.getKanji());
+        assertEquals("kanji", result.getCharacter());
     }
 
     @Test

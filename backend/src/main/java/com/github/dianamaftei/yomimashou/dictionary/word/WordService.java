@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.github.dianamaftei.yomimashou.model.QWordEntry.wordEntry;
+import static com.github.dianamaftei.yomimashou.dictionary.word.QWord.word;
 
 @Service
 public class WordService {
@@ -23,40 +23,40 @@ public class WordService {
     @Transactional
     public List<Word> get(String[] words) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        for (String word : words) {
-            booleanBuilder.or(wordEntry.readingElements.like(word)).or(wordEntry.kanjiElements.like(word));
-            booleanBuilder.or(wordEntry.readingElements.like(word + "|%")).or(wordEntry.kanjiElements.like(word + "|%"));
-            booleanBuilder.or(wordEntry.readingElements.like("%|" + word + "|%")).or(wordEntry.kanjiElements.like("%|" + word + "|%"));
-            booleanBuilder.or(wordEntry.readingElements.like("%|" + word)).or(wordEntry.kanjiElements.like("%|" + word));
+        for (String wordString : words) {
+            booleanBuilder.or(word.readingElements.like(wordString)).or(word.kanjiElements.like(wordString));
+            booleanBuilder.or(word.readingElements.like(wordString + "|%")).or(word.kanjiElements.like(wordString + "|%"));
+            booleanBuilder.or(word.readingElements.like("%|" + wordString + "|%")).or(word.kanjiElements.like("%|" + wordString + "|%"));
+            booleanBuilder.or(word.readingElements.like("%|" + wordString)).or(word.kanjiElements.like("%|" + wordString));
         }
-        return (List<Word>) jpaQueryFactory.query().from(wordEntry).where(booleanBuilder).distinct().leftJoin(wordEntry.meanings).fetchJoin().fetch();
+        return (List<Word>) jpaQueryFactory.query().from(word).where(booleanBuilder).distinct().leftJoin(word.meanings).fetchJoin().fetch();
     }
 
     public List<Word> getByStartingKanji(String searchItem) {
-        return (List<Word>) jpaQueryFactory.query().from(wordEntry)
-                .where(wordEntry.kanjiElements.like("%|" + searchItem)
-                        .or(wordEntry.kanjiElements.like(searchItem + "%"))
-                ).orderBy(wordEntry.priority.asc())
+        return (List<Word>) jpaQueryFactory.query().from(word)
+                .where(word.kanjiElements.like("%|" + searchItem)
+                        .or(word.kanjiElements.like(searchItem + "%"))
+                ).orderBy(word.priority.asc())
                 .distinct().limit(10).fetch();
     }
 
     public List<Word> getByEndingKanji(String searchItem) {
-        return (List<Word>) jpaQueryFactory.query().from(wordEntry)
-                .where(wordEntry.kanjiElements.like(searchItem + "|%")
-                        .or(wordEntry.kanjiElements.like("%" + searchItem))
-                ).orderBy(wordEntry.priority.asc())
+        return (List<Word>) jpaQueryFactory.query().from(word)
+                .where(word.kanjiElements.like(searchItem + "|%")
+                        .or(word.kanjiElements.like("%" + searchItem))
+                ).orderBy(word.priority.asc())
                 .distinct().limit(10).fetch();
     }
 
     public List<Word> getByContainingKanji(String searchItem) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.or(wordEntry.kanjiElements.like("%" + searchItem + "%"));
-        booleanBuilder.andNot(wordEntry.kanjiElements.like("%|" + searchItem + "%"));
-        booleanBuilder.andNot(wordEntry.kanjiElements.like("%" + searchItem));
-        booleanBuilder.andNot(wordEntry.kanjiElements.like(searchItem + "%"));
-        booleanBuilder.andNot(wordEntry.kanjiElements.like("%" + searchItem + "|%"));
+        booleanBuilder.or(word.kanjiElements.like("%" + searchItem + "%"));
+        booleanBuilder.andNot(word.kanjiElements.like("%|" + searchItem + "%"));
+        booleanBuilder.andNot(word.kanjiElements.like("%" + searchItem));
+        booleanBuilder.andNot(word.kanjiElements.like(searchItem + "%"));
+        booleanBuilder.andNot(word.kanjiElements.like("%" + searchItem + "|%"));
 
-        return (List<Word>) jpaQueryFactory.query().from(wordEntry)
-                .where(booleanBuilder).distinct().orderBy(wordEntry.priority.asc()).limit(10).fetch();
+        return (List<Word>) jpaQueryFactory.query().from(word)
+                .where(booleanBuilder).distinct().orderBy(word.priority.asc()).limit(10).fetch();
     }
 }

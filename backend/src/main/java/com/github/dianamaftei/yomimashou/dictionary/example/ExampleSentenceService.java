@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.github.dianamaftei.yomimashou.model.QExampleSentence.exampleSentence;
+import static com.github.dianamaftei.yomimashou.dictionary.example.QExampleSentence.exampleSentence;
 
 @Service
 public class ExampleSentenceService {

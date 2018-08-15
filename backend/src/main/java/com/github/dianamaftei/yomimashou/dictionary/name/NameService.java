@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.github.dianamaftei.yomimashou.model.QNameEntry.nameEntry;
+import static com.github.dianamaftei.yomimashou.dictionary.name.QName.name;
 
 @Service
 public class NameService {
@@ -31,24 +31,24 @@ public class NameService {
     public List<Name> get(String[] words) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         for (String word : words) {
-            booleanBuilder.or(nameEntry.reading.like(word)).or(nameEntry.kanji.like(word));
+            booleanBuilder.or(name.reading.like(word)).or(name.kanji.like(word));
         }
-        return (List<Name>) jpaQueryFactory.query().from(nameEntry).where(booleanBuilder).distinct().limit(20).fetch();
+        return (List<Name>) jpaQueryFactory.query().from(name).where(booleanBuilder).distinct().limit(20).fetch();
     }
 
     @Transactional
     public Set<String> get(Set<String> words) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         for (String word : words) {
-            booleanBuilder.or(nameEntry.kanji.eq(word)).or(nameEntry.reading.eq(word));
+            booleanBuilder.or(name.kanji.eq(word)).or(name.reading.eq(word));
         }
 
-        List<Tuple> list = jpaQueryFactory.query().select(nameEntry.kanji, nameEntry.reading).from(nameEntry).where(booleanBuilder).distinct().fetch();
+        List<Tuple> list = jpaQueryFactory.query().select(name.kanji, name.reading).from(name).where(booleanBuilder).distinct().fetch();
 
         Set<String> names = new HashSet<>();
         list.stream().forEach(tuple -> {
-            names.add(tuple.get(nameEntry.kanji));
-            names.add(tuple.get(nameEntry.reading));
+            names.add(tuple.get(name.kanji));
+            names.add(tuple.get(name.reading));
         });
         return names.stream().filter(word -> word != null && words.contains(word)).collect(Collectors.toSet());
     }

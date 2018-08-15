@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.*;
 
-import static com.github.dianamaftei.yomimashou.model.QKanjiEntry.kanjiEntry;
+import static com.github.dianamaftei.yomimashou.dictionary.kanji.QKanji.kanji;
 
 @Service
 public class KanjiService {
@@ -28,7 +28,7 @@ public class KanjiService {
 
     @Transactional
     public Kanji get(String searchItem) {
-        return (Kanji) jpaQueryFactory.query().from(kanjiEntry).where(kanjiEntry.kanji.eq(searchItem)).fetchOne();
+        return (Kanji) jpaQueryFactory.query().from(kanji).where(kanji.character.eq(searchItem)).fetchOne();
     }
 
     @ResponseBody

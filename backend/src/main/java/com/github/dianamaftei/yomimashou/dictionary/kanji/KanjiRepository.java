@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface KanjiRepository extends JpaRepository<Kanji, Long> {
-    Kanji findByKanji(String kanji);
+    Kanji findByCharacter(String character);
 }
