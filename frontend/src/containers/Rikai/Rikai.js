@@ -126,7 +126,7 @@ const getResultFromKanjiEntry = (entry) => {
     kanji.grade = entry.grade;
     kanji.strokes = entry.strokeCount;
     kanji.eigo = entry.meaning ? entry.meaning.replace(/\|/g, ", ") : null;
-    kanji.kanji = entry.kanji;
+    kanji.character = entry.character;
     kanji.kunReading = entry.kunReading ? entry.kunReading.replace(/\|/g, ", ") : null;
     kanji.onReading = entry.onReading ? entry.onReading.replace(/\|/g, ", ") : null;
     kanji.oldJLPT = entry.references ? entry.references.jlptOldLevel : null;

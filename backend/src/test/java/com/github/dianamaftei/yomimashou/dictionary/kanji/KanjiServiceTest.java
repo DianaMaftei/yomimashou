@@ -51,7 +51,7 @@ public class KanjiServiceTest {
 
         verify(jpaQuery).where(predicateArgumentCaptor.capture());
         Predicate value = predicateArgumentCaptor.getValue();
-        assertEquals("kanji.kanji = searchItem", value.toString());
+        assertEquals("kanji.character = searchItem", value.toString());
         verify(jpaQuery, times(1)).from(kanji);
         verify(jpaQueryFactory, times(1)).query();
         assertEquals("kanji", result.getCharacter());

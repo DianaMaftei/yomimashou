@@ -7,7 +7,7 @@ import apiUrl from "../../../AppUrl";
 export default ({ result, showWordExamples }) => {
     window.Raphael = Raphael;
 
-    let dmak = new window.Dmak(result.kanji, {'element': "kanji-draw", "stroke": {attr:{active: "#943a51"}}, step: 0.01, "uri": apiUrl + '/api/kanji/svg/'});
+    let dmak = new window.Dmak(result.character, {'element': "kanji-draw", "stroke": {attr:{active: "#943a51"}}, step: 0.01, "uri": apiUrl + '/api/kanji/svg/'});
 
     return (
         <div className="kanji-box">
@@ -38,12 +38,12 @@ export default ({ result, showWordExamples }) => {
             <h4>See example words:</h4>
             <br/>
             <div className="example-words-search">
-                <span onClick={() => showWordExamples(result.kanji, "byStartingKanji")}>{result.kanji}<span
+                <span onClick={() => showWordExamples(result.character, "byStartingKanji")}>{result.character}<span
                     className="asterisk">*</span></span>
-                <span onClick={() => showWordExamples(result.kanji, "byContainingKanji")}><span
-                    className="asterisk">*</span>{result.kanji}<span className="asterisk">*</span></span>
-                <span onClick={() => showWordExamples(result.kanji, "byEndingKanji")}><span
-                    className="asterisk">*</span>{result.kanji}</span>
+                <span onClick={() => showWordExamples(result.character, "byContainingKanji")}><span
+                    className="asterisk">*</span>{result.character}<span className="asterisk">*</span></span>
+                <span onClick={() => showWordExamples(result.character, "byEndingKanji")}><span
+                    className="asterisk">*</span>{result.character}</span>
             </div>
         </div>
     )

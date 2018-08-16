@@ -189,7 +189,7 @@ describe("Rikai", () => {
     });
 
     it("should render RikaiLoading when a result of type 'names' is passed as prop", () => {
-        props.searchResult = { type: "names", result: {} };
+        props.searchResult = { type: "names", result: null };
         props.showResult = { type: "names", result: "" };
 
         expect(wrapper().find("#spinner").length).toBe(1);
