@@ -33,7 +33,7 @@ public abstract class XMLEntryToPOJO {
             unmarshalledFile.ifPresent(dictionaryFile -> {
                 List<? extends DictionaryEntry> dictionaryEntries = getEntries(dictionaryFile);
                 saveToFile(dictionaryEntries);
-                fillDatabase(dictionaryEntries);
+//                fillDatabase(dictionaryEntries);
             });
         } catch (JAXBException e) {
             LOGGER.error("could not process entries from XML", e);

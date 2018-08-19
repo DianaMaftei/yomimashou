@@ -27,7 +27,7 @@ public class EntriesCreator {
 
         try {
             xmlEntryToPOJOList.forEach(XMLEntryToPOJO::processEntries);
-            exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+//            exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
         } catch (Exception e) {
             LOGGER.error("could not create entries", e);
         }
