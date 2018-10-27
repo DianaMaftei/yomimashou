@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.core.MediaType;
 
 @RestController
-@RequestMapping("/api/kanji")
+@RequestMapping("/api/dictionary/kanji")
+@CrossOrigin
 public class KanjiController {
 
     private final KanjiService kanjiService;
@@ -16,7 +17,7 @@ public class KanjiController {
         this.kanjiService = kanjiService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public Kanji get(@RequestParam("searchItem") String searchItem) {
         return kanjiService.get(searchItem);
     }

@@ -1,16 +1,14 @@
 package com.github.dianamaftei.yomimashou.dictionary.name;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/names")
+@RequestMapping("/api/dictionary/names")
+@CrossOrigin
 public class NameController {
 
     private final NameService nameService;
@@ -20,7 +18,7 @@ public class NameController {
         this.nameService = nameService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<Name> get(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
             return nameService.get(searchItem.split(","));
