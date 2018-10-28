@@ -41,7 +41,7 @@ public class ExampleSentenceControllerTest {
         String searchItem = "test sentence";
         when(exampleSentenceService.get(new String[]{searchItem})).thenReturn(Collections.singletonList(exampleSentence));
 
-        MockHttpServletResponse response = mvc.perform(get("/api/examples?searchItem={attribute_uri}", searchItem)
+        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -53,7 +53,7 @@ public class ExampleSentenceControllerTest {
     public void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
         String searchItem = null;
 
-        MockHttpServletResponse response = mvc.perform(get("/api/examples?searchItem={non_existent_variable}", searchItem)
+        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/examples?searchItem={non_existent_variable}", searchItem)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -65,7 +65,7 @@ public class ExampleSentenceControllerTest {
     public void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
         String searchItem = "";
 
-        MockHttpServletResponse response = mvc.perform(get("/api/examples?searchItem={attribute_uri}", searchItem)
+        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
