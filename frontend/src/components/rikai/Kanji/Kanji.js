@@ -1,7 +1,7 @@
 import React from "react";
 import Raphael from "raphael";
 import "dmak";
-import MaterialIcon from 'material-icons-react';
+import MaterialIcon from 'material-icons-react'; //TODO replace with material-ui
 import apiUrl from "../../../AppUrl";
 
 export default ({ result, showWordExamples }) => {

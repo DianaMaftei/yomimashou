@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
-import YomiText from '../YomiText/YomiText';
+import YomiText from '../../containers/YomiText/YomiText';
+import "./read.css";
 
 const mapStateToProps = (state) => ({
-    text: state.viewYomi.text
+    text: state.add.text
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -15,7 +16,7 @@ const mapDispatchToProps = (dispatch) => ({
     }
 });
 
-export class ViewYomimono extends React.Component {
+export class Read extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.text !== nextProps.text;
@@ -23,7 +24,7 @@ export class ViewYomimono extends React.Component {
 
     render() {
         return (
-            <div id="view-yomimono">
+            <div id="read-page">
                 <div id="user-options">
                     <h4>Things you can do:</h4>
                     <ul>
@@ -45,4 +46,4 @@ export class ViewYomimono extends React.Component {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewYomimono);
+export default connect(mapStateToProps, mapDispatchToProps)(Read);
