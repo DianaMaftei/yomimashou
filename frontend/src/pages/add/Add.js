@@ -1,20 +1,22 @@
 import React from 'react';
 import ReactQuill from "react-quill/dist/react-quill";
 import "./add.css";
-import Button from "@material-ui/core/es/Button/Button";
-import Switch from "@material-ui/core/es/Switch/Switch";
-import TextField from "@material-ui/core/es/TextField/TextField";
-import Chip from "@material-ui/core/es/Chip/Chip";
-import Divider from "@material-ui/core/es/Divider/Divider";
-import FormControlLabel from "@material-ui/core/es/FormControlLabel/FormControlLabel";
-import FormControl from "@material-ui/core/es/FormControl/FormControl";
-import MenuItem from "@material-ui/core/es/MenuItem/MenuItem";
-import Select from "@material-ui/core/es/Select/Select";
-import Checkbox from "@material-ui/core/es/Checkbox/Checkbox";
+import {
+    Button,
+    Checkbox,
+    Chip,
+    Divider,
+    FormControl,
+    FormControlLabel,
+    MenuItem,
+    Select,
+    Switch,
+    TextField
+} from "@material-ui/core/umd/material-ui.development";
 import axios from "axios/index";
 import apiUrl from "../../AppUrl";
 import { connect } from "react-redux";
-import Link from "react-router-dom/es/Link";
+import { Link } from "react-router-dom/umd/react-router-dom";
 
 const modules = {
     toolbar: [

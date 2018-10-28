@@ -32,7 +32,7 @@
   "devDependencies": {
     "deepfreeze": "2.0.0",
     "enzyme": "3.3.0",
-    "enzyme-adapter-react-15": "1.0.5",
+    "enzyme-adapter-react-16": "1.6.0",
     "react-app-rewire-hot-loader": "1.0.0",
     "react-hot-loader": "4.1.2",
     "react-hot-loader-loader": "0.0.5",
