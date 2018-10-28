@@ -18,16 +18,16 @@ public class TextController {
         this.textParserService = textParserService;
     }
 
-    @GetMapping(value = "/parse/words")
-    public Set<String> getWords(@RequestParam("text") String text) {
+    @PostMapping(value = "/parse/words")
+    public Set<String> getWords(@RequestBody String text) {
         if (text != null && text.length() > 0) {
             return textParserService.parseWords(text);
         }
         return Collections.emptySet();
     }
 
-    @GetMapping(value = "/parse/names")
-    public Set<String> getNames(@RequestParam("text") String text) {
+    @PostMapping(value = "/parse/names")
+    public Set<String> getNames(@RequestBody String text) {
         if (text != null && text.length() > 0) {
             return textParserService.parseNames(text);
         }
