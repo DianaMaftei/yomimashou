@@ -1,10 +1,10 @@
 import deepFreeze from 'deepfreeze';
-import viewYomi from "../../../../src/containers/ViewYomimono";
+import add from "../../../pages/add/index";
 
-describe('ViewYomimonoReducers', function () {
+describe('ReadReducers', function () {
 
     const initialState = deepFreeze({
-        text: null});
+        text: {}});
 
     it('should return the default state when no valid action type is passed', () => {
 
@@ -12,19 +12,19 @@ describe('ViewYomimonoReducers', function () {
             type: 'FOO_BAR'
         });
 
-        const finalState = viewYomi(initialState, action);
+        const finalState = add(initialState, action);
 
         expect(finalState).toEqual(initialState);
     });
 
     it('should update the text', () => {
-        let newText = deepFreeze("foo bar");
+        let newText = deepFreeze({"formatted": "foo", "plain": "<p>foo</p>"});
         const action = deepFreeze({
             type: 'SET_TEXT',
             text: newText
         });
 
-        const finalState = viewYomi(initialState, action);
+        const finalState = add(initialState, action);
 
         expect(finalState.text).toEqual(newText);
     });
@@ -34,9 +34,9 @@ describe('ViewYomimonoReducers', function () {
             type: 'RESET_TEXT'
         });
 
-        const finalState = viewYomi(initialState, action);
+        const finalState = add(initialState, action);
 
-        expect(finalState.text).toEqual(null);
+        expect(finalState.text).toEqual({});
     });
 
 });

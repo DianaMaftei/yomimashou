@@ -1,6 +1,6 @@
 import React from "react";
 import { configure, shallow } from "enzyme";
-import Adapter from 'enzyme-adapter-react-15';
+import Adapter from 'enzyme-adapter-react-16';
 import WordItem from "../../../../components/rikai/Words/WordItem/WordItem";
 
 configure({ adapter: new Adapter() });
