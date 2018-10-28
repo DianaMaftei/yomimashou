@@ -1,16 +1,14 @@
 package com.github.dianamaftei.yomimashou.dictionary.word;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/words")
+@RequestMapping("/api/dictionary/words")
+@CrossOrigin
 public class WordController {
 
     private final WordService wordService;
@@ -20,7 +18,7 @@ public class WordController {
         this.wordService = wordService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<Word> get(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
             return wordService.get(searchItem.split(","));
@@ -28,7 +26,7 @@ public class WordController {
         return Collections.emptyList();
     }
 
-    @RequestMapping(value = "/byStartingKanji", method = RequestMethod.GET)
+    @GetMapping(value = "/byStartingKanji")
     public List<Word> getByStartingKanji(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
             return wordService.getByStartingKanji(searchItem);
@@ -36,7 +34,7 @@ public class WordController {
         return Collections.emptyList();
     }
 
-    @RequestMapping(value = "/byEndingKanji", method = RequestMethod.GET)
+    @GetMapping(value = "/byEndingKanji")
     public List<Word> getByEndingKanji(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
             return wordService.getByEndingKanji(searchItem);
@@ -44,7 +42,7 @@ public class WordController {
         return Collections.emptyList();
     }
 
-    @RequestMapping(value = "/byContainingKanji", method = RequestMethod.GET)
+    @GetMapping(value = "/byContainingKanji")
     public List<Word> getByContainingKanji(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
             return wordService.getByContainingKanji(searchItem);

@@ -7,6 +7,8 @@ import registerServiceWorker from "./registerServiceWorker";
 import state from "./State";
 import AddYomimono from "./containers/AddYomimono/AddYomimono";
 import ViewYomimono from "./containers/ViewYomimono/ViewYomimono";
+import { Register } from "./components/user/Register/Register";
+import { Login } from "./components/user/Login/Login";
 
 const render = () => {
     ReactDOM.render(
@@ -18,6 +20,8 @@ const render = () => {
                         <Route exact path="/" component={() => <AddYomimono/>}/>
                         <Route path="/add" component={() => <AddYomimono/>}/>
                         <Route path="/view" component={() => <ViewYomimono/>}/>
+                        <Route path="/register" component={() => <Register/>}/>
+                        <Route path="/login" component={() => <Login/>}/>
                     </Switch>
                 </div>
             </BrowserRouter>

@@ -7,7 +7,7 @@ import apiUrl from "../../../AppUrl";
 export default ({ result, showWordExamples }) => {
     window.Raphael = Raphael;
 
-    let dmak = new window.Dmak(result.character, {'element': "kanji-draw", "stroke": {attr:{active: "#943a51"}}, step: 0.01, "uri": apiUrl + '/api/kanji/svg/'});
+    let dmak = new window.Dmak(result.character, {'element': "kanji-draw", "stroke": {attr:{active: "#943a51"}}, step: 0.01, "uri": apiUrl + '/api/dictionary/kanji/svg/'});
 
     return (
         <div className="kanji-box">
