@@ -1,24 +1,24 @@
 import React from "react";
 import { configure, shallow } from "enzyme";
-import Adapter from 'enzyme-adapter-react-15';
+import Adapter from 'enzyme-adapter-react-16';
 import '../../../__mocks__/xhr-mock.js';
 import '../../../__mocks__/LocalStorageMock.js';
-import { ViewYomimono } from "../../../containers/ViewYomimono/ViewYomimono";
+import { Read } from "../../../pages/read/Read";
 import { Link } from "react-router-dom";
 
 configure({ adapter: new Adapter() });
 
-describe("ViewYomimono", () => {
+describe("Read", () => {
     let props;
-    let shallowViewYomimono;
+    let shallowRead;
 
     const wrapper = () => {
-        if (!shallowViewYomimono) {
-            shallowViewYomimono = shallow(
-                <ViewYomimono {...props} />
+        if (!shallowRead) {
+            shallowRead = shallow(
+                <Read {...props} />
             );
         }
-        return shallowViewYomimono;
+        return shallowRead;
     };
 
     beforeEach(() => {
@@ -26,11 +26,11 @@ describe("ViewYomimono", () => {
             text: undefined,
             resetText: undefined
         };
-        shallowViewYomimono = undefined;
+        shallowRead = undefined;
     });
 
-    it("should render ViewYomimono component", () => {
-        expect(wrapper().find("#view-yomimono").length).toBe(1);
+    it("should render Read page component", () => {
+        expect(wrapper().find("#read-page").length).toBe(1);
     });
 
     it("should contain a YomiText component", () => {

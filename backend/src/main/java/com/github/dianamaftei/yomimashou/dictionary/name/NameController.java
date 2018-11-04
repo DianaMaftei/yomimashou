@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/names")
+@RequestMapping("/api/dictionary/names")
 @CrossOrigin
 public class NameController {
 
@@ -18,7 +18,7 @@ public class NameController {
         this.nameService = nameService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public List<Name> get(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
             return nameService.get(searchItem.split(","));

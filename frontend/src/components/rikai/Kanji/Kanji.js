@@ -1,13 +1,13 @@
 import React from "react";
 import Raphael from "raphael";
 import "dmak";
-import MaterialIcon from 'material-icons-react';
+import MaterialIcon from 'material-icons-react'; //TODO replace with material-ui
 import apiUrl from "../../../AppUrl";
 
 export default ({ result, showWordExamples }) => {
     window.Raphael = Raphael;
 
-    let dmak = new window.Dmak(result.character, {'element': "kanji-draw", "stroke": {attr:{active: "#943a51"}}, step: 0.01, "uri": apiUrl + '/api/kanji/svg/'});
+    let dmak = new window.Dmak(result.character, {'element': "kanji-draw", "stroke": {attr:{active: "#943a51"}}, step: 0.01, "uri": apiUrl + '/api/dictionary/kanji/svg/'});
 
     return (
         <div className="kanji-box">

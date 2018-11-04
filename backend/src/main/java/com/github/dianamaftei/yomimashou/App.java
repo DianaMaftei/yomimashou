@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.EntityManager;
 
@@ -27,7 +28,7 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if("true".equalsIgnoreCase(unmarshalXML)) {
+        if ("true".equalsIgnoreCase(unmarshalXML)) {
             entriesCreator.run();
         }
     }
@@ -38,4 +39,8 @@ public class App implements CommandLineRunner {
         return new JPAQueryFactory(entityManager);
     }
 
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }

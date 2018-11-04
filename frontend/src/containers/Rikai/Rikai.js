@@ -23,7 +23,7 @@ const mapDispatchToProps = (dispatch) => ({
     }, fetchData: (list, url) => {
         dispatch({
             type: 'FETCH_DATA',
-            payload: axios.get(apiUrl + '/api/' + url + '?searchItem=' + list.toString())
+            payload: axios.get(apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString())
         });
     }, updateSearchResult: result => {
         dispatch({

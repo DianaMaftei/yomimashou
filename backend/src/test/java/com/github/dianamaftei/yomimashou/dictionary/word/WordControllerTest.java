@@ -41,7 +41,7 @@ public class WordControllerTest {
         String searchItem = "猫";
         when(wordService.get(new String[]{searchItem})).thenReturn(Collections.singletonList(word));
 
-        MockHttpServletResponse response = mvc.perform(get("/api/words?searchItem={attribute_uri}", "猫")
+        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/words?searchItem={attribute_uri}", "猫")
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -53,7 +53,7 @@ public class WordControllerTest {
     public void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
         String searchItem = null;
 
-        MockHttpServletResponse response = mvc.perform(get("/api/words?searchItem={non_existent_variable}", searchItem)
+        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/words?searchItem={non_existent_variable}", searchItem)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -65,7 +65,7 @@ public class WordControllerTest {
     public void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
         String searchItem = "";
 
-        MockHttpServletResponse response = mvc.perform(get("/api/words?searchItem={attribute_uri}", searchItem)
+        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/words?searchItem={attribute_uri}", searchItem)
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 

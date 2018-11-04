@@ -1,0 +1,77 @@
+.text-card-top {
+    position: relative;
+}
+
+.text-card-excerpt {
+    margin-top: 10px!important;
+    white-space: pre-wrap;
+}
+
+.text-card-date {
+    font-size: 16px!important;
+    margin-right: 5px;
+}
+
+.difficulty-bar {
+    float: left;
+    position: absolute;
+    top: 0;
+    background-color: white;
+    padding: 5px;
+    border-radius: 0 0 20px 0;
+}
+
+.difficulty-bar.difficulty-bar-no-image {
+    position: inherit;
+    background-color: #f5f5f5;
+
+}
+
+.difficulty-level {
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Safari 3-8 */
+    transform: rotate(90deg);
+}
+
+.difficulty-bar .level-zero {
+    color: #7bee65;
+}
+
+.difficulty-bar .level-one {
+    color: #38c14c;
+}
+
+.difficulty-bar .level-two {
+    color: #e7db10;
+}
+
+.difficulty-bar .level-three {
+    color: #ee891e;
+}
+
+.difficulty-bar .level-four {
+    color: #c80009;
+}
+
+.text-card-bottom {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-card-bottom-container {
+    display: block !important;
+}
+
+.tag-icon {
+    margin-right: 5px;
+}
+
+.tag-list {
+    font-size: 12px;
+    position: relative;
+    top: -4px;
+}
+
+.favorite-icon {
+    color: #c80009;
+}

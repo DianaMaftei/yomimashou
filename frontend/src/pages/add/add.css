@@ -1,0 +1,39 @@
+#add-page {
+    height: 100%;
+    padding: 50px;
+}
+
+.quill {
+    height: 60%;
+}
+
+.ql-toolbar {
+    box-shadow: 0 1px 10px rgba(0, 0, 0, .1);
+    text-align: center;
+}
+
+.ql-container {
+    border-radius: 0 0 5px 5px;
+}
+
+.add-action-footer {
+    margin-top: 50px;
+}
+
+.add-action-buttons {
+    margin: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.add-text-series {
+   margin-bottom: 20px;
+}
+
+.chips-list {
+    padding: 10px 10px 20px 10px;
+}
+
+.tag-chip {
+    margin: 5px 5px 0 0;
+}

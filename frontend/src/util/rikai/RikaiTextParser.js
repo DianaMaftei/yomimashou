@@ -95,7 +95,7 @@ export function search(tdata, dictOption, wordList, nameList) {
 
     tdata.uofsNext = 1;
 
-    if (!rp) {
+    if (!rp || !rp.data) {
         return;
     }
 

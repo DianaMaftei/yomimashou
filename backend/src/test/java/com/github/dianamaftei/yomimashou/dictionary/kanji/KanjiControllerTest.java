@@ -42,7 +42,7 @@ public class KanjiControllerTest {
         kanji.setMeaning("cat");
         when(kanjiService.get("猫")).thenReturn(kanji);
 
-        MockHttpServletResponse response = mvc.perform(get("/api/kanji?searchItem=猫")
+        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/kanji?searchItem=猫")
                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -59,7 +59,7 @@ public class KanjiControllerTest {
         byte[] svgBytes = svg.getBytes();
         when(kanjiService.getKanjiSVG(kanji)).thenReturn(svgBytes);
 
-        MockHttpServletResponse response = mvc.perform(get("/api/kanji/svg/" + kanji)
+        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/kanji/svg/" + kanji)
                 .characterEncoding("UTF-8")
                 .accept(javax.ws.rs.core.MediaType.APPLICATION_SVG_XML))
                 .andReturn().getResponse();

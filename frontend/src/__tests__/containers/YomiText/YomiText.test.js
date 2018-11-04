@@ -1,6 +1,6 @@
 import React from "react";
 import { configure, shallow } from "enzyme";
-import Adapter from 'enzyme-adapter-react-15';
+import Adapter from 'enzyme-adapter-react-16';
 import '../../../__mocks__/xhr-mock.js';
 import { YomiText } from "../../../containers/YomiText/YomiText";
 import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../../util/rikai/RikaiTextParser";

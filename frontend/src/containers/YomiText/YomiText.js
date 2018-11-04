@@ -5,11 +5,12 @@ import RikaiPopUp from "../Rikai/Rikai";
 import '../Rikai/Rikai.css';
 import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../util/rikai/RikaiTextParser";
 import apiUrl from "../../AppUrl";
+import ReactQuill from "react-quill/dist/react-quill";
 
 const mapStateToProps = (state) => ({
-    text: state.viewYomi.text,
-    words: state.addYomi.words,
-    names: state.addYomi.names,
+    text: state.add.text.plain,
+    words: state.add.words,
+    names: state.add.names,
     textSelectInfo: state.yomiText.textSelectInfo,
     searchResult: state.popUp.searchResult,
     showResult: state.popUp.showResult,
@@ -28,7 +29,7 @@ const mapDispatchToProps = (dispatch) => ({
     fetchData: (list, url) => {
         dispatch({
             type: 'FETCH_DATA',
-            payload: axios.get(apiUrl + '/api/' + url + '?searchItem=' + list.toString())
+            payload: axios.get(apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString())
         });
     },
     updateSearchResult: result => {
@@ -143,6 +144,12 @@ export class YomiText extends React.Component {
                  onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}>
 
                 {this.props.text}
+
+                {/*<ReactQuill*/}
+                    {/*value={this.props.text || ''}*/}
+                    {/*readOnly={true}*/}
+                    {/*theme={null}*/}
+                {/*/>*/}
 
             </div>
 
