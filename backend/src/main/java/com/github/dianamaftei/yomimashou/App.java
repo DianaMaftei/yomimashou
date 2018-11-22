@@ -1,5 +1,6 @@
 package com.github.dianamaftei.yomimashou;
 
+import com.github.dianamaftei.yomimashou.audit.UserAuditorAware;
 import com.github.dianamaftei.yomimashou.dictionary.creator.EntriesCreator;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.EntityManager;
 
 @SpringBootApplication
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class App implements CommandLineRunner {
 
     @Value("${unmarshal.XML}")
@@ -42,5 +46,10 @@ public class App implements CommandLineRunner {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    AuditorAware<String> auditorAware() {
+        return new UserAuditorAware();
     }
 }

@@ -14,12 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.github.dianamaftei.yomimashou.security.SecurityConstants.*;
+import static com.github.dianamaftei.yomimashou.security.SecurityConstants.HEADER_STRING;
+import static com.github.dianamaftei.yomimashou.security.SecurityConstants.TOKEN_PREFIX;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+    private static String SECRET;
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager) {
+    public JWTAuthorizationFilter(AuthenticationManager authManager, String SECRET) {
         super(authManager);
+        this.SECRET = SECRET;
     }
 
     @Override

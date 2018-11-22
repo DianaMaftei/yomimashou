@@ -1,8 +1,10 @@
 package com.github.dianamaftei.yomimashou.security;
 
 import com.github.dianamaftei.yomimashou.user.ApplicationUserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,6 +25,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private ApplicationUserService applicationUserService;
     private PasswordEncoder passwordEncoder;
 
+    @Value("${security.SECRET}")
+    public String SECRET;
+
     public WebSecurity(ApplicationUserService applicationUserService, PasswordEncoder passwordEncoder) {
         this.applicationUserService = applicationUserService;
         this.passwordEncoder = passwordEncoder;
@@ -34,10 +39,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
                 .antMatchers(HttpMethod.GET, "/api/dictionary/*/**").permitAll()
                 .antMatchers("/api/text/parse/*").permitAll()
+                .antMatchers("/api/text/*").permitAll()
+                .antMatchers("/api/text").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), SECRET))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), SECRET))
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

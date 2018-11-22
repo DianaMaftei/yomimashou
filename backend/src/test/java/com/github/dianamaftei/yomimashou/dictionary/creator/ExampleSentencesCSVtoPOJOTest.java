@@ -39,8 +39,8 @@ public class ExampleSentencesCSVtoPOJOTest {
         exampleSentencesCSVtoPOJO.setResource(classPathResource);
         when(classPathResource.getInputStream()).thenReturn(new ByteArrayInputStream(
                 ("3400993\tjpn\tこれ、可愛いな。\tThis is cute.\n" +
-                 "1204364\tjpn\t明日の午前２時４０分てそれ１回目？それとも２回目？\tIs it the first time at 2:40AM tomorrow? Or is it the second time?")
-                 .getBytes()));
+                        "1204364\tjpn\t明日の午前２時４０分てそれ１回目？それとも２回目？\tIs it the first time at 2:40AM tomorrow? Or is it the second time?")
+                        .getBytes()));
 
         exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
 

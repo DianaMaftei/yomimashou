@@ -106,10 +106,10 @@ public class TextParserService {
     }
 
     private String getValidTextFragment(String text) {
-        List<String> endingCharacters = Stream.of("、", "。").collect(Collectors.toList());
+        String[] endingCharacters = {"。", "、", ".", ",", "！", "？"};
         int indexOfEndingCharacter = -1;
-        for (int i = 0; i < endingCharacters.size(); i++) {
-            int index = text.indexOf(endingCharacters.get(i));
+        for (String endingCharacter : endingCharacters) {
+            int index = text.indexOf(endingCharacter);
             if (index != -1 && (indexOfEndingCharacter == -1 || index < indexOfEndingCharacter)) {
                 indexOfEndingCharacter = index;
             }

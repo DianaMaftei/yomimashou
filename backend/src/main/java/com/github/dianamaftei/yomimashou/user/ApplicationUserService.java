@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static java.util.Collections.emptyList;
 
 @Service
@@ -23,11 +25,19 @@ public class ApplicationUserService implements UserDetailsService {
     }
 
     public void register(ApplicationUser user) {
-        if(user.getEmail() == null || user.getEmail().isEmpty()) {
-            throw new RuntimeException("Missing or empty email.");
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            throw new InvalidUserInfoException("Missing or empty email.");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         applicationUserRepository.save(user);
+    }
+
+    public Optional<ApplicationUser> findByUsername(String username) {
+        return applicationUserRepository.findByUsername(username);
+    }
+
+    public Optional<ApplicationUser> findById(Long id) {
+        return applicationUserRepository.findById(id);
     }
 
     @Override
