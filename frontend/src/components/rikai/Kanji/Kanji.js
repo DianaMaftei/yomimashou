@@ -31,8 +31,8 @@ export default ({ result, showWordExamples }) => {
                 </div>
             </div>
             <h2 className="k-eigo">{result.eigo}</h2>
-            <h3>Kun: <span className="k-yomi">{result.kunReading}</span></h3>
-            <h3>On: <span className="k-yomi">{result.onReading}</span></h3>
+            <h3>Kun: <span className="k-yomi">{result.kunReading || '–' }</span></h3>
+            <h3>On: <span className="k-yomi">{result.onReading  || '–'}</span></h3>
             <br/>
 
             <h4>See example words:</h4>

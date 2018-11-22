@@ -1,3 +1,7 @@
+.text-card-link:hover {
+    text-decoration: none;
+}
+
 .text-card-top {
     position: relative;
 }

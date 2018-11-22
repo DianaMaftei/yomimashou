@@ -1,6 +1,7 @@
 let defaultState = {
     popUp: {
-        totalDictionaries: 3,
+        totalDictionaries: 2,
+        // totalDictionaries: 3,
         currentDictionary: 2,
         limit: 5
     }
@@ -18,7 +19,7 @@ const config = (state = defaultState, action) => {
                 ...state,
                 popUp: {
                     ...state.popUp,
-                    currentDictionary: getNextDictionary(state.popUp)
+                    currentDictionary: state.popUp.currentDictionary === 2 ? 1 : 2
                 }
             };
 

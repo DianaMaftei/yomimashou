@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import axios from "axios";
 import RikaiPopUp from "../Rikai/Rikai";
 import '../Rikai/Rikai.css';
+import './yomi.css';
 import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../util/rikai/RikaiTextParser";
 import apiUrl from "../../AppUrl";
-import ReactQuill from "react-quill/dist/react-quill";
+import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
+import Kuroshiro from "kuroshiro";
+import Trumbowyg from 'react-trumbowyg'
 
 const mapStateToProps = (state) => ({
-    text: state.add.text.plain,
     words: state.add.words,
     names: state.add.names,
     textSelectInfo: state.yomiText.textSelectInfo,
@@ -20,6 +22,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    setText: (text) => {
+        dispatch({
+            type: 'SET_HIGHLIGHTED_TEXT',
+            text
+        });
+    },
     updateTextSelectInfo: textSelectInfo => {
         dispatch({
             type: 'UPDATE_TEXT_SELECT_INFO',
@@ -48,13 +56,32 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
             type: 'SWITCH_DICTIONARY'
         });
+    },
+    setFuriganaText: text => {
+        dispatch({
+            type: 'SET_FURIGANA_TEXT',
+            text
+        });
     }
 });
 
 export class YomiText extends React.Component {
     constructor(props) {
         super(props);
-        window.addEventListener('keydown', this.onKeyDown.bind(this), true);
+
+        // window.removeEventListener('keydown', this.onKeyDown.bind(this), true);
+        // window.addEventListener('keydown', this.onKeyDown.bind(this), true);
+
+        this.analyzer = new KuromojiAnalyzer({
+            dictPath: "/kuromojiDict"
+        });
+
+        this.kuroshiro = new Kuroshiro();
+        this.kuroshiro.init(this.analyzer);
+    }
+
+    componentDidMount() {
+        window.addEventListener("keydown", this.onKeyDown.bind(this));
     }
 
     shouldComponentUpdate(nextProps) {
@@ -62,7 +89,9 @@ export class YomiText extends React.Component {
     }
 
     onMouseClick(searchResult, fetchData, setPopupInfo) {
-        if (!isVisible()){
+        if (!searchResult.type) return;
+
+        if (!isVisible()) {
             if (searchResult.type === "words") {
                 fetchData(searchResult.result.data.map(item => item.word), searchResult.type);
             } else if (searchResult.type === "kanji") {
@@ -71,10 +100,12 @@ export class YomiText extends React.Component {
                 fetchData(searchResult.result.data, searchResult.type);
             }
 
+            if(!document.getSelection().getRangeAt(0).getClientRects()[0]) return;
+
             setPopupInfo({
                 visibility: true, position: {
-                    x: document.getSelection().getRangeAt(0).getClientRects()[0].left,
-                    y: document.getSelection().getRangeAt(0).getClientRects()[0].bottom
+                    x: document.getSelection().getRangeAt(0).getClientRects()[0].x - 10,
+                    y: document.getSelection().getRangeAt(0).getClientRects()[0].y - document.body.scrollTop + 25
                 }
             });
         }
@@ -82,9 +113,9 @@ export class YomiText extends React.Component {
 
     onMouseMove(ev, updateSearchResult, currentDictionary, updateTextSelectInfo, wordList, nameList) {
         if (!isVisible() && !this.mouseDown) {
-            let textSelectInfo = tryToFindTextAtMouse(ev);
+            let textAtMouseInfo = tryToFindTextAtMouse(ev);
 
-            let searchResult = search(textSelectInfo, currentDictionary, wordList, nameList);
+            let searchResult = search(textAtMouseInfo, currentDictionary, wordList, nameList);
 
             if (searchResult) {
                 let entries = searchResult.entries;
@@ -93,16 +124,21 @@ export class YomiText extends React.Component {
                     return;
                 }
 
-                updateSearchResult(entries);
+                if (!this.props.searchResult.result) {
+                    updateSearchResult(entries);
+                } else if (JSON.stringify(this.props.searchResult.result) !== JSON.stringify(entries.result)) {
+                    updateSearchResult(entries);
+                }
 
-                if (textSelectInfo && entries) {
-                    textSelectInfo.uofsNext = entries.matchLen;
-                    textSelectInfo.uofs = (textSelectInfo.prevRangeOfs + textSelectInfo.uofs - textSelectInfo.prevRangeOfs);
-                    textSelectInfo.prevSelView = textSelectInfo.prevRangeNode.ownerDocument.defaultView;
-                    textSelectInfo.lastRo = searchResult.lastRo;
-                    textSelectInfo.lastSelEnd = searchResult.lastSelEnd;
+                if (textAtMouseInfo && entries) {
+                    textAtMouseInfo.entries = JSON.stringify(entries.result.data);
+                    textAtMouseInfo.matchLen = entries.result.matchLen || entries.matchLen;
+                    textAtMouseInfo.uofs = (textAtMouseInfo.prevRangeOfs + textAtMouseInfo.uofs);
+                    textAtMouseInfo.prevSelView = textAtMouseInfo.prevRangeNode.ownerDocument.defaultView;
+                    textAtMouseInfo.lastRo = searchResult.lastRo;
+                    textAtMouseInfo.selEndList = searchResult.selEndList;
 
-                    updateTextSelectInfo(textSelectInfo);
+                    updateTextSelectInfo(textAtMouseInfo);
 
                     let highlightColors = {
                         1: "#f0a0a8",
@@ -110,7 +146,9 @@ export class YomiText extends React.Component {
                         3: "#6fbca7"
                     };
 
-                    highlightMatch(textSelectInfo.totalOffset, entries.result.matchLen, textSelectInfo.lastSelEnd, highlightColors[currentDictionary]);
+                    let highlightedText = highlightMatch(textAtMouseInfo, highlightColors[currentDictionary]);
+
+                    // this.props.setText(highlightedText);
                 }
             }
         }
@@ -135,7 +173,30 @@ export class YomiText extends React.Component {
         ev.preventDefault();
     };
 
+    showFurigana() {
+        if (this.props.text.furigana) {
+            this.props.setFuriganaText(null);
+
+        } else {
+            let setFuriganaText = this.props.setFuriganaText;
+            let text = this.props.text.content;
+            this.kuroshiro.convert(text, {
+                to: "hiragana",
+                mode: "furigana"
+            }).then(function (result) {
+                setFuriganaText(result);
+            })
+        }
+    }
+
     render() {
+        let btnsDef = {
+            buttonName: {
+                fn: () => alert("boo"),
+                ico: 'insertImage'
+            }
+        };
+
         return <div id="yomi-text">
             <div id="yomi-text-container"
                  onMouseDown={ev => this.mouseDown = true}
@@ -143,13 +204,17 @@ export class YomiText extends React.Component {
                  onClick={(ev) => this.onMouseClick(this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
                  onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}>
 
-                {this.props.text}
+                <div id="yomi-text-box">
+                    <button id="toggle-furigana" onClick={this.showFurigana.bind(this)}> ルビ</button>
+                    <Trumbowyg
+                        id='react-trumbowyg'
+                        data={this.props.text.furigana || this.props.text.content || '<p><br></p>'}
+                        btnsDef={btnsDef}
+                        buttons={[['buttonName']]}
+                        disabled={true}
+                    />
+                </div>
 
-                {/*<ReactQuill*/}
-                    {/*value={this.props.text || ''}*/}
-                    {/*readOnly={true}*/}
-                    {/*theme={null}*/}
-                {/*/>*/}
 
             </div>
 
