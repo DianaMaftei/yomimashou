@@ -10,8 +10,10 @@ export default (text) => (
             image={require("../../pics/ghost-cat.jpg")}
             title="Contemplative Reptile"
         />
-        <div className="difficulty-bar">
-            <DifficultyLevel level={text.level}/>
-        </div>
+        {text.level &&
+            <div className="difficulty-bar">
+                <DifficultyLevel level={text.level}/>
+            </div>
+        }
     </div>
 );

@@ -1,0 +1,38 @@
+#react-trumbowyg {
+    height: 100% !important;
+}
+
+#yomi-text-box {
+    position: relative;
+}
+
+#toggle-furigana {
+    position: absolute;
+    z-index: 10;
+    height: 28px;
+    line-height: 14px;
+    top: 5px;
+    left: 5px;
+    font-size: 14px;
+    display: block;
+    padding: 1px 6px!important;
+    margin-bottom: 1px;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+    background: 0 0;
+    -webkit-transition: background-color 150ms,opacity 150ms;
+    -o-transition: background-color 150ms,opacity 150ms;
+    transition: background-color 150ms,opacity 150ms;
+}
+
+#toggle-furigana:hover{
+    background-color: #FFF;
+    outline: 0;
+}
+
+#react-trumbowyg p,
+#react-trumbowyg span {
+    font-size: 20px !important;
+    line-height: 50px !important;
+}

@@ -29,6 +29,11 @@
 */
 import RikaiDict from "./RikaiDictionary";
 
+// expression to get all text nodes that are not in (RP or RT) elements
+let textNodeExpr = 'descendant-or-self::text()[not(parent::rp) and not(ancestor::rt)]';
+// ignore text in RT elements
+let startElementExpr = 'boolean(parent::rp or ancestor::rt)';
+
 export function isInline(node) {
     let inlineNames = {
         // text node
@@ -84,29 +89,29 @@ export function isInline(node) {
         );
 }
 
-export function search(tdata, dictOption, wordList, nameList) {
-    if (!tdata) {
+export function search(textAtMouseInfo, dictOption, wordList, nameList) {
+    if (!textAtMouseInfo) {
         return;
     }
 
-    let rp = tdata.prevRangeNode;
-    let ro = tdata.prevRangeOfs + tdata.uofs;
+    let prevRangeNode = textAtMouseInfo.prevRangeNode;
+    let prevRangeOfs = textAtMouseInfo.prevRangeOfs + textAtMouseInfo.uofs;
     let u;
 
-    tdata.uofsNext = 1;
+    textAtMouseInfo.matchLen = 1;
 
-    if (!rp || !rp.data) {
+    if (!prevRangeNode || !prevRangeNode.data) {
         return;
     }
 
-    if ((ro < 0)) {
+    if ((prevRangeOfs < 0)) {
         return;
     }
 
     // if we have '   XYZ', where whitespace is compressed, X never seems to get selected
-    while (((u = rp.data.charCodeAt(ro)) === 32) || (u === 9) || (u === 10)) {
-        ++ro;
-        if (ro >= rp.data.length) {
+    while (((u = prevRangeNode.data.charCodeAt(prevRangeOfs)) === 32) || (u === 9) || (u === 10)) {
+        ++prevRangeOfs;
+        if (prevRangeOfs >= prevRangeNode.data.length) {
             return;
         }
     }
@@ -120,18 +125,14 @@ export function search(tdata, dictOption, wordList, nameList) {
         return;
     }
 
-    //selection end data
     let selEndList = [];
-    let maxLength = dictOption !== 3 ? 13 : 25;
-    let end = ro + maxLength;
-    selEndList.push({ node: rp, offset: Math.min(rp.data.length, end) });
 
-    let text = rp.textContent.substring(ro, end);
+    let text = getTextFromRange(prevRangeNode, prevRangeOfs, selEndList, 13 /*maxlength*/);
 
     let result = {
         entries: RikaiDict.search(text, String(dictOption), wordList, nameList),
-        lastSelEnd: selEndList,
-        lastRo: ro
+        selEndList: selEndList,
+        lastRo: prevRangeOfs
     };
 
     return result;
@@ -142,73 +143,190 @@ export function isVisible() {
     return popup && popup.style.display === 'block';
 }
 
-export function highlightMatch(so, matchLen = 1, selEndList, color) {
-    if (!selEndList) {
+export function highlightMatch(info, highlightColor) {
+    if (!info.selEndList) {
         return;
     }
 
-    let offset = matchLen + so;
+    let offset = info.matchLen + info.lastRo;
 
-    let parentNode = document.getElementById("yomi-text-container");
+    let doc = info.prevRangeNode.ownerDocument;
 
-    let text = parentNode.textContent;
+    let sel = doc.defaultView.getSelection();
 
-    let highlight = text.substring(so, offset);
-    let newText = text.substring(0, so) + "<span id='highlight-selection' style='background-color: " + color + "'>" + highlight + "</span>" + text.substring(offset, text.length);
+    let range = doc.createRange();
 
-    parentNode.innerHTML = newText;
+    range.setStart(info.prevRangeNode, info.lastRo);
+
+    let selEnd;
+    for (let i = 0, len = info.selEndList.length; i < len; i++) {
+        selEnd = info.selEndList[i];
+        if (offset <= selEnd.offset) break;
+        offset -= selEnd.offset;
+    }
+    range.setEnd(selEnd.node, offset);
+
+    let newNode = document.createElement("span");
+    newNode.style.backgroundColor = highlightColor;
+    // range.surroundContents(newNode);
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    // let highlight = text.substring(so, offset);
+    // console.log(highlight);
+    // console.log(so);
+    // console.log(offset);
+    // let newText = text.substring(0, so) + "<span id='highlight-selection' style='background-color: " + color + "'>" + highlight + "</span>" + text.substring(offset, text.length);
+
+    // return newText;
+    // parentNode.innerHTML = newText;
+}
+
+// Gets text from a node
+// returns a string
+// node: a node
+// selEnd: the selection end object will be changed as a side effect
+// maxLength: the maximum length of returned string
+// xpathExpr: an XPath expression, which evaluates to text nodes, will be evaluated
+// relative to "node" argument
+function getInlineText(node, selEndList, maxLength, xpathExpr) {
+    let text = '';
+    let endIndex;
+
+    if (node.nodeName === '#text') {
+        endIndex = Math.min(maxLength, node.data.length);
+        selEndList.push({ node: node, offset: endIndex });
+        return node.data.substring(0, endIndex);
+    }
+
+    let result = xpathExpr.evaluate(node, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+
+    while ((text.length < maxLength) && (node = result.iterateNext())) {
+        endIndex = Math.min(node.data.length, maxLength - text.length);
+        text += node.data.substring(0, endIndex);
+        selEndList.push({ node: node, offset: endIndex });
+    }
+
+    return text;
+}
+
+function getNext(node) {
+    let nextNode;
+
+    if ((nextNode = node.nextSibling) != null)
+        return nextNode;
+    if (((nextNode = node.parentNode) != null) && isInline(nextNode))
+        return getNext(nextNode);
+
+    return null;
+}
+
+function getTextFromRange(rangeParent, offset, selEndList, maxLength) {
+    let text = '';
+
+    let endIndex;
+
+    let xpathExpr = rangeParent.ownerDocument.createExpression(textNodeExpr, null);
+
+    if (rangeParent.ownerDocument.evaluate(startElementExpr, rangeParent, null, XPathResult.BOOLEAN_TYPE, null).booleanValue)
+        return '';
+
+    if (rangeParent.nodeType !== Node.TEXT_NODE)
+        return '';
+
+    endIndex = Math.min(rangeParent.data.length, offset + maxLength);
+    text += rangeParent.data.substring(offset, endIndex);
+    selEndList.push({ node: rangeParent, offset: endIndex });
+
+    let nextNode = rangeParent;
+    while (((nextNode = getNext(nextNode)) != null) && (isInline(nextNode)) && (text.length < maxLength))
+        text += getInlineText(nextNode, selEndList, maxLength - text.length, xpathExpr);
+
+    return text;
+}
+
+function getFirstTextChild(node) {
+    return document.evaluate('descendant::text()[not(parent::rp) and not(ancestor::rt)]',
+        node, null, XPathResult.ANY_TYPE, null).iterateNext();
 }
 
 export function tryToFindTextAtMouse(ev) {
-    let range, rp, ro;
+    let range, rangePosition, rangeOffset;
 
     if (document.caretRangeFromPoint) {
         range = document.caretRangeFromPoint(ev.clientX, ev.clientY);
-        rp = range.startContainer;
-        ro = range.startOffset;
+        rangePosition = range.startContainer;
+        rangeOffset = range.startOffset;
     } else if (document.caretPositionFromPoint) {
         range = document.caretPositionFromPoint(ev.clientX, ev.clientY);
-        rp = range.offsetNode;
-        ro = range.offset;
+        rangePosition = range.offsetNode;
+        rangeOffset = range.offset;
     } else {
         range = window.getSelection();
-        rp = range.anchorNode;
-        ro = range.anchorOffset;
+        rangePosition = range.anchorNode;
+        rangeOffset = range.anchorOffset;
     }
 
-    let node = rp.parentElement;
-    if (node.id === "yomi-text") {
-        node = rp;
-    }
-    let offset = 0;
+    try {
+        // This is to account for bugs in caretRangeFromPoint
+        // It includes the fact that it returns text nodes over non text nodes
+        // and also the fact that it miss the first character of inline nodes.
 
-    if(node.id === "highlight-selection") {
-        rp = document.createTextNode(rp.textContent + node.nextSibling.textContent);
-        offset = node.previousSibling ? node.previousSibling.length + ro : ro ;
-    } else {
-        for (let index = 0; index < node.childNodes.length; index++) {
-            let currentNode = node.childNodes[index];
-            if (currentNode === rp) {
-                if (index === 0) {
-                    offset = ro;
-                    break;
-                } else {
-                    offset += ro;
+        // If the range offset is equal to the node data length
+        // Then we have the second case and need to correct.
+        if ((rangePosition.data) && rangeOffset === rangePosition.data.length) {
+            // A special exception is the WBR tag which is inline but doesn't
+            // contain text.
+            if ((rangePosition.nextSibling) && (rangePosition.nextSibling.nodeName === 'WBR')) {
+                rangePosition = rangePosition.nextSibling.nextSibling;
+                rangeOffset = 0;
+            }
+            // If we're to the right of an inline character we can use the target.
+            // However, if we're just in a blank spot don't do anything.
+            else if (isInline(ev.target)) {
+                if (rangePosition.parentNode !== ev.target) {
+                    rangePosition = ev.target.firstChild;
+                    rangeOffset = 0;
                 }
-
-            } else if (currentNode.length) {
-                offset += currentNode.length;
-            } else if (currentNode.textContent) {
-                offset += currentNode.textContent.length;
+            }
+            // Otherwise we're on the right and can take the next sibling of the
+            // inline element.
+            else {
+                rangePosition = rangePosition.parentNode.nextSibling;
+                rangeOffset = 0;
             }
         }
+        // The case where the before div is empty so the false spot is in the parent
+        // But we should be able to take the target.
+        // The 1 seems random but it actually represents the preceding empty tag
+        // also we don't want it to mess up with our fake div
+        // Also, form elements don't seem to fall into this case either.
+        if (!('form' in ev.target) && rangePosition && rangePosition.parentNode !== ev.target && rangeOffset === 1) {
+            rangePosition = getFirstTextChild(ev.target);
+            rangeOffset = 0;
+        }
+
+
+        // Otherwise, we're off in nowhere land and we should go home.
+        // offset should be 0 or max in this case.
+        else if ((!(rangePosition) || ((rangePosition.parentNode !== ev.target)))) {
+            rangePosition = null;
+            rangeOffset = -1;
+
+        }
+
     }
+    catch (err) {
+        console.log(err.message);
+        return;
+    }
+
 
     let textSelectInfo = {
         prevTarget: ev.target,
-        prevRangeNode: rp,
-        prevRangeOfs: ro,
-        totalOffset: offset,
+        prevRangeNode: rangePosition,
+        prevRangeOfs: rangeOffset,
+        // totalOffset: offset,
         uofs: 0,
     };
 

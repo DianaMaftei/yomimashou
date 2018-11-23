@@ -30,10 +30,11 @@
 let RikaiDict = (function () {
 
     let config = {
-        dictCount: 3,
+        dictCount: 2,
+        // dictCount: 3,
         kanji: '1',
         words: '2',
-        names: '3',
+        // names: '3',
         wordEntries: [],
         nameEntries: []
     };
@@ -173,6 +174,7 @@ let RikaiDict = (function () {
         while (string.length > 0) {
             deinflectionResult = deinflect(string);
             deinflectedWord = "";
+            let originalWord = deinflectionResult[0].word;
 
             for (let i = 0; i < deinflectionResult.length; i++) {
                 deinflectedWord = deinflectionResult[i];
@@ -180,8 +182,8 @@ let RikaiDict = (function () {
                 if (isWord) {
                     if (alreadyFound.indexOf(deinflectedWord.word) === -1) {
                         alreadyFound.push(deinflectedWord.word);
-                        validEntries.push({ word: deinflectedWord.word, grammarPoint: deinflectedWord.reason });
-                        maxLengthOfWord = deinflectedWord.word.length > maxLengthOfWord ? deinflectedWord.word.length : maxLengthOfWord;
+                        validEntries.push({ word: deinflectedWord.word, grammarPoint: deinflectedWord.reason, originalWord: originalWord });
+                        maxLengthOfWord = originalWord.length > maxLengthOfWord ? originalWord.length : maxLengthOfWord;
                     }
                 }
             }
@@ -223,12 +225,13 @@ let RikaiDict = (function () {
 
     function search(text, dictOption, wordList, nameList) {
         let e = null;
+
         switch (dictOption) {
             case config.kanji:
                 if (!isKanji(text.charAt(0))) {
                     return e = null;
                 }
-                e = { result: [text.charAt(0)], type: "kanji" };
+                e = { result: [text.charAt(0)], type: "kanji", matchLen: 1 };
                 return e;
             case config.words:
                 e = { result: findValidWordsInString(text, wordList), type: "words" };

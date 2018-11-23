@@ -3,8 +3,10 @@ import DifficultyLevel from "./DifficultyLevel";
 
 export default (text) => (
     <div className="text-card-top">
-        <div className="difficulty-bar difficulty-bar-no-image">
-            <DifficultyLevel level={text.level}/>
-        </div>
+        {text.level &&
+            <div className="difficulty-bar difficulty-bar-no-image">
+                <DifficultyLevel level={text.level}/>
+            </div>
+        }
     </div>
 )

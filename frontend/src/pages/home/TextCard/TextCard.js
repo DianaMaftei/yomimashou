@@ -9,35 +9,38 @@ import CardActions from "@material-ui/core/es/CardActions/CardActions";
 import DateRange from '@material-ui/icons/DateRange';
 import Divider from "@material-ui/core/es/Divider/Divider";
 import "./TextCard.css";
+import Link from "react-router-dom/es/Link";
 
-export default ({ text }) => {
+export default ({ text, onCardClick }) => {
+    if (!text) return <div/>
+
     return (
-        <Card style={{ maxWidth: 300 }}>
-            <CardActionArea>
-                <TextCardTop text={text}/>
-                <CardContent>
-                    <Typography variant="h5" component="h2">
-                        {text.title}
-                    </Typography>
-                    <Typography gutterBottom variant="caption">
-                        <DateRange className="text-card-date"/>
-                        <span>
-                           {new Intl.DateTimeFormat('en-GB', {
-                               year: 'numeric',
-                               month: 'long',
-                               day: '2-digit'
-                           }).format(text.date)}
+        <Card style={{ maxWidth: 350 }} onClick={() => onCardClick(text.id)}>
+            <Link to="/read" className="text-card-link">
+                <CardActionArea>
+                    <TextCardTop text={text}/>
+                    <CardContent>
+                        <Typography variant="h5" component="h2">
+                            {text.title}
+                        </Typography>
+                        <Typography gutterBottom variant="caption">
+                            <DateRange className="text-card-date"/>
+
+                            {text.creationDate}
+                            <span style={{ float: 'right' }}>
+                            by {text.createdBy}
                         </span>
-                        <span style={{ float: 'right' }}>
-                            by {text.user}
-                        </span>
-                    </Typography>
-                    <Divider/>
-                    <Typography component="p" className="text-card-excerpt">
-                        {text.excerpt}
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
+                        </Typography>
+                        {/*<Typography gutterBottom variant="caption">*/}
+                        {/*Text Length: {text.content.length} characters*/}
+                        {/*</Typography>*/}
+                        <Divider/>
+                        <Typography component="p" className="text-card-excerpt">
+                            {text.excerpt.replace(/<br>/g, "")}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+            </Link>
             <Divider/>
             <CardActions className="text-card-bottom-container">
                 <TextCardBottom text={text}/>

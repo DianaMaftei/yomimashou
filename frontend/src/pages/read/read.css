@@ -1,7 +1,12 @@
 #read-page h4{
-    padding-top: 50px;
+    /*padding-top: 50px;*/
 }
 
 #read-page .ql-editor {
     font-size: 20px;
 }
+
+#react-trumbowyg {
+    font-size: 20px!important;
+}
+

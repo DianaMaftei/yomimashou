@@ -1,6 +1,8 @@
 import React from 'react';
-import ReactQuill from "react-quill/dist/react-quill";
+import 'react-trumbowyg/dist/trumbowyg.min.css';
 import "./add.css";
+import Trumbowyg from 'react-trumbowyg'
+
 import {
     Button,
     Checkbox,
@@ -55,18 +57,6 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_TAG_INPUT',
             tag
         });
-    },
-    getWordsForText: (text) => {
-        dispatch({
-            type: 'PARSE_TEXT_WORDS',
-            payload: axios.post(apiUrl + '/api/text/parse/words', text)
-        })
-    },
-    getNamesForText: (text) => {
-        dispatch({
-            type: 'PARSE_TEXT_NAMES',
-            payload: axios.post(apiUrl + '/api/text/parse/names', text)
-        })
     }
 });
 
@@ -78,7 +68,7 @@ export class Add extends React.Component {
 
     disableAddBtn() {
         let textHasNoTitle = !this.props.text.title || this.props.text.title.length === 0;
-        let textHasNoContent = !this.props.text.plain || this.props.text.plain.trim().length === 0;
+        let textHasNoContent = !this.props.text.content || this.props.text.content.trim().length === 0;
         return textHasNoTitle || textHasNoContent;
     }
 
@@ -103,8 +93,18 @@ export class Add extends React.Component {
     }
 
     submitText() {
-        this.props.getWordsForText(this.props.text.plain);
-        // this.props.getNamesForText(this.props.text.plain);
+        let text = this.props.text;
+        const username = localStorage.getItem('username');
+        const token = localStorage.getItem('token');
+        text.user = {
+            username: username
+        };
+
+        axios.post(apiUrl + '/api/text', text, { headers: { Authorization: token } })
+            .then(resp => console.log(resp.data));
+
+        // axios.post(apiUrl + '/api/text/parse/names', text)
+
     }
 
     render() {
@@ -137,7 +137,9 @@ export class Add extends React.Component {
                     value={this.props.text.formatted || ''}
                     modules={modules}
                     onChange={this.props.setText}
+                    onPaste={this.props.setText}
                 />
+
                 <div className="add-action-footer">
                     <div>
                         <h6>Tags</h6>
@@ -145,8 +147,9 @@ export class Add extends React.Component {
                             id="tags"
                             value={this.props.tagInput}
                             onChange={this.updateTag.bind(this)}
+                            disabled
                         />
-                        <Button variant="outlined" component="span" onClick={this.addTag.bind(this)}>
+                        <Button variant="outlined" component="span" onClick={this.addTag.bind(this)} disabled>
                             Add
                         </Button>
                         <div className="chips-list">
@@ -162,9 +165,9 @@ export class Add extends React.Component {
                             )}
                         </div>
                         <div className="add-text-series">
-                            <FormControlLabel value="series" control={<Checkbox/>} label="Series"/>
+                            <FormControlLabel value="series" control={<Checkbox/>} label="Series" disabled/>
                             <div>
-                                <FormControl>
+                                <FormControl disabled>
                                     <Select
                                         value="ceva"
                                         onChange={() => {
@@ -181,7 +184,7 @@ export class Add extends React.Component {
                     </div>
                     <Divider/>
                     <div className="add-action-buttons">
-                        <Button variant="outlined" component="span"> Preview </Button>
+                        <Button variant="outlined" component="span" disabled> Preview </Button>
                         <div>
                             <Switch
                                 checked={true}
@@ -189,6 +192,7 @@ export class Add extends React.Component {
                                     console.log(ceva)
                                 }}
                                 color="primary"
+                                disabled
                             />
                             <span>public</span>
                         </div>
@@ -198,7 +202,7 @@ export class Add extends React.Component {
                                 disabled={this.disableAddBtn()}
                                 onClick={this.submitText.bind(this)}
                         >
-                            <Link to="/view">
+                            <Link to="/read">
                                 Add & Read
                             </Link>
                         </Button>

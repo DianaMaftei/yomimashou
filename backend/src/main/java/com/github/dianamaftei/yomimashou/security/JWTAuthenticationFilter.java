@@ -23,9 +23,11 @@ import static com.github.dianamaftei.yomimashou.security.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
+    private static String SECRET;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, String SECRET) {
         this.authenticationManager = authenticationManager;
+        this.SECRET = SECRET;
     }
 
     @Override

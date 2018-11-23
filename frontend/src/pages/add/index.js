@@ -12,8 +12,38 @@ const addYomi = (state = defaultState, action) => {
                 ...state,
                 text: {
                     ...state.text,
-                    plain: action.text.plain,
-                    formatted: action.text.formatted
+                    content: action.text.content
+                }
+            };
+        case 'GET_TEXT_BY_ID_PENDING':
+            return {
+                ...state,
+                text: {}
+            };
+        case 'GET_TEXT_BY_ID_FULFILLED':
+            return {
+                ...state,
+                text: action.payload.data
+            };
+        case 'GET_TEXT_BY_ID_REJECTED':
+            return {
+                ...state,
+                error: action.payload
+            };
+        case 'SET_HIGHLIGHTED_TEXT':
+            return {
+                ...state,
+                text: {
+                    ...state.text,
+                    content: action.text
+                }
+            };
+        case 'SET_FURIGANA_TEXT':
+            return {
+                ...state,
+                text: {
+                    ...state.text,
+                    furigana: action.text
                 }
             };
         case 'RESET_TEXT':
