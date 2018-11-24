@@ -124,7 +124,7 @@ export class YomiText extends React.Component {
                     return;
                 }
 
-                if (!this.props.searchResult.result) {
+                if (!this.props.searchResult || this.props.searchResult.result) {
                     updateSearchResult(entries);
                 } else if (JSON.stringify(this.props.searchResult.result) !== JSON.stringify(entries.result)) {
                     updateSearchResult(entries);
@@ -208,7 +208,7 @@ export class YomiText extends React.Component {
                     <button id="toggle-furigana" onClick={this.showFurigana.bind(this)}> ルビ</button>
                     <Trumbowyg
                         id='react-trumbowyg'
-                        data={this.props.text.furigana || this.props.text.content || '<p><br></p>'}
+                        data={(this.props.text && (this.props.text.furigana || this.props.text.content)) || '<p><br></p>'}
                         btnsDef={btnsDef}
                         buttons={[['buttonName']]}
                         disabled={true}

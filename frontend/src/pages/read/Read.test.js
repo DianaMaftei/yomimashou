@@ -1,13 +1,9 @@
 import React from "react";
-import { configure, shallow } from "enzyme";
-import Adapter from 'enzyme-adapter-react-16';
+import { shallow } from "enzyme";
 import '../../__mocks__/xhr-mock.js';
 import '../../__mocks__/LocalStorageMock.js';
-import Trumbowyg from "react-trumbowyg";
 import { Read } from "./Read";
 import { Link } from "react-router-dom";
-
-configure({ adapter: new Adapter() });
 
 describe("Read", () => {
     let props;
