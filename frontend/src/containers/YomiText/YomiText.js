@@ -87,14 +87,20 @@ export class YomiText extends React.Component {
         let that = this;
         this.kuroshiro.init(this.analyzer).then(function () {
             that.props.setAnalyzer(that.kuroshiro._analyzer);
-        })
+        });
+
+        this.keyDownHandler = this.onKeyDown.bind(this);
     }
 
     componentDidMount() {
-        window.addEventListener("keydown", this.onKeyDown.bind(this));
+        document.addEventListener("keydown", this.keyDownHandler, false);
 
         let element = document.getElementById("yomi-text-container");
         element.innerHTML = (this.props.text && (this.props.text.furigana || this.props.text.content)) || '';
+    }
+
+    componentWillUnmount(){
+        document.removeEventListener("keydown", this.keyDownHandler, false);
     }
 
     shouldComponentUpdate(nextProps) {
