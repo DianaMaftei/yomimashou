@@ -2,7 +2,8 @@ let defaultState = {
     words: [],
     names: [],
     text: {},
-    tagInput: ""
+    tagInput: "",
+    analyzer: null
 };
 
 const addYomi = (state = defaultState, action) => {
@@ -45,6 +46,11 @@ const addYomi = (state = defaultState, action) => {
                     ...state.text,
                     furigana: action.text
                 }
+            };
+        case 'SET_ANALYZER':
+            return {
+                ...state,
+                analyzer: action.analyzer
             };
         case 'RESET_TEXT':
             return {

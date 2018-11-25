@@ -5,7 +5,7 @@ import SkipPrevious from '@material-ui/icons/SkipPrevious';
 import SkipNext from '@material-ui/icons/SkipNext';
 import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
 import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
-import StopOutlined from '@material-ui/icons/StopOutlined';
+import Replay from '@material-ui/icons/Replay';
 
 import apiUrl from "../../../AppUrl";
 
@@ -20,10 +20,10 @@ export default ({ result, showWordExamples }) => {
                 <div className="k-kanji">
                     <div id="kanji-draw"/>
                     <div id="sample-btn">
-                        <button className="btn" id="p" onClick={() => dmak.eraseLastStrokes(1)}><SkipPrevious fontSize="small"/></button>
+                        <button className="btn" id="p" onClick={() => dmak.eraseLastStrokes(1)}><SkipPrevious fontSize="default"/></button>
                         <button className="btn" id="s" onClick={() => dmak.pause()}><PauseCircleOutline fontSize="small"/></button>
                         <button className="btn" id="g" onClick={() => dmak.render()}><PlayCircleOutline fontSize="small"/></button>
-                        <button className="btn" id="r" onClick={() => dmak.erase()}><StopOutlined fontSize="small"/></button>
+                        <button className="btn" id="r" onClick={() => dmak.erase()}><Replay fontSize="small"/></button>
                         <button className="btn" id="n" onClick={() => dmak.renderNextStrokes(1)}><SkipNext fontSize="small"/></button>
                     </div>
                 </div>

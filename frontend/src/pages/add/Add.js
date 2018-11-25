@@ -1,7 +1,7 @@
 import React from 'react';
 import 'react-trumbowyg/dist/trumbowyg.min.css';
 import "./add.css";
-import Trumbowyg from 'react-trumbowyg'
+import Editor from 'react-pell';
 
 import {
     Button,
@@ -20,14 +20,6 @@ import apiUrl from "../../AppUrl";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom/umd/react-router-dom";
 
-const modules = {
-    toolbar: [
-        [{ 'header': [1, 2, false] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        ['clean']
-    ]
-};
-
 const mapStateToProps = (state) => ({
     text: state.add.text,
     tagInput: state.add.tagInput
@@ -40,6 +32,17 @@ const mapDispatchToProps = (dispatch) => ({
             text: {
                 plain: editor.getText(),
                 formatted: content
+            }
+        });
+    }, resetText: () => {
+        dispatch({
+            type: 'RESET_TEXT'
+        });
+    }, setText: (html) => {
+        dispatch({
+            type: 'SET_TEXT',
+            text: {
+                content: stripRubyAndFormatting(html)
             }
         });
     }, setTitle: (event) => {
@@ -61,6 +64,20 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export class Add extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.showTextPlaceholder = true;
+    }
+
+    componentDidMount() {
+        this.props.resetText();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.text !== nextProps.text;
+    }
 
     constructor() {
         super();
@@ -100,14 +117,26 @@ export class Add extends React.Component {
             username: username
         };
 
-        axios.post(apiUrl + '/api/text', text, { headers: { Authorization: token } })
-            .then(resp => console.log(resp.data));
+        let doc = new DOMParser().parseFromString(this.props.text.content, "text/html");
 
-        // axios.post(apiUrl + '/api/text/parse/names', text)
+        let newtext = doc.body.innerText.replace(/\n/g, '<br>');
+        this.props.setText(newtext);
 
+        text.content = newtext;
+
+        axios.post(apiUrl + '/api/text', text, { headers: { Authorization: token } });
+    }
+
+    removePlaceholder() {
+        if (this.showTextPlaceholder) {
+            this.props.setTextToEmptyString();
+            this.showTextPlaceholder = false;
+        }
     }
 
     render() {
+        let editorContent = this.props.text.content != null ? this.props.text.content : '<p id="default-content">Paste your text here</p>';
+
         return (
             <div id="add-page">
                 <h1 style={{ textAlign: 'center' }}>Add a text to read</h1>
@@ -116,7 +145,7 @@ export class Add extends React.Component {
                     fullWidth
                     id="title-required"
                     label="Title"
-                    defaultValue={this.props.text.title || ''}
+                    value={this.props.text.title || ''}
                     onChange={this.props.setTitle}
                     margin="normal"
                 />
@@ -133,12 +162,15 @@ export class Add extends React.Component {
                     </Button>
                 </label>
 
-                <ReactQuill
-                    value={this.props.text.formatted || ''}
-                    modules={modules}
-                    onChange={this.props.setText}
-                    onPaste={this.props.setText}
-                />
+                <div onClick={() => this.removePlaceholder()}>
+                    <Editor
+                        defaultContent={editorContent}
+                        actions={[]}
+                        actionBarClass="my-custom-class"
+                        onChange={this.props.setText}
+                        onPaste={this.props.setText}
+                    />
+                </div>
 
                 <div className="add-action-footer">
                     <div>

@@ -164,6 +164,9 @@ export function highlightMatch(info, highlightColor) {
         if (offset <= selEnd.offset) break;
         offset -= selEnd.offset;
     }
+
+    if(!selEnd) return;
+
     range.setEnd(selEnd.node, offset);
 
     let newNode = document.createElement("span");

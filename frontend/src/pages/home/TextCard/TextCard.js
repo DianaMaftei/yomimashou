@@ -11,12 +11,12 @@ import Divider from "@material-ui/core/es/Divider/Divider";
 import "./TextCard.css";
 import Link from "react-router-dom/es/Link";
 
-export default ({ text, onCardClick }) => {
+export default ({ text }) => {
     if (!text) return <div/>
 
     return (
-        <Card style={{ maxWidth: 350 }} onClick={() => onCardClick(text.id)}>
-            <Link to="/read" className="text-card-link">
+        <Card style={{ maxWidth: 350 }}>
+            <Link to={"/read/" + text.id} className="text-card-link">
                 <CardActionArea>
                     <TextCardTop text={text}/>
                     <CardContent>
@@ -36,7 +36,7 @@ export default ({ text, onCardClick }) => {
                         {/*</Typography>*/}
                         <Divider/>
                         <Typography component="p" className="text-card-excerpt">
-                            {text.excerpt.replace(/<br>/g, "")}
+                            {text.excerpt.replace(/<br>/g, "\n")}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
