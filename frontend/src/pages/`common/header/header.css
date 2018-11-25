@@ -1,3 +1,13 @@
+#app-header {
+    background-color: #732472;
+    color: #FFC4B2;
+    font-weight: bold;
+    font-family: Georgia, serif;
+    font-size: 2em;
+    padding: 10px;
+    text-align: center;
+}
+
 .header .logo {
     width: 150px;
 }

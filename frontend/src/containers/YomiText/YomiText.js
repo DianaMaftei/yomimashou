@@ -104,7 +104,9 @@ export class YomiText extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        return (this.props.text !== nextProps.text) || (this.props.analyzer !== nextProps.analyzer);
+        return (this.props.text !== nextProps.text) ||
+            (this.props.analyzer !== nextProps.analyzer) ||
+            (this.props.currentDictionary !== nextProps.currentDictionary);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -184,6 +186,10 @@ export class YomiText extends React.Component {
         }
     };
 
+    getClassForDictionary() {
+        return this.props.currentDictionary === 2 ? "word-dict" : "kanji-dict";
+    }
+
     onKeyDown(ev) {
         switch (ev.keyCode) {
             case 83:	// s - switch dictionaries (kanji, names, words, examples)
@@ -221,7 +227,8 @@ export class YomiText extends React.Component {
     }
 
     render() {
-        return <div id="yomi-text">
+        return (
+        <div id="yomi-text" className={this.getClassForDictionary()}>
             <div id="yomi-text-options">
                 <button className="btn btn-light" id="toggle-furigana"
                         disabled={!this.props.analyzer}
@@ -237,7 +244,7 @@ export class YomiText extends React.Component {
             </div>
 
             <RikaiPopUp/>
-        </div>;
+        </div>);
     }
 }
 
