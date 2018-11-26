@@ -15,11 +15,6 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'GET_TEXTS',
             payload: axios.get(apiUrl + '/api/text')
         });
-    }, getTextById: id => {
-        dispatch({
-            type: 'GET_TEXT_BY_ID',
-            payload: axios.get(apiUrl + '/api/text/' + id)
-        });
     }
 });
 
@@ -36,7 +31,7 @@ export class Home extends React.Component {
 
         return (
             <div className="home-container">
-                <MasonryLayout texts={this.props.texts} onCardClick={this.props.getTextById}/>
+                <MasonryLayout texts={this.props.texts}/>
             </div>
         );
     }

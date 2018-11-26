@@ -8,11 +8,11 @@ import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../u
 import apiUrl from "../../AppUrl";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
 import Kuroshiro from "kuroshiro";
-import Trumbowyg from 'react-trumbowyg'
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
     names: state.add.names,
+    analyzer: state.add.analyzer,
     textSelectInfo: state.yomiText.textSelectInfo,
     searchResult: state.popUp.searchResult,
     showResult: state.popUp.showResult,
@@ -62,12 +62,19 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_FURIGANA_TEXT',
             text
         });
+    }, setAnalyzer: analyzer => {
+        dispatch({
+            type: 'SET_ANALYZER',
+            analyzer
+        });
     }
 });
 
 export class YomiText extends React.Component {
     constructor(props) {
         super(props);
+
+        this.props.setAnalyzer(null);
 
         // window.removeEventListener('keydown', this.onKeyDown.bind(this), true);
         // window.addEventListener('keydown', this.onKeyDown.bind(this), true);
@@ -77,18 +84,37 @@ export class YomiText extends React.Component {
         });
 
         this.kuroshiro = new Kuroshiro();
-        this.kuroshiro.init(this.analyzer);
+        let that = this;
+        this.kuroshiro.init(this.analyzer).then(function () {
+            that.props.setAnalyzer(that.kuroshiro._analyzer);
+        });
+
+        this.keyDownHandler = this.onKeyDown.bind(this);
     }
 
     componentDidMount() {
-        window.addEventListener("keydown", this.onKeyDown.bind(this));
+        document.addEventListener("keydown", this.keyDownHandler, false);
+
+        let element = document.getElementById("yomi-text-container");
+        element.innerHTML = (this.props.text && (this.props.text.furigana || this.props.text.content)) || '';
+    }
+
+    componentWillUnmount(){
+        document.removeEventListener("keydown", this.keyDownHandler, false);
     }
 
     shouldComponentUpdate(nextProps) {
-        return this.props.text !== nextProps.text;
+        return (this.props.text !== nextProps.text) || (this.props.analyzer !== nextProps.analyzer);
     }
 
-    onMouseClick(searchResult, fetchData, setPopupInfo) {
+    componentWillUpdate(nextProps, nextState) {
+        if (this.props.text !== nextProps.text) {
+            let element = document.getElementById("yomi-text-container");
+            element.innerHTML = (nextProps.text && (nextProps.text.furigana || nextProps.text.content)) || '';
+        }
+    }
+
+    onMouseClick(ev, searchResult, fetchData, setPopupInfo) {
         if (!searchResult.type) return;
 
         if (!isVisible()) {
@@ -100,7 +126,7 @@ export class YomiText extends React.Component {
                 fetchData(searchResult.result.data, searchResult.type);
             }
 
-            if(!document.getSelection().getRangeAt(0).getClientRects()[0]) return;
+            if (!document.getSelection().getRangeAt(0).getClientRects()[0]) return;
 
             setPopupInfo({
                 visibility: true, position: {
@@ -122,9 +148,13 @@ export class YomiText extends React.Component {
 
                 if (!entries || !entries.result) {
                     return;
+                } else {
+                    if (entries.type === "words" && (!entries.result.data || entries.result.data.length === 0)) {
+                        return;
+                    }
                 }
 
-                if (!this.props.searchResult.result) {
+                if (!this.props.searchResult || this.props.searchResult.result) {
                     updateSearchResult(entries);
                 } else if (JSON.stringify(this.props.searchResult.result) !== JSON.stringify(entries.result)) {
                     updateSearchResult(entries);
@@ -180,6 +210,7 @@ export class YomiText extends React.Component {
         } else {
             let setFuriganaText = this.props.setFuriganaText;
             let text = this.props.text.content;
+
             this.kuroshiro.convert(text, {
                 to: "hiragana",
                 mode: "furigana"
@@ -190,32 +221,19 @@ export class YomiText extends React.Component {
     }
 
     render() {
-        let btnsDef = {
-            buttonName: {
-                fn: () => alert("boo"),
-                ico: 'insertImage'
-            }
-        };
-
         return <div id="yomi-text">
+            <div id="yomi-text-options">
+                <button className="btn btn-light" id="toggle-furigana"
+                        disabled={!this.props.analyzer}
+                        onClick={this.showFurigana.bind(this)}>
+                    ルビ
+                </button>
+            </div>
             <div id="yomi-text-container"
                  onMouseDown={ev => this.mouseDown = true}
                  onMouseUp={ev => this.mouseDown = false}
-                 onClick={(ev) => this.onMouseClick(this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
+                 onClick={(ev) => this.onMouseClick(ev, this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
                  onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}>
-
-                <div id="yomi-text-box">
-                    <button id="toggle-furigana" onClick={this.showFurigana.bind(this)}> ルビ</button>
-                    <Trumbowyg
-                        id='react-trumbowyg'
-                        data={this.props.text.furigana || this.props.text.content || '<p><br></p>'}
-                        btnsDef={btnsDef}
-                        buttons={[['buttonName']]}
-                        disabled={true}
-                    />
-                </div>
-
-
             </div>
 
             <RikaiPopUp/>

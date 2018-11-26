@@ -37,3 +37,11 @@
 .tag-chip {
     margin: 5px 5px 0 0;
 }
+
+.pell-content {
+    border: 1px solid lightgray;
+}
+
+#default-content {
+    color: lightgray;
+}

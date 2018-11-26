@@ -1,13 +1,11 @@
 import React from "react";
-import { configure, shallow } from "enzyme";
-import Adapter from 'enzyme-adapter-react-16';
+import { shallow } from "enzyme";
 import '../../__mocks__/xhr-mock.js';
 import { YomiText } from "./YomiText";
 import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../util/rikai/RikaiTextParser";
 import deepFreeze from "deepfreeze";
 import Trumbowyg from "react-trumbowyg";
 
-configure({ adapter: new Adapter() });
 jest.mock('../../util/rikai/RikaiTextParser', () => ({
     highlightMatch: jest.fn(),
     isVisible: jest.fn(),
@@ -108,7 +106,7 @@ describe("YomiText", () => {
             return {
                 getRangeAt: () => {
                     return {
-                        getClientRects: () => [{ left: 20, bottom: 20 }]
+                        getClientRects: () => [{ x: 20, y: 20 }]
                     }
                 }
             }
@@ -119,7 +117,7 @@ describe("YomiText", () => {
         wrapper().find("#yomi-text-container").simulate('click', { target: { value: 'mock text' } });
 
         expect(props.fetchData).toHaveBeenCalledWith(result.result.data, result.type);
-        expect(props.setPopupInfo).toHaveBeenCalledWith({ "position": { "x": 20, "y": 20 }, "visibility": true });
+        expect(props.setPopupInfo).toHaveBeenCalledWith({ "position": { "x": 10, "y": 45 }, "visibility": true });
     });
 
     it("should try to fetch data when searchResult's type is 'kanji' and user has clicked inside container", () => {
@@ -132,7 +130,7 @@ describe("YomiText", () => {
             return {
                 getRangeAt: () => {
                     return {
-                        getClientRects: () => [{ left: 20, bottom: 20 }]
+                        getClientRects: () => [{ x: 20, y: 20 }]
                     }
                 }
             }
@@ -143,6 +141,6 @@ describe("YomiText", () => {
         wrapper().find("#yomi-text-container").simulate('click', { target: { value: 'mock text' } });
 
         expect(props.fetchData).toHaveBeenCalledWith(result.result, result.type);
-        expect(props.setPopupInfo).toHaveBeenCalledWith({ "position": { "x": 20, "y": 20 }, "visibility": true });
+        expect(props.setPopupInfo).toHaveBeenCalledWith({ "position": { "x": 10, "y": 45 }, "visibility": true });
     });
 });

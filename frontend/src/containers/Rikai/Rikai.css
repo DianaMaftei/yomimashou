@@ -193,12 +193,11 @@
     vertical-align: sub;
 }
 
-#sample-btn .btn i {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 18px;
+#sample-btn .btn {
+    height: 25px;
+    width: 25px;
 }
+
 #sample-btn {
    text-align: center;
 }

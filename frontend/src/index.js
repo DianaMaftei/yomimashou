@@ -26,7 +26,8 @@ const render = () => {
                     <Switch>
                         <Route exact path="/" component={() => <Home/>}/>
                         <Route path="/add" component={() => <Add/>}/>
-                        <Route path="/read" component={() => <Read/>}/>
+                        <Route path="/read/:id" component={Read}/>
+                        <Route path="/read" component={Read}/>
                         <Route path="/register" component={() => <Register/>}/>
                         <Route path="/login" component={() => <Login/>}/>
                     </Switch>
