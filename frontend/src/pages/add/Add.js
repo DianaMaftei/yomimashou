@@ -118,7 +118,7 @@ export class Add extends React.Component {
         };
 
         let doc = new DOMParser().parseFromString(this.props.text.content, "text/html");
-
+        doc.body.innerHTML = doc.body.innerHTML.replace(/<\/p><p/g, '</p>\n<p');
         let newtext = doc.body.innerText.replace(/\n/g, '<br>');
         this.props.setText(newtext);
 
@@ -157,7 +157,7 @@ export class Add extends React.Component {
                     style={{ display: 'none' }}
                 />
                 <label htmlFor="outlined-button-file">
-                    <Button variant="outlined" component="span">
+                    <Button variant="outlined" component="span" disabled>
                         Upload image
                     </Button>
                 </label>

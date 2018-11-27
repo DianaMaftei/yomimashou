@@ -47,6 +47,14 @@ const addYomi = (state = defaultState, action) => {
                     furigana: action.text
                 }
             };
+            case 'SET_FURIGANA_TITLE':
+            return {
+                ...state,
+                text: {
+                    ...state.text,
+                    furiganaTitle: action.title
+                }
+            };
         case 'SET_ANALYZER':
             return {
                 ...state,
@@ -57,6 +65,13 @@ const addYomi = (state = defaultState, action) => {
                 ...state,
                 text: {}
             };
+         case 'RESET_DICTIONARIES':
+            return {
+                ...state,
+                words: [],
+                names: []
+            };
+
         case 'SET_TEXT_TITLE':
             return {
                 ...state,

@@ -39,20 +39,6 @@ html, body {
     }
 }
 
-#text-box, #reset-btn {
-    text-align: center;
-}
-
-#text-box {
-    margin: 20px 0;
-}
-
-#yomi-text {
-    margin: 5%;
-    font-size: 24px;
-    line-height: 50px;
-}
-
 .word-dict > #yomi-text-container::-moz-selection {
     background-color: #72d2f2;
 }

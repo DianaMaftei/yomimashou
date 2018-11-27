@@ -22,12 +22,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    setText: (text) => {
-        dispatch({
-            type: 'SET_HIGHLIGHTED_TEXT',
-            text
-        });
-    },
     updateTextSelectInfo: textSelectInfo => {
         dispatch({
             type: 'UPDATE_TEXT_SELECT_INFO',
@@ -62,6 +56,12 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_FURIGANA_TEXT',
             text
         });
+    },
+    setFuriganaTitle: title => {
+        dispatch({
+            type: 'SET_FURIGANA_TITLE',
+            title
+        });
     }, setAnalyzer: analyzer => {
         dispatch({
             type: 'SET_ANALYZER',
@@ -75,9 +75,6 @@ export class YomiText extends React.Component {
         super(props);
 
         this.props.setAnalyzer(null);
-
-        // window.removeEventListener('keydown', this.onKeyDown.bind(this), true);
-        // window.addEventListener('keydown', this.onKeyDown.bind(this), true);
 
         this.analyzer = new KuromojiAnalyzer({
             dictPath: "/kuromojiDict"
@@ -99,7 +96,7 @@ export class YomiText extends React.Component {
         element.innerHTML = (this.props.text && (this.props.text.furigana || this.props.text.content)) || '';
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         document.removeEventListener("keydown", this.keyDownHandler, false);
     }
 
@@ -111,8 +108,11 @@ export class YomiText extends React.Component {
 
     componentWillUpdate(nextProps, nextState) {
         if (this.props.text !== nextProps.text) {
-            let element = document.getElementById("yomi-text-container");
-            element.innerHTML = (nextProps.text && (nextProps.text.furigana || nextProps.text.content)) || '';
+            let textElement = document.getElementById("yomi-text-container");
+            textElement.innerHTML = (nextProps.text && (nextProps.text.furigana || nextProps.text.content)) || '';
+
+            let titleElement = document.getElementById("yomi-text-title");
+            titleElement.innerHTML = (nextProps.text && (nextProps.text.furiganaTitle || nextProps.text.title)) || '';
         }
     }
 
@@ -209,42 +209,56 @@ export class YomiText extends React.Component {
         ev.preventDefault();
     };
 
-    showFurigana() {
+    toggleFurigana() {
         if (this.props.text.furigana) {
             this.props.setFuriganaText(null);
+            this.props.setFuriganaTitle(null);
 
         } else {
             let setFuriganaText = this.props.setFuriganaText;
+            let setFuriganaTitle = this.props.setFuriganaTitle;
+
             let text = this.props.text.content;
+            let title = this.props.text.title;
 
             this.kuroshiro.convert(text, {
                 to: "hiragana",
                 mode: "furigana"
             }).then(function (result) {
                 setFuriganaText(result);
-            })
+            });
+
+            this.kuroshiro.convert(title, {
+                to: "hiragana",
+                mode: "furigana"
+            }).then(function (result) {
+                setFuriganaTitle(result);
+            });
         }
     }
 
     render() {
         return (
-        <div id="yomi-text" className={this.getClassForDictionary()}>
-            <div id="yomi-text-options">
-                <button className="btn btn-light" id="toggle-furigana"
-                        disabled={!this.props.analyzer}
-                        onClick={this.showFurigana.bind(this)}>
-                    ルビ
-                </button>
-            </div>
-            <div id="yomi-text-container"
-                 onMouseDown={ev => this.mouseDown = true}
-                 onMouseUp={ev => this.mouseDown = false}
-                 onClick={(ev) => this.onMouseClick(ev, this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
-                 onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}>
-            </div>
+            <div id="yomi-text" className={this.getClassForDictionary()}>
+                <div id="yomi-text-options">
+                    <button className="btn btn-light" id="toggle-furigana"
+                            disabled={!this.props.analyzer}
+                            onClick={this.toggleFurigana.bind(this)}>
+                        ルビ
+                    </button>
+                </div>
+                <div
+                    onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}
+                    onClick={(ev) => this.onMouseClick(ev, this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
+                >
+                    <h3 id="yomi-text-title">{this.props.text.title}</h3>
+                    <br/>
+                    <div id="yomi-text-container"/>
+                </div>
 
-            <RikaiPopUp/>
-        </div>);
+
+                <RikaiPopUp/>
+            </div>);
     }
 }
 

@@ -15,6 +15,10 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
             type: 'RESET_TEXT'
         });
+    }, resetDictionaries: () => {
+        dispatch({
+            type: 'RESET_DICTIONARIES'
+        });
     },
     getWordsForText: (text) => {
         dispatch({
@@ -40,20 +44,28 @@ export class Read extends React.Component {
 
     componentDidMount() {
         const { id } = this.props.match.params;
-        if(id) {
+        if (id) {
             this.props.getTextById(id);
         } else {
-            if(!this.props.text.content) {
+            if (!this.props.text.content) {
                 this.props.history.push('/')
             }
         }
+
+        if (!this.props.text.content) return;
+        this.props.getWordsForText(this.props.text.content.replace(/<br>/g, ""));
+        // this.props.getNamesForText(this.props.text.content);
+    }
+
+    componentWillUnmount() {
+        this.props.resetDictionaries();
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(!this.props.text.content) return;
+        if (!this.props.text.content) return;
 
         if (this.props.text.content !== prevProps.text.content) {
-            this.props.getWordsForText(this.props.text.content.replace(/<br>/g, ""));
+            this.props.getWordsForText(this.props.text.title + " " + this.props.text.content.replace(/<br>/g, ""));
             // this.props.getNamesForText(this.props.text.content);
         }
     }
@@ -65,16 +77,6 @@ export class Read extends React.Component {
     render() {
         return (
             <div id="read-page">
-                <div id="user-options">
-                    <h4>Things you can do:</h4>
-                    <ul>
-                        <li>Hover over the text to detect words in the dictionary and click to see the
-                            definition.
-                        </li>
-                        <li>Press 'S' to switch between available dictionaries (words / kanji).</li>
-                        <li>Click 'Ex' on word definitions to see example sentences.</li>
-                    </ul>
-                </div>
                 <YomiText text={this.props.text}/>
                 <div id="reset-btn">
                     <Link to="/add">
