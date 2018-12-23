@@ -1,6 +1,6 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator;
 
-import com.github.dianamaftei.yomimashou.dictionary.creator.XMLToPOJOTransformers.XMLEntryToPOJO;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.XMLEntryToPOJO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ public class EntriesCreator {
 
     public void run() {
         System.setProperty("jdk.xml.entityExpansionLimit", "0");
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "20");
 
         try {
             xmlEntryToPOJOList.forEach(XMLEntryToPOJO::processEntries);

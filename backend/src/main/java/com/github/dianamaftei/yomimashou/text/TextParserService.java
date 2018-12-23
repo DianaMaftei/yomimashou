@@ -1,20 +1,18 @@
 package com.github.dianamaftei.yomimashou.text;
 
 import com.github.dianamaftei.yomimashou.dictionary.name.NameService;
-import com.github.dianamaftei.yomimashou.text.Dictionary.Deinflector;
-import com.github.dianamaftei.yomimashou.text.Dictionary.NameDictionary;
-import com.github.dianamaftei.yomimashou.text.Dictionary.WordDictionary;
+import com.github.dianamaftei.yomimashou.text.dictionary.Deinflector;
+import com.github.dianamaftei.yomimashou.text.dictionary.NameDictionary;
+import com.github.dianamaftei.yomimashou.text.dictionary.WordDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class TextParserService {
