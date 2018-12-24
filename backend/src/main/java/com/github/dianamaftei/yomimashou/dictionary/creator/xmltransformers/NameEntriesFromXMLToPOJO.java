@@ -26,12 +26,13 @@ public class NameEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     public NameEntriesFromXMLToPOJO(NameRepository nameRepository) {
         this.nameRepository = nameRepository;
         this.dictionarySource = "http://ftp.monash.edu/pub/nihongo/JMnedict.xml.gz";
+        this.fileName = "nameEntries.txt";
     }
 
     @Override
     void saveToDB(List<? extends DictionaryEntry> entries) {
         ((List<Entry>) entries).parallelStream().filter(Objects::nonNull).forEach(name -> {
-            Name nameEntry = getEntry(name);
+            Name nameEntry = buildNameEntry(name);
             nameRepository.save(nameEntry);
         });
     }
@@ -51,19 +52,19 @@ public class NameEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         try {
             Set<String> nameEntries = ((List<Entry>) entries).parallelStream()
                     .filter(Objects::nonNull)
-                    .map(this::getEntry)
+                    .map(this::buildNameEntry)
                     .map(nameEntry -> Arrays.asList(nameEntry.getKanji(), nameEntry.getReading()))
                     .flatMap(List::stream)
                     .collect(Collectors.toSet());
 
-            writeToFile(nameEntries, "nameEntries.txt");
+            writeToFile(nameEntries, fileName);
         } catch (Exception e) {
-            LOGGER.error("Could not save to file nameEntries.txt", e);
+            LOGGER.error("Could not save to file: " + fileName, e);
         }
 
     }
 
-    private Name getEntry(Entry name) {
+    private Name buildNameEntry(Entry name) {
         Name nameEntry = new Name();
         List<Object> entSeqOrKEleOrREleOrTrans = name.getEntSeqOrKEleOrREleOrTrans();
         for (Object component : entSeqOrKEleOrREleOrTrans) {

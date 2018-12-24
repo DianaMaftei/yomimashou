@@ -1,5 +1,6 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator;
 
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.KanjiEntriesFromXMLToPOJO;
 import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.XMLEntryToPOJO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

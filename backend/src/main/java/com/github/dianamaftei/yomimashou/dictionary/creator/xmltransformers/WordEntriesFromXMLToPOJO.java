@@ -31,6 +31,7 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         this.wordRepository = wordRepository;
         this.partsOfSpeech = getListOfPartsOfSpeech();
         this.dictionarySource = "http://ftp.monash.edu/pub/nihongo/JMdict_e.gz";
+        this.fileName = "wordEntries.txt";
     }
 
     @Override
@@ -55,22 +56,21 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
                     .flatMap(List::stream)
                     .collect(Collectors.toSet());
 
-            writeToFile(wordEntries, "wordEntries.txt");
+            writeToFile(wordEntries, fileName);
         } catch (Exception e) {
-            LOGGER.error("Could not save to file wordEntries.txt", e);
+            LOGGER.error("Could not save to file: " + fileName, e);
         }
-
     }
 
     @Override
     void saveToDB(List<? extends DictionaryEntry> entries) {
         ((List<Entry>) entries).parallelStream().forEach(entry -> {
-            Word word = getEntry(entry);
+            Word word = buildWordEntry(entry);
             wordRepository.save(word);
         });
     }
 
-    private Word getEntry(Entry entry) {
+    private Word buildWordEntry(Entry entry) {
         Word word = new Word();
 
         word.setKanjiElements(getKanjiElements(entry));

@@ -1,29 +1,45 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.DictionaryEntry;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Character;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.*;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Codepoint;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.CpValue;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.DicNumber;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.DicRef;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Kanjidic2;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Meaning;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Misc;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.QCode;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.QueryCode;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Radical;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Reading;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.ReadingMeaning;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Rmgroup;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Variant;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.Kanji;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.KanjiReferences;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.KanjiRepository;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.github.dianamaftei.yomimashou.dictionary.kanji.QKanji.kanji;
 
 @Component
 public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
@@ -32,13 +48,14 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
 
     private final JPAQueryFactory jpaQueryFactory;
     private final KanjiRepository kanjiRepository;
-    private final Map<String, String> kanjiJLPTLevelMap= getKanjiAndCorrespondingJLPTLevel();
+    private final Map<String, String> kanjiJLPTLevelMap = getKanjiAndCorrespondingJLPTLevel();
 
     @Autowired
     public KanjiEntriesFromXMLToPOJO(JPAQueryFactory jpaQueryFactory, KanjiRepository kanjiRepository) {
         this.jpaQueryFactory = jpaQueryFactory;
         this.kanjiRepository = kanjiRepository;
         this.dictionarySource = "http://ftp.monash.edu/pub/nihongo/kanjidic2.xml.gz";
+        this.fileName = "kanjiEntries.txt";
     }
 
     @Override
@@ -47,7 +64,6 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
             Kanji kanji = buildKanjiEntry(character);
             kanjiRepository.save(kanji);
         });
-        addKanjiVariants((List<Character>) characters);
     }
 
     @Override
@@ -69,9 +85,9 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
                     .map(Kanji::getCharacter)
                     .collect(Collectors.toSet());
 
-            writeToFile(kanjiEntries, "kanjiEntries.txt");
+            writeToFile(kanjiEntries, fileName);
         } catch (Exception e) {
-            LOGGER.error("Could not save to file kanjiEntries.txt", e);
+            LOGGER.error("Could not save to file: " + fileName, e);
         }
     }
 
@@ -140,7 +156,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
                     kanjiEntry.getReferences().setJlptOldLevel(misc.getJlpt());
                     break;
                 case DICNUMBER:
-                    addListReferences(kanjiEntry.getReferences(), (DicNumber) component);
+                    setKanjiReferences(kanjiEntry.getReferences(), (DicNumber) component);
                     break;
                 case QUERYCODE:
                     QueryCode queryCode = (QueryCode) component;
@@ -161,53 +177,6 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         }
 
         return kanjiEntry;
-    }
-
-    private void addKanjiVariants(List<Character> characters) {
-        for (Character character : characters) {
-            List<Object> kanjiInfo = character.getLiteralAndCodepointAndRadical();
-
-            String kanjiCharacter = null;
-            Misc misc = null;
-
-            for (Object info : kanjiInfo) {
-                if (info instanceof String) {
-                    kanjiCharacter = (String) info;
-                } else if (info instanceof Misc) {
-                    misc = (Misc) info;
-                }
-            }
-
-            if (kanjiCharacter != null && misc != null) {
-                Kanji kanji = kanjiRepository.findByCharacter(kanjiCharacter);
-                if (kanji != null) {
-                    kanji.setVariant(extractKanjiVariant(misc));
-                    kanjiRepository.save(kanji);
-                    return;
-                }
-            }
-        }
-    }
-
-    private String extractKanjiVariant(Misc misc) {
-        List<String> variants = new ArrayList<>();
-        String kanjiVariant = null;
-
-        if (misc.getVariant() != null && !misc.getVariant().isEmpty()) {
-            JPAQuery<Kanji> query = jpaQueryFactory.selectFrom(kanji);
-            BooleanBuilder builder = new BooleanBuilder();
-
-            for (Variant variant : misc.getVariant()) {
-                builder.or((kanji.codepoint.like('%' + variant.getContent() + ";" + variant.getVarType() + '%')));
-            }
-
-            List<Kanji> kanjiList = query.where(builder).fetch();
-            for (Kanji kanji : kanjiList) {
-                variants.add(kanji.getCharacter());
-            }
-            kanjiVariant = String.join("|", variants);
-        }
-        return kanjiVariant;
     }
 
     private void addReadingsAndMeanings(Kanji kanji, ReadingMeaning component) {
@@ -241,92 +210,25 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         kanji.setMeaning(String.join("|", meanings));
     }
 
-    private void addListReferences(KanjiReferences references, DicNumber component) {
+    private void setKanjiReferences(KanjiReferences references, DicNumber component) {
         List<DicRef> dicRefs = component.getDicRef();
 
         for (DicRef dicRef : dicRefs) {
-            switch (DictionaryType.valueOf(dicRef.getDrType().toUpperCase())) {
-                case NELSON_C:
-                    references.setNelsonC(dicRef.getContent());
-                    break;
-                case NELSON_N:
-                    references.setNelsonN(dicRef.getContent());
-                    break;
-                case HALPERN_NJECD:
-                    references.setHalpernNjecd(dicRef.getContent());
-                    break;
-                case HALPERN_KKD:
-                    references.setHalpernKkd(dicRef.getContent());
-                    break;
-                case HALPERN_KKLD:
-                    references.setHalpernKkld(dicRef.getContent());
-                    break;
-                case HALPERN_KKLD_2ED:
-                    references.setHalpernKkld2ed(dicRef.getContent());
-                    break;
-                case HEISIG:
-                    references.setHeisig(dicRef.getContent());
-                    break;
-                case HEISIG6:
-                    references.setHeisig6(dicRef.getContent());
-                    break;
-                case GAKKEN:
-                    references.setGakken(dicRef.getContent());
-                    break;
-                case ONEILL_NAMES:
-                    references.setOneillNames(dicRef.getContent());
-                    break;
-                case ONEILL_KK:
-                    references.setOneillKk(dicRef.getContent());
-                    break;
-                case MORO:
-                    references.setMoro(dicRef.getContent());
-                    break;
-                case HENSHALL:
-                    references.setHenshall(dicRef.getContent());
-                    break;
-                case HENSHALL3:
-                    references.setHenshall3(dicRef.getContent());
-                    break;
-                case SH_KK:
-                    references.setShKk(dicRef.getContent());
-                    break;
-                case SH_KK2:
-                    references.setShKk2(dicRef.getContent());
-                    break;
-                case JF_CARDS:
-                    references.setJfCards(dicRef.getContent());
-                    break;
-                case SAKADE:
-                    references.setSakade(dicRef.getContent());
-                    break;
-                case TUTT_CARDS:
-                    references.setTuttCards(dicRef.getContent());
-                    break;
-                case CROWLEY:
-                    references.setCrowley(dicRef.getContent());
-                    break;
-                case KANJI_IN_CONTEXT:
-                    references.setKanjiInContext(dicRef.getContent());
-                    break;
-                case BUSY_PEOPLE:
-                    references.setBusyPeople(dicRef.getContent());
-                    break;
-                case KODANSHA_COMPACT:
-                    references.setKodanshaCompact(dicRef.getContent());
-                    break;
-                case MANIETTE:
-                    references.setManiette(dicRef.getContent());
-                    break;
+            try {
+                KanjiReferences.class
+                        .getMethod("set" + convertSnakeCaseToPascalCase(dicRef.getDrType()), String.class)
+                        .invoke(references, dicRef.getContent());
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                LOGGER.error("Could not set field: " + dicRef.getDrType(), e);
             }
         }
     }
 
-    private enum KanjiComponentClass {
-        STRING, CODEPOINT, RADICAL, MISC, DICNUMBER, QUERYCODE, READINGMEANING
+    private String convertSnakeCaseToPascalCase(String snakeCaseText) {
+        return StringUtils.remove(WordUtils.capitalizeFully(snakeCaseText, '_'), "_");
     }
 
-    private enum DictionaryType {
-        NELSON_C, NELSON_N, HALPERN_NJECD, HALPERN_KKD, HALPERN_KKLD, HALPERN_KKLD_2ED, HEISIG, HEISIG6, GAKKEN, ONEILL_NAMES, ONEILL_KK, MORO, HENSHALL, HENSHALL3, SH_KK, SH_KK2, SAKADE, JF_CARDS, TUTT_CARDS, CROWLEY, KANJI_IN_CONTEXT, BUSY_PEOPLE, KODANSHA_COMPACT, MANIETTE
+    private enum KanjiComponentClass {
+        STRING, CODEPOINT, RADICAL, MISC, DICNUMBER, QUERYCODE, READINGMEANING
     }
 }

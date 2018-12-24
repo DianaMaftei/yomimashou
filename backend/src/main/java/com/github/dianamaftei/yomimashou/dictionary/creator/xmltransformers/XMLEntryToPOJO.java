@@ -25,7 +25,8 @@ public abstract class XMLEntryToPOJO {
     @Value("${file.path}")
     private String filePath;
 
-    String dictionarySource;
+    protected String dictionarySource;
+    protected String fileName;
 
     public void processEntries() {
         try {
