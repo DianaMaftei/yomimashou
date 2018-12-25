@@ -55,6 +55,10 @@ public class TextService {
         int endOfEndingCharacterSearch = 350;
         int indexOfEndingCharacter = 100;
 
+        if (text.length() < endOfEndingCharacterSearch) {
+            return text.length();
+        }
+
         String substring = text.substring(startOfEndingCharacterSearch, endOfEndingCharacterSearch + 1);
 
         for (String character : SENTENCE_ENDING_CHARACTERS) {

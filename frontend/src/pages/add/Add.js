@@ -169,6 +169,7 @@ export class Add extends React.Component {
                     </Button>
                 </label>
 
+                <h6><a href="https://anatolt.ru/t/del-timestamp-srt.html" target="_blank">Subtitle?</a></h6>
                 <div onClick={() => this.removePlaceholder()}>
                     <Editor
                         defaultContent={editorContent}

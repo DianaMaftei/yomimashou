@@ -8,6 +8,7 @@ import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../u
 import apiUrl from "../../AppUrl";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
 import Kuroshiro from "kuroshiro";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
@@ -103,7 +104,8 @@ export class YomiText extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (this.props.text !== nextProps.text) ||
             (this.props.analyzer !== nextProps.analyzer) ||
-            (this.props.currentDictionary !== nextProps.currentDictionary);
+            (this.props.currentDictionary !== nextProps.currentDictionary) ||
+            (this.props.words !== nextProps.words);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -240,6 +242,7 @@ export class YomiText extends React.Component {
     render() {
         return (
             <div id="yomi-text" className={this.getClassForDictionary()}>
+                {(!this.props.words || this.props.words.length === 0) && <LinearProgress/>}
                 <div id="yomi-text-options">
                     <button className="btn btn-light" id="toggle-furigana"
                             disabled={!this.props.analyzer}
