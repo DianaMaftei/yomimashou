@@ -1,7 +1,23 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.DictionaryEntry;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.*;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Entry;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Gloss;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.JMdict;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.KEle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.REle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Sense;
 import com.github.dianamaftei.yomimashou.dictionary.word.Word;
 import com.github.dianamaftei.yomimashou.dictionary.word.WordMeaning;
 import com.github.dianamaftei.yomimashou.dictionary.word.WordRepository;
@@ -9,10 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
@@ -73,15 +85,15 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     private Word buildWordEntry(Entry entry) {
         Word word = new Word();
 
-        word.setKanjiElements(getKanjiElements(entry));
-        word.setReadingElements(getReadingElements(entry));
-        word.setMeanings(getMeanings(entry));
-        word.setPriority(getHighestPriority(entry));
+        word.setKanjiElements(entry.getKEle().stream().map(KEle::getKeb).collect(Collectors.joining("|")));
+        word.setReadingElements(entry.getREle().stream().map(REle::getReb).collect(Collectors.joining("|")));
+        word.setMeanings(buildMeaningsList(entry));
+        word.setPriority(extractHighestPriority(entry));
 
         return word;
     }
 
-    private Integer getHighestPriority(Entry entry) {
+    private Integer extractHighestPriority(Entry entry) {
         Set<Integer> priorities = new HashSet<>();
         entry.getKEle().forEach(kEle -> {
             if (!kEle.getKePri().isEmpty()) {
@@ -98,6 +110,7 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
             return LOW_PRIORITY;
         }
 
+        // 1 is the highest priority
         return Collections.min(priorities);
     }
 
@@ -110,40 +123,22 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         return MODERATE_PRIORITY;
     }
 
-    private String getKanjiElements(Entry entry) {
-        List<String> kanjiElements = new ArrayList<>();
-
-        for (KEle kanjiEl : entry.getKEle()) {
-            kanjiElements.add(kanjiEl.getKeb());
-        }
-
-        return String.join("|", kanjiElements);
-    }
-
-    private String getReadingElements(Entry entry) {
-        List<String> readingElements = new ArrayList<>();
-
-        for (REle readingEl : entry.getREle()) {
-            readingElements.add(readingEl.getReb());
-        }
-
-        return String.join("|", readingElements);
-    }
-
-    private List<WordMeaning> getMeanings(Entry entry) {
+    private List<WordMeaning> buildMeaningsList(Entry entry) {
         List<WordMeaning> meanings = new ArrayList<>();
 
         for (Sense sense : entry.getSense()) {
             WordMeaning meaning = new WordMeaning();
-            meaning.setPartOfSpeech(String.join("|", sense.getPos().stream().map(partsOfSpeech::get).filter(Objects::nonNull).collect(Collectors.toList())));
+            meaning.setPartOfSpeech(String.join("|", sense.getPos().stream()
+                    .map(partsOfSpeech::get)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList())));
             meaning.setFieldOfApplication(String.join("|", sense.getField()));
             meaning.setAntonym(String.join("|", sense.getAnt()));
-            List<String> glosses = new ArrayList<>();
-            for (Gloss gloss : sense.getGloss()) {
-                for (Serializable item : gloss.getContent())
-                    glosses.add(item.toString());
-            }
-            meaning.setGlosses(String.join("|", glosses));
+            meaning.setGlosses(String.join("|", sense.getGloss().stream()
+                    .map(Gloss::getContent)
+                    .flatMap(serializables -> serializables.stream())
+                    .map(serializable -> serializable.toString())
+                    .collect(Collectors.toList())));
 
             meanings.add(meaning);
         }

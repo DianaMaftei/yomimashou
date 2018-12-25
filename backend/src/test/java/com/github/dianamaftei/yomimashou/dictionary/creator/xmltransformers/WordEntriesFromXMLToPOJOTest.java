@@ -35,7 +35,7 @@ public class WordEntriesFromXMLToPOJOTest {
     private ArgumentCaptor<Word> wordArgumentCaptor;
 
     @Test
-    public void getEntriesShoulrReturnAListOfEntryObjects() {
+    public void getEntriesShouldReturnAListOfEntryObjects() {
         List<Entry> entries = wordEntriesFromXMLToPOJO.getEntries(dictionaryFile);
         verify(dictionaryFile, times(1)).getEntry();
         assertEquals(entries, dictionaryFile.getEntry());
@@ -52,7 +52,7 @@ public class WordEntriesFromXMLToPOJOTest {
     }
 
     @Test
-    public void fillDatabaseShouldAddAllEntriesToTheDatabase() {
+    public void saveToDBShouldAddAllEntriesToTheDatabase() {
         List<Entry> entries = dictionaryFile.getEntry();
         entries.add(new Entry());
         entries.add(new Entry());
@@ -74,8 +74,8 @@ public class WordEntriesFromXMLToPOJOTest {
         WordMeaning wordMeaning = word.getMeanings().get(0);
 
         assertTrue(wordMeaning.getGlosses().contains("meaning"));
-        assertEquals("kanji", word.getKanjiElements());
-        assertEquals("reading", word.getReadingElements());
+        assertEquals("kanji|kanji2", word.getKanjiElements());
+        assertEquals("reading|reading2", word.getReadingElements());
         assertEquals("field of application", wordMeaning.getFieldOfApplication());
         assertEquals("iv", wordMeaning.getPartOfSpeech());
         assertEquals("antonym", wordMeaning.getAntonym());
@@ -87,11 +87,21 @@ public class WordEntriesFromXMLToPOJOTest {
         KEle kanjiElement = new KEle();
         kanjiElement.setKeb("kanji");
         kanjiElement.getKePri().add("news1");
+
+        KEle kanjiElement2 = new KEle();
+        kanjiElement2.setKeb("kanji2");
+        kanjiElement2.getKePri().add("news1");
+
         entry.getKEle().add(kanjiElement);
+        entry.getKEle().add(kanjiElement2);
 
         REle readingElement = new REle();
         readingElement.setReb("reading");
+
+        REle readingElement2 = new REle();
+        readingElement2.setReb("reading2");
         entry.getREle().add(readingElement);
+        entry.getREle().add(readingElement2);
 
         Sense sense = new Sense();
         Gloss meaning = new Gloss();

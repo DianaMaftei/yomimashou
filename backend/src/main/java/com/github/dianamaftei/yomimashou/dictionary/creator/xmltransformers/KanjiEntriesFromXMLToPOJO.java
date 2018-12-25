@@ -46,13 +46,11 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KanjiEntriesFromXMLToPOJO.class);
 
-    private final JPAQueryFactory jpaQueryFactory;
     private final KanjiRepository kanjiRepository;
     private final Map<String, String> kanjiJLPTLevelMap = getKanjiAndCorrespondingJLPTLevel();
 
     @Autowired
     public KanjiEntriesFromXMLToPOJO(JPAQueryFactory jpaQueryFactory, KanjiRepository kanjiRepository) {
-        this.jpaQueryFactory = jpaQueryFactory;
         this.kanjiRepository = kanjiRepository;
         this.dictionarySource = "http://ftp.monash.edu/pub/nihongo/kanjidic2.xml.gz";
         this.fileName = "kanjiEntries.txt";

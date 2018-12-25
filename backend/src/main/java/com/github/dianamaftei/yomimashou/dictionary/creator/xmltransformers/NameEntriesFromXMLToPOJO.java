@@ -61,7 +61,6 @@ public class NameEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         } catch (Exception e) {
             LOGGER.error("Could not save to file: " + fileName, e);
         }
-
     }
 
     private Name buildNameEntry(Entry name) {
