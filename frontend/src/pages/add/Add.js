@@ -1,5 +1,4 @@
 import React from 'react';
-import 'react-trumbowyg/dist/trumbowyg.min.css';
 import "./add.css";
 import Editor from 'react-pell';
 
@@ -25,13 +24,25 @@ const mapStateToProps = (state) => ({
     tagInput: state.add.tagInput
 });
 
+const stripRubyAndFormatting = html => {
+    let doc = new DOMParser().parseFromString(html, "text/html");
+
+    let rubyStart = /(?=<ruby)(.*?)(?:>)/g;
+    let rubyEnd = /(<rt)(.*?)(<\/ruby>)/g;
+    doc.body.innerHTML = doc.body.innerHTML.replace(rubyStart, '');
+    doc.body.innerHTML = doc.body.innerHTML.replace(rubyEnd, '');
+
+    doc.body.innerHTML = doc.body.innerHTML.replace(/<\/p><p/g, '</p>\n<p');
+
+    return doc.body.innerHTML.replace(/\n/g, '<br>');
+};
+
 const mapDispatchToProps = (dispatch) => ({
-    setText: (content, delta, source, editor) => {
+    setTextToEmptyString: () => {
         dispatch({
             type: 'SET_TEXT',
             text: {
-                plain: editor.getText(),
-                formatted: content
+                content: ''
             }
         });
     }, resetText: () => {
@@ -77,10 +88,6 @@ export class Add extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.props.text !== nextProps.text;
-    }
-
-    constructor() {
-        super();
     }
 
     disableAddBtn() {

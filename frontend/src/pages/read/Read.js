@@ -53,7 +53,7 @@ export class Read extends React.Component {
         }
 
         if (!this.props.text.content) return;
-        this.props.getWordsForText(this.props.text.content.replace(/<br>/g, ""));
+        this.props.getWordsForText(this.props.text.title + " " + this.props.text.content.replace(/<br>/g, ""));
         // this.props.getNamesForText(this.props.text.content);
     }
 
