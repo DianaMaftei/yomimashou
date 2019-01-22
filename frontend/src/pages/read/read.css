@@ -1,7 +1,3 @@
-#read-page h4{
-    /*padding-top: 50px;*/
-}
-
 #read-page .ql-editor {
     font-size: 20px;
 }
@@ -10,3 +6,26 @@
     font-size: 20px!important;
 }
 
+#yomi-text-title {
+    text-align: center;
+    padding-top: 50px;
+}
+
+#text-box, #reset-btn {
+    text-align: center;
+}
+
+#reset-btn {
+    text-align: center;
+    margin: 5%;
+}
+
+#text-box {
+    margin: 20px 0;
+}
+
+#yomi-text {
+    margin: 0 5%;
+    font-size: 24px;
+    line-height: 50px;
+}

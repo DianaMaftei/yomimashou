@@ -1,5 +1,4 @@
 import React from 'react';
-import 'react-trumbowyg/dist/trumbowyg.min.css';
 import "./add.css";
 import Editor from 'react-pell';
 
@@ -25,13 +24,25 @@ const mapStateToProps = (state) => ({
     tagInput: state.add.tagInput
 });
 
+const stripRubyAndFormatting = html => {
+    let doc = new DOMParser().parseFromString(html, "text/html");
+
+    let rubyStart = /(?=<ruby)(.*?)(?:>)/g;
+    let rubyEnd = /(<rt)(.*?)(<\/ruby>)/g;
+    doc.body.innerHTML = doc.body.innerHTML.replace(rubyStart, '');
+    doc.body.innerHTML = doc.body.innerHTML.replace(rubyEnd, '');
+
+    doc.body.innerHTML = doc.body.innerHTML.replace(/<\/p><p/g, '</p>\n<p');
+
+    return doc.body.innerHTML.replace(/\n/g, '<br>');
+};
+
 const mapDispatchToProps = (dispatch) => ({
-    setText: (content, delta, source, editor) => {
+    setTextToEmptyString: () => {
         dispatch({
             type: 'SET_TEXT',
             text: {
-                plain: editor.getText(),
-                formatted: content
+                content: ''
             }
         });
     }, resetText: () => {
@@ -79,10 +90,6 @@ export class Add extends React.Component {
         return this.props.text !== nextProps.text;
     }
 
-    constructor() {
-        super();
-    }
-
     disableAddBtn() {
         let textHasNoTitle = !this.props.text.title || this.props.text.title.length === 0;
         let textHasNoContent = !this.props.text.content || this.props.text.content.trim().length === 0;
@@ -118,7 +125,7 @@ export class Add extends React.Component {
         };
 
         let doc = new DOMParser().parseFromString(this.props.text.content, "text/html");
-
+        doc.body.innerHTML = doc.body.innerHTML.replace(/<\/p><p/g, '</p>\n<p');
         let newtext = doc.body.innerText.replace(/\n/g, '<br>');
         this.props.setText(newtext);
 
@@ -157,11 +164,12 @@ export class Add extends React.Component {
                     style={{ display: 'none' }}
                 />
                 <label htmlFor="outlined-button-file">
-                    <Button variant="outlined" component="span">
+                    <Button variant="outlined" component="span" disabled>
                         Upload image
                     </Button>
                 </label>
 
+                <h6><a href="https://anatolt.ru/t/del-timestamp-srt.html" target="_blank">Subtitle?</a></h6>
                 <div onClick={() => this.removePlaceholder()}>
                     <Editor
                         defaultContent={editorContent}

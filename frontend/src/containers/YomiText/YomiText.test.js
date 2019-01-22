@@ -4,7 +4,6 @@ import '../../__mocks__/xhr-mock.js';
 import { YomiText } from "./YomiText";
 import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "../../util/rikai/RikaiTextParser";
 import deepFreeze from "deepfreeze";
-import Trumbowyg from "react-trumbowyg";
 
 jest.mock('../../util/rikai/RikaiTextParser', () => ({
     highlightMatch: jest.fn(),

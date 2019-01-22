@@ -39,40 +39,24 @@ html, body {
     }
 }
 
-#text-box, #reset-btn {
-    text-align: center;
+.word-dict > #yomi-text-container::-moz-selection {
+    background-color: #72d2f2;
 }
 
-#text-box {
-    margin: 20px 0;
+.word-dict > #yomi-text-container::selection {
+    background-color: #72d2f2;
 }
 
-#yomi-text {
-    margin: 5%;
-    font-size: 24px;
-    line-height: 50px;
+.kanji-dict > #yomi-text-container::-moz-selection {
+    background-color: #ee891e;
 }
 
-#yomi-text-container::-moz-selection {
-    background-color: #f3f2f2;
-}
-
-#yomi-text-container::selection {
-    background-color: #eeeded;
+.kanji-dict > #yomi-text-container::selection {
+    background-color: #ee891e;
 }
 
 #highlight-selection {
     /*background-color: #9f76b7;*/
-}
-
-#app-header {
-    background-color: #732472;
-    color: #FFC4B2;
-    font-weight: bold;
-    font-family: Georgia, serif;
-    font-size: 2em;
-    padding: 10px;
-    text-align: center;
 }
 
 #example-header {
