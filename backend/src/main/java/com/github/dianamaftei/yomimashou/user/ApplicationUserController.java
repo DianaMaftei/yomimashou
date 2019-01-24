@@ -22,11 +22,6 @@ public class ApplicationUserController {
         applicationUserService.register(user);
     }
 
-    @GetMapping("/afterLogin/{username}")
-    public String afterLogin(@PathVariable String username) {
-        return username;
-    }
-
     @GetMapping("/afterLogout")
     public String afterLogout() {
         return "logged out";

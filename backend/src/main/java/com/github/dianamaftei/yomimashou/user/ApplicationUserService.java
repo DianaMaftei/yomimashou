@@ -32,10 +32,6 @@ public class ApplicationUserService implements UserDetailsService {
         applicationUserRepository.save(user);
     }
 
-    public Optional<ApplicationUser> findByUsername(String username) {
-        return applicationUserRepository.findByUsername(username);
-    }
-
     public Optional<ApplicationUser> findById(Long id) {
         return applicationUserRepository.findById(id);
     }

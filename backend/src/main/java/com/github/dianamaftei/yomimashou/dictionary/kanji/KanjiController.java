@@ -24,7 +24,7 @@ public class KanjiController {
 
     @ResponseBody
     @GetMapping(value = "/svg/{kanji}", produces = MediaType.APPLICATION_SVG_XML)
-    public byte[] getKanjiSVG(@PathVariable String kanji) {
-        return kanjiService.getKanjiSVG(kanji);
+    public byte[] getStrokesSVG(@PathVariable String kanji) {
+        return kanjiService.getStrokesSVG(kanji);
     }
 }

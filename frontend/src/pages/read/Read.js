@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 import YomiText from '../../containers/YomiText/YomiText';
 import "./read.css";
@@ -78,11 +77,6 @@ export class Read extends React.Component {
         return (
             <div id="read-page">
                 <YomiText text={this.props.text}/>
-                <div id="reset-btn">
-                    <Link to="/add">
-                        <button onClick={this.props.resetText}> Try a different text</button>
-                    </Link>
-                </div>
             </div>
         )
     };

@@ -18,6 +18,7 @@ public class KanjiService {
     private static final Logger LOGGER = LoggerFactory.getLogger(KanjiService.class);
 
     private final JPAQueryFactory jpaQueryFactory;
+
     @Value("${kanji.path}")
     private String kanjiPath;
 
@@ -32,7 +33,7 @@ public class KanjiService {
     }
 
     @ResponseBody
-    public byte[] getKanjiSVG(String kanji) {
+    public byte[] getStrokesSVG(String kanji) {
         try (InputStream in = new FileInputStream(new File(kanjiPath + File.separator + kanji));
              ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
 

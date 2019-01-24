@@ -1,8 +1,5 @@
 package com.github.dianamaftei.yomimashou.dictionary.kanji;
 
-import com.github.dianamaftei.yomimashou.dictionary.kanji.Kanji;
-import com.github.dianamaftei.yomimashou.dictionary.kanji.KanjiController;
-import com.github.dianamaftei.yomimashou.dictionary.kanji.KanjiService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,13 +48,13 @@ public class KanjiControllerTest {
     }
 
     @Test
-    public void shouldGetAKanjiSVG() throws Exception {
+    public void shouldGetStrokesSVG() throws Exception {
         String kanji = "猫";
         String svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
                 "<circle cx=\"100\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"2\" fill=\"red\" />\n" +
                 "</svg> ";
         byte[] svgBytes = svg.getBytes();
-        when(kanjiService.getKanjiSVG(kanji)).thenReturn(svgBytes);
+        when(kanjiService.getStrokesSVG(kanji)).thenReturn(svgBytes);
 
         MockHttpServletResponse response = mvc.perform(get("/api/dictionary/kanji/svg/" + kanji)
                 .characterEncoding("UTF-8")

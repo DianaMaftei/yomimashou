@@ -27,6 +27,7 @@ public class ApplicationUserServiceTest {
 
     private ApplicationUser applicationUser;
     private String username = "JohnDemo";
+    private String email = "test@email.com";
     private Long userId = 1L;
 
     @Before
@@ -34,7 +35,7 @@ public class ApplicationUserServiceTest {
         applicationUser = new ApplicationUser();
         applicationUser.setId(userId);
         applicationUser.setUsername(username);
-        applicationUser.setEmail("test@email.com");
+        applicationUser.setEmail(email);
         applicationUser.setPassword("password");
     }
 
@@ -59,15 +60,6 @@ public class ApplicationUserServiceTest {
     }
 
     @Test
-    public void findByUsernameShouldReturnAValidUser() throws Exception {
-        when(applicationUserRepository.findByUsername(username)).thenReturn(Optional.of(applicationUser));
-        Optional<ApplicationUser> user = applicationUserService.findByUsername(username);
-
-        verify(applicationUserRepository, times(1)).findByUsername(username);
-        assertEquals(applicationUser, user.get());
-    }
-
-    @Test
     public void findByIdShouldReturnAValidUser() throws Exception {
         when(applicationUserRepository.findById(userId)).thenReturn(Optional.of(applicationUser));
         Optional<ApplicationUser> user = applicationUserService.findById(userId);
@@ -79,10 +71,10 @@ public class ApplicationUserServiceTest {
 
     @Test
     public void loadUserByUsernameShouldReturnAValidUser() throws Exception {
-        when(applicationUserRepository.findByUsername(username)).thenReturn(Optional.of(applicationUser));
-        UserDetails userDetails = applicationUserService.loadUserByUsername(username);
+        when(applicationUserRepository.findByEmail(email)).thenReturn(Optional.of(applicationUser));
+        UserDetails userDetails = applicationUserService.loadUserByUsername(email);
 
-        verify(applicationUserRepository, times(1)).findByUsername(username);
+        verify(applicationUserRepository, times(1)).findByEmail(email);
         assertEquals(applicationUser.getUsername(), userDetails.getUsername());
     }
 

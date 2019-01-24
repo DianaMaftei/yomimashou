@@ -30,7 +30,7 @@ public class Deinflector {
                 deinflector = instance;
                 if (deinflector == null) {
                     deinflector = new Deinflector();
-                    addRules();
+                    rulesGroupedByRuleLength = buildRuleList();
                     instance = deinflector;
                 }
             }
@@ -38,7 +38,7 @@ public class Deinflector {
         return deinflector;
     }
 
-    private static void addRules() {
+    private static Map<Integer, List<DeinflectRule>> buildRuleList() {
         List<DeinflectRule> ruleList = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(filePath + File.separator + "dictionaries" + File.separator + "deinflect.txt")))) {
@@ -53,7 +53,7 @@ public class Deinflector {
             LOGGER.error("Could not add deinflection rules from file", e);
         }
 
-        rulesGroupedByRuleLength = ruleList.stream().collect(Collectors.groupingBy(item -> item.from.length()));
+        return ruleList.stream().collect(Collectors.groupingBy(item -> item.from.length()));
     }
 
     public Set<String> getDeinflectedWords(String textFragmentWithInflectedWords) {
@@ -93,6 +93,14 @@ public class Deinflector {
         private DeinflectRule(String from, String to) {
             this.from = from;
             this.to = to;
+        }
+
+        @Override
+        public String toString() {
+            return "DeinflectRule{" +
+                    "from='" + from + '\'' +
+                    ", to='" + to + '\'' +
+                    '}';
         }
     }
 }
