@@ -13,7 +13,6 @@ export default () => (
                 <img className="logo" src={logo} alt="logo"/>
                 <div className="button">
                     <Link to="/"><Button color="inherit" style={{ textTransform: 'initial', color:'white' }}>Home</Button></Link>
-                    <Link to="/add"><Button color="inherit" style={{ textTransform: 'initial', color:'white' }}>Add</Button></Link>
                     <Link to="/login"><Button color="inherit" style={{ textTransform: 'initial', color:'white' }}>Login</Button></Link>
                     <Link to="/register"><Button color="inherit" style={{ textTransform: 'initial', color:'white' }}>Register</Button></Link>
                 </div>

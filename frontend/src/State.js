@@ -5,6 +5,7 @@ import yomiText from "./containers/YomiText";
 import promiseMiddleware from 'redux-promise-middleware';
 import add from "./pages/add/index";
 import home from "./pages/home";
+import login from "./pages/login/loginReducers";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(combineReducers({
@@ -12,17 +13,16 @@ const store = createStore(combineReducers({
     home,
     yomiText,
     popUp,
-    config
+    config,
+    login
 }), composeEnhancers(
     applyMiddleware(promiseMiddleware())
 ));
 
 
-
 const subscribe = store.subscribe;
-const getCurrentState = () => store.getState();
 
 export default {
     store,
-    subscribe,
-    getCurrentState};
+    subscribe
+};

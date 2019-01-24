@@ -17,7 +17,7 @@ import {
 import axios from "axios/index";
 import apiUrl from "../../AppUrl";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom/umd/react-router-dom";
+import { withRouter } from 'react-router-dom'
 
 const mapStateToProps = (state) => ({
     text: state.add.text,
@@ -27,14 +27,14 @@ const mapStateToProps = (state) => ({
 const stripRubyAndFormatting = html => {
     let doc = new DOMParser().parseFromString(html, "text/html");
 
-    let rubyStart = /(?=<ruby)(.*?)(?:>)/g;
-    let rubyEnd = /(<rt)(.*?)(<\/ruby>)/g;
-    doc.body.innerHTML = doc.body.innerHTML.replace(rubyStart, '');
-    doc.body.innerHTML = doc.body.innerHTML.replace(rubyEnd, '');
+    let rubyStart = /(?=<ruby)(.*?)(?:><rb>)/g;
+    let rubyEnd = /(<\/rb><rt)(.*?)(<\/ruby>)/g;
+    let text = doc.body.innerHTML.replace(rubyStart, '');
+    text = text.replace(rubyEnd, '');
 
-    doc.body.innerHTML = doc.body.innerHTML.replace(/<\/p><p/g, '</p>\n<p');
+    text = text.replace(/<\/p><p/g, '</p>\n<p');
 
-    return doc.body.innerHTML.replace(/\n/g, '<br>');
+    return text.replace(/\n/g, '<br>');
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -74,12 +74,19 @@ const mapDispatchToProps = (dispatch) => ({
     }
 });
 
-export class Add extends React.Component {
+class Add extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.showTextPlaceholder = true;
+    }
+
+    componentWillMount() {
+       let username = localStorage.getItem('username');
+       if(!username) {
+           this.props.history.push('/');
+       }
     }
 
     componentDidMount() {
@@ -131,7 +138,9 @@ export class Add extends React.Component {
 
         text.content = newtext;
 
-        axios.post(apiUrl + '/api/text', text, { headers: { Authorization: token } });
+        axios.post(apiUrl + '/api/text', text, { headers: { Authorization: token } }).then((response) => {
+            this.props.history.push('/read/' + response.data.id);
+        });
     }
 
     removePlaceholder() {
@@ -242,9 +251,7 @@ export class Add extends React.Component {
                                 disabled={this.disableAddBtn()}
                                 onClick={this.submitText.bind(this)}
                         >
-                            <Link to="/read">
                                 Add & Read
-                            </Link>
                         </Button>
                     </div>
                 </div>
@@ -253,4 +260,4 @@ export class Add extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Add);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Add));

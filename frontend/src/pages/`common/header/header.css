@@ -18,3 +18,32 @@
 .header .button {
     margin-left: auto;
 }
+
+.userIcon {
+    height: 30px;
+    padding-right: 10px;
+}
+
+#username {
+    font-size: 15px;
+    position: relative;
+    top: -2px;
+    text-transform: capitalize;
+}
+
+.chevron-down {
+    font-size: 30px!important;
+    position: relative;
+    top: 8px;
+    cursor: pointer;
+}
+
+.user-menu {
+    position: relative;
+    top: 8px;
+    color: white;
+}
+.user-menu div{
+    color: white;
+    font-weight: normal;
+}
