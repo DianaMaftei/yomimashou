@@ -78,7 +78,7 @@ export class YomiText extends React.Component {
         this.props.setAnalyzer(null);
 
         this.analyzer = new KuromojiAnalyzer({
-            dictPath: "/static/kuromojiDict"
+            dictPath: "/static/kuromoji"
         });
 
         this.kuroshiro = new Kuroshiro();
