@@ -10,11 +10,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    resetText: () => {
-        dispatch({
-            type: 'RESET_TEXT'
-        });
-    }, resetDictionaries: () => {
+    resetDictionaries: () => {
         dispatch({
             type: 'RESET_DICTIONARIES'
         });
@@ -46,7 +42,7 @@ export class Read extends React.Component {
         if (id) {
             this.props.getTextById(id);
         } else {
-            if (!this.props.text.content) {
+            if (!this.props.text || !this.props.text.content) {
                 this.props.history.push('/')
             }
         }

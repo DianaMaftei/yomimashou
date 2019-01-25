@@ -1,15 +1,15 @@
 import React from 'react';
-import Card from "@material-ui/core/es/Card/Card";
-import CardActionArea from "@material-ui/core/es/CardActionArea/CardActionArea";
+import Card from "@material-ui/core/Card/Card";
+import CardActionArea from "@material-ui/core/CardActionArea/CardActionArea";
 import TextCardTop from "./TextCardTop";
 import TextCardBottom from "./TextCardBottom";
-import CardContent from "@material-ui/core/es/CardContent/CardContent";
-import Typography from "@material-ui/core/es/Typography/Typography";
-import CardActions from "@material-ui/core/es/CardActions/CardActions";
+import CardContent from "@material-ui/core//CardContent/CardContent";
+import Typography from "@material-ui/core/Typography/Typography";
+import CardActions from "@material-ui/core/CardActions/CardActions";
 import DateRange from '@material-ui/icons/DateRange';
-import Divider from "@material-ui/core/es/Divider/Divider";
+import Divider from "@material-ui/core/Divider/Divider";
 import "./TextCard.css";
-import Link from "react-router-dom/es/Link";
+import Link from "react-router-dom/Link";
 
 export default ({ text }) => {
     if (!text) return <div/>

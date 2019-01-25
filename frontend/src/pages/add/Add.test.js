@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
-import { Add } from "./Add";
-import { Link } from "react-router-dom/umd/react-router-dom";
+import Add from "./Add";
+import Editor from "react-pell";
 
 describe("Add", () => {
     let props;
@@ -10,7 +10,7 @@ describe("Add", () => {
     const wrapper = () => {
         if (!shallowAdd) {
             shallowAdd = shallow(
-                <Add {...props} />
+                <Add.WrappedComponent {...props} />
             );
         }
         return shallowAdd;
@@ -19,7 +19,11 @@ describe("Add", () => {
     beforeEach(() => {
         props = {
             text: {},
-            setText: undefined
+            setText: undefined,
+            history: {
+                push: jest.fn()
+            },
+            resetText: jest.fn()
         };
         shallowAdd = undefined;
     });
@@ -36,12 +40,9 @@ describe("Add", () => {
         expect(wrapper().find("#outlined-button-file")).toHaveLength(1);
     });
 
-    it("should contain a button with a Link component leading to /view", () => {
-        expect(wrapper().find(Link).props().to).toBe('/read');
+    it("should contain an Editor field with the text content value", () => {
+        props.text.content = "some content";
+        expect(wrapper().find(Editor).props().defaultContent).toBe(props.text.content);
     });
 
-    it("should contain a text adding field component", () => {
-        expect(wrapper().find("#add-text-field")).toHaveLength(1);
-    });
-    
 });

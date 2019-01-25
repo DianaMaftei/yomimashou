@@ -1,6 +1,5 @@
 import React from 'react';
-import DifficultyLevel from "./DifficultyLevel";
-import CardMedia from "@material-ui/core/es/CardMedia/CardMedia";
+import CardMedia from "@material-ui/core/CardMedia/CardMedia";
 
 export default (text) => (
     <div className="text-card-top">
@@ -10,10 +9,5 @@ export default (text) => (
             image={require("../../pics/ghost-cat.jpg")}
             title="Contemplative Reptile"
         />
-        {text.level &&
-            <div className="difficulty-bar">
-                <DifficultyLevel level={text.level}/>
-            </div>
-        }
     </div>
 );

@@ -4,7 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import logo from "./appLogo.svg";
 import './header.css';
-import Link from "react-router-dom/es/Link";
+import Link from "react-router-dom/Link";
 
 export default () => (
     <div className="header">

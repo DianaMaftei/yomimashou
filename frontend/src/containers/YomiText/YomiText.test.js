@@ -32,11 +32,13 @@ describe("YomiText", () => {
                 }
             };
         };
+
+        document.getElementById = jest.fn().mockReturnValue({});
     });
 
     beforeEach(() => {
         props = {
-            text: undefined,
+            text: {title: "some title"},
             textSelectInfo: undefined,
             searchResult: undefined,
             showResult: undefined,
@@ -46,7 +48,9 @@ describe("YomiText", () => {
             updateTextSelectInfo: undefined,
             fetchData: undefined,
             updateSearchResult: undefined,
-            setPopupInfo: undefined
+            setPopupInfo: undefined,
+            setAnalyzer: jest.fn(() => {
+            })
         };
         shallowYomiText = undefined;
     });
@@ -66,7 +70,7 @@ describe("YomiText", () => {
         wrapper().instance().onMouseMove = mockOnMouseMove;
         wrapper().update();
 
-        wrapper().find("#yomi-text-container").simulate('mousemove', { target: { value: 'mock text' } });
+        wrapper().find("#yomi-text-box").simulate('mousemove', { target: { value: 'mock text' } });
 
         expect(mockOnMouseMove.mock.calls.length).toBe(1);
     });
@@ -78,7 +82,7 @@ describe("YomiText", () => {
         wrapper().instance().onMouseClick = mockOnMouseClick;
         wrapper().update();
 
-        wrapper().find("#yomi-text-container").simulate('click', { target: { value: 'mock text' } });
+        wrapper().find("#yomi-text-box").simulate('click', { target: { value: 'mock text' } });
 
         expect(mockOnMouseClick.mock.calls.length).toBe(1);
     });
@@ -87,7 +91,7 @@ describe("YomiText", () => {
         props.updateSearchResult = jest.fn();
         props.updateTextSelectInfo = jest.fn();
 
-        wrapper().find("#yomi-text-container").simulate('mousemove', { target: { value: 'mock text' } });
+        wrapper().find("#yomi-text-box").simulate('mousemove', { target: { value: 'mock text' } });
 
         expect(isVisible).toHaveBeenCalledTimes(1);
         expect(tryToFindTextAtMouse).toHaveBeenCalledTimes(1);
@@ -113,7 +117,7 @@ describe("YomiText", () => {
 
         document.getSelection = jest.fn().mockImplementation(getSelection);
 
-        wrapper().find("#yomi-text-container").simulate('click', { target: { value: 'mock text' } });
+        wrapper().find("#yomi-text-box").simulate('click', { target: { value: 'mock text' } });
 
         expect(props.fetchData).toHaveBeenCalledWith(result.result.data, result.type);
         expect(props.setPopupInfo).toHaveBeenCalledWith({ "position": { "x": 10, "y": 45 }, "visibility": true });
@@ -137,7 +141,7 @@ describe("YomiText", () => {
 
         document.getSelection = jest.fn().mockImplementation(getSelection);
 
-        wrapper().find("#yomi-text-container").simulate('click', { target: { value: 'mock text' } });
+        wrapper().find("#yomi-text-box").simulate('click', { target: { value: 'mock text' } });
 
         expect(props.fetchData).toHaveBeenCalledWith(result.result, result.type);
         expect(props.setPopupInfo).toHaveBeenCalledWith({ "position": { "x": 10, "y": 45 }, "visibility": true });
