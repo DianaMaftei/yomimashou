@@ -120,6 +120,8 @@
                                     <directory>${main.basedir}/frontend/build</directory>
                                     <includes>
                                         <include>static/</include>
+                                        <include>kuromojiDict/</include>
+                                        <include>favicon.ico</include>
                                         <include>index.html</include>
                                     </includes>
                                 </resource>
