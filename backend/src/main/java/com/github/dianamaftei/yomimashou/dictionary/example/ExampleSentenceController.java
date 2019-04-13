@@ -8,7 +8,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/dictionary/examples")
-@CrossOrigin
 public class ExampleSentenceController {
 
     private final ExampleSentenceService exampleSentenceService;

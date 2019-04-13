@@ -32,9 +32,7 @@ public class ExampleSentencesCSVtoPOJO {
         List<ExampleSentence> exampleSentenceList = new ArrayList<>();
 
         try (BufferedReader sentenceReader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
-            sentenceReader.lines().forEach(line -> {
-                exampleSentenceList.add(getExampleSentenceFromCSVLine(line));
-            });
+            sentenceReader.lines().forEach(line -> exampleSentenceList.add(getExampleSentenceFromCSVLine(line)));
 
             exampleSentenceList.parallelStream().forEach(exampleSentenceRepository::save);
 

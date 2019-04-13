@@ -15,7 +15,7 @@ import static java.util.Collections.emptyList;
 @Service
 public class ApplicationUserService implements UserDetailsService {
 
-    private ApplicationUserRepository applicationUserRepository;
+    private final ApplicationUserRepository applicationUserRepository;
     private PasswordEncoder passwordEncoder;
 
     @Autowired

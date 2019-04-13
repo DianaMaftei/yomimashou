@@ -8,7 +8,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/dictionary/words")
-@CrossOrigin
 public class WordController {
 
     private final WordService wordService;
@@ -21,7 +20,9 @@ public class WordController {
     @GetMapping
     public List<Word> get(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
-            return wordService.get(searchItem.split(","));
+            List<Word> words = wordService.get(searchItem.split(","));
+            Collections.sort(words);
+            return words;
         }
         return Collections.emptyList();
     }
@@ -29,7 +30,9 @@ public class WordController {
     @GetMapping(value = "/byStartingKanji")
     public List<Word> getByStartingKanji(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
-            return wordService.getByStartingKanji(searchItem);
+            List<Word> words = wordService.getByStartingKanji(searchItem);
+            Collections.sort(words);
+            return words;
         }
         return Collections.emptyList();
     }
@@ -37,7 +40,9 @@ public class WordController {
     @GetMapping(value = "/byEndingKanji")
     public List<Word> getByEndingKanji(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
-            return wordService.getByEndingKanji(searchItem);
+            List<Word> words = wordService.getByEndingKanji(searchItem);
+            Collections.sort(words);
+            return words;
         }
         return Collections.emptyList();
     }
@@ -45,7 +50,9 @@ public class WordController {
     @GetMapping(value = "/byContainingKanji")
     public List<Word> getByContainingKanji(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
-            return wordService.getByContainingKanji(searchItem);
+            List<Word> words = wordService.getByContainingKanji(searchItem);
+            Collections.sort(words);
+            return words;
         }
         return Collections.emptyList();
     }

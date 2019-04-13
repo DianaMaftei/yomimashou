@@ -9,7 +9,6 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/text")
-@CrossOrigin
 public class TextController {
 
     private final TextParserService textParserService;
@@ -29,9 +28,7 @@ public class TextController {
     @GetMapping()
     public List<Text> getAll() {
         List<Text> texts = this.textService.getAll();
-        texts.forEach(text -> {
-            text.setContent(null);
-        });
+        texts.forEach(text -> text.setContent(null));
         return texts;
     }
 

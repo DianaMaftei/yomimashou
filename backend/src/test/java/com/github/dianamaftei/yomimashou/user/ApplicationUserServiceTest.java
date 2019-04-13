@@ -26,7 +26,7 @@ public class ApplicationUserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     private ApplicationUser applicationUser;
-    private String username = "JohnDemo";
+    private final String username = "JohnDemo";
     private String email = "test@email.com";
     private Long userId = 1L;
 

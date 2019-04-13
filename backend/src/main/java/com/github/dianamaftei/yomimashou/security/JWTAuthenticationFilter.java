@@ -22,7 +22,7 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static com.github.dianamaftei.yomimashou.security.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
     private static String SECRET;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, String SECRET) {

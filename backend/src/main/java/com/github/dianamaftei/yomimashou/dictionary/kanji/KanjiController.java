@@ -7,7 +7,6 @@ import javax.ws.rs.core.MediaType;
 
 @RestController
 @RequestMapping("/api/dictionary/kanji")
-@CrossOrigin
 public class KanjiController {
 
     private final KanjiService kanjiService;

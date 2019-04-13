@@ -7,10 +7,9 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin
 public class ApplicationUserController {
 
-    private ApplicationUserService applicationUserService;
+    private final ApplicationUserService applicationUserService;
 
     @Autowired
     public ApplicationUserController(ApplicationUserService applicationUserService) {

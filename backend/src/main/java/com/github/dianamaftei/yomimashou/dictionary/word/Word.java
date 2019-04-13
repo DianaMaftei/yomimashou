@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Word {
+public class Word implements Comparable<Word>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,5 +58,10 @@ public class Word {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    @Override
+    public int compareTo(Word o) {
+        return this.priority - o.priority;
     }
 }

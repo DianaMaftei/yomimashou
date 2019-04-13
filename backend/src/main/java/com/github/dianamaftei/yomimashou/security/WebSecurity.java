@@ -1,7 +1,5 @@
 package com.github.dianamaftei.yomimashou.security;
 
-import static com.github.dianamaftei.yomimashou.security.SecurityConstants.SIGN_UP_URL;
-
 import java.util.Arrays;
 import java.util.Collections;
 import com.github.dianamaftei.yomimashou.user.ApplicationUserService;
@@ -20,7 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
-    private ApplicationUserService applicationUserService;
+    private final ApplicationUserService applicationUserService;
     private PasswordEncoder passwordEncoder;
 
     @Value("${security.SECRET}")

@@ -12,14 +12,13 @@ public class TextService {
     private final TextRepository textRepository;
     private final String[] SENTENCE_ENDING_CHARACTERS = {"。", ".", "…", "‥", "！", "？"};
 
-
     @Autowired
     public TextService(TextRepository textRepository) {
         this.textRepository = textRepository;
     }
 
     public Text add(Text text) {
-        text.setExcerpt(getExerpt(text));
+        text.setExcerpt(getExcerpt(text));
         return textRepository.save(text);
     }
 
@@ -32,7 +31,7 @@ public class TextService {
     }
 
 
-    private String getExerpt(Text text) {
+    private String getExcerpt(Text text) {
         String snippet = text.getContent().substring(0, getIndexOfSentenceEnd(text.getContent()));
         boolean snippetEndsWithEndingCharacter = false;
 

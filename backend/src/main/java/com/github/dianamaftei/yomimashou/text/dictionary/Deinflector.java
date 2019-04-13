@@ -3,10 +3,7 @@ package com.github.dianamaftei.yomimashou.text.dictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,15 +11,13 @@ public class Deinflector {
 
     private static final Object lock = new Object();
     private static final Logger LOGGER = LoggerFactory.getLogger(Deinflector.class);
-    private static String filePath;
     private static Map<Integer, List<DeinflectRule>> rulesGroupedByRuleLength;
     private static volatile Deinflector instance;
-
+    private static Reader reader;
     private Deinflector() {
     }
 
-    public static Deinflector getInstance(String path) {
-        filePath = path;
+    public static Deinflector getInstance(String filePath) {
 
         Deinflector deinflector = instance;
         if (deinflector == null) {
@@ -30,7 +25,7 @@ public class Deinflector {
                 deinflector = instance;
                 if (deinflector == null) {
                     deinflector = new Deinflector();
-                    rulesGroupedByRuleLength = buildRuleList();
+                    rulesGroupedByRuleLength = buildRuleList(filePath);
                     instance = deinflector;
                 }
             }
@@ -38,10 +33,10 @@ public class Deinflector {
         return deinflector;
     }
 
-    private static Map<Integer, List<DeinflectRule>> buildRuleList() {
+    private static Map<Integer, List<DeinflectRule>> buildRuleList(String filePath) {
         List<DeinflectRule> ruleList = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(filePath + File.separator + "dictionaries" + File.separator + "deinflect.txt")))) {
+        try (BufferedReader reader = new BufferedReader(getReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] ruleComponents = line.split("\t");
@@ -56,16 +51,18 @@ public class Deinflector {
         return ruleList.stream().collect(Collectors.groupingBy(item -> item.from.length()));
     }
 
+    static Reader getReader(String filePath) throws FileNotFoundException {
+        if(reader != null) return reader;
+
+        return new FileReader(filePath + File.separator + "dictionaries" + File.separator + "deinflect.txt");
+    }
+
     public Set<String> getDeinflectedWords(String textFragmentWithInflectedWords) {
         Set<String> deinflectedWords = new HashSet<>();
 
         while (textFragmentWithInflectedWords.length() > 0) {
             String textFragment = textFragmentWithInflectedWords;
-            rulesGroupedByRuleLength.forEach((ruleLength, listOfRules) -> {
-                listOfRules.forEach(rule -> {
-                    getDeinflectedWordIfEndingMatchesRule(rule, ruleLength, textFragment).ifPresent(deinflectedWords::add);
-                });
-            });
+            rulesGroupedByRuleLength.forEach((ruleLength, listOfRules) -> listOfRules.forEach(rule -> getDeinflectedWordIfEndingMatchesRule(rule, ruleLength, textFragment).ifPresent(deinflectedWords::add)));
 
             textFragmentWithInflectedWords = textFragmentWithInflectedWords.substring(0, textFragmentWithInflectedWords.length() - 1);
         }
@@ -86,8 +83,12 @@ public class Deinflector {
         return Optional.empty();
     }
 
+    public static void setReader(Reader reader) {
+        Deinflector.reader = reader;
+    }
+
     private static class DeinflectRule {
-        private String from;
+        private final String from;
         private String to;
 
         private DeinflectRule(String from, String to) {

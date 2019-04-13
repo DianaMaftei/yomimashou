@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.StringReader;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,10 +19,18 @@ public class DeinflectorTest {
 
     private Deinflector deinflector;
 
-
     @Before
     public void setUp() {
-        deinflector = Deinflector.getInstance(Deinflector.class.getResource("/").getPath());
+        Deinflector.setReader(new StringReader(
+                     "た\tる\n" +
+                        "ない\tる\n" +
+                        "い\tいる\n" +
+                        "い\tう\n" +
+                        "い\tる\n" +
+                        "え\tう\n" +
+                        "え\tえる\n" +
+                        "な"));
+        deinflector = Deinflector.getInstance("");
     }
 
     @Test

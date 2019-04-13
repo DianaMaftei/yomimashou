@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Aspect
 @Component
 public class LoggingAspect {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Before("execution(* com.github.dianamaftei.yomimashou..*.*(..) )")
     public void logBefore(JoinPoint joinPoint) {

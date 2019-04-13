@@ -1,5 +1,10 @@
 package com.github.dianamaftei.yomimashou.dictionary.kanji;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,57 +17,53 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 @RunWith(MockitoJUnitRunner.class)
 public class KanjiControllerTest {
-    private MockMvc mvc;
 
-    @Mock
-    private KanjiService kanjiService;
+  private MockMvc mvc;
 
-    @InjectMocks
-    private KanjiController kanjiController;
+  @Mock
+  private KanjiService kanjiService;
 
-    @Before
-    public void setup() {
-        mvc = MockMvcBuilders.standaloneSetup(kanjiController).build();
-    }
+  @InjectMocks
+  private KanjiController kanjiController;
 
-    @Test
-    public void shouldGetAKanjiEntryBasedOnASearchItem() throws Exception {
-        Kanji kanji = new Kanji();
-        kanji.setMeaning("cat");
-        when(kanjiService.get("猫")).thenReturn(kanji);
+  @Before
+  public void setup() {
+    mvc = MockMvcBuilders.standaloneSetup(kanjiController).build();
+  }
 
-        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/kanji?searchItem=猫")
-                .accept(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
+  @Test
+  public void shouldGetAKanjiEntryBasedOnASearchItem() throws Exception {
+    Kanji kanji = new Kanji();
+    kanji.setMeaning("cat");
+    when(kanjiService.get("猫")).thenReturn(kanji);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString().indexOf("meaning\":\"cat")).isGreaterThan(0);
-    }
+    MockHttpServletResponse response = mvc.perform(get("/api/dictionary/kanji?searchItem=猫")
+        .accept(MediaType.APPLICATION_JSON))
+        .andReturn().getResponse();
 
-    @Test
-    public void shouldGetStrokesSVG() throws Exception {
-        String kanji = "猫";
-        String svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
-                "<circle cx=\"100\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"2\" fill=\"red\" />\n" +
-                "</svg> ";
-        byte[] svgBytes = svg.getBytes();
-        when(kanjiService.getStrokesSVG(kanji)).thenReturn(svgBytes);
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    assertThat(response.getContentAsString().indexOf("meaning\":\"cat")).isGreaterThan(0);
+  }
 
-        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/kanji/svg/" + kanji)
-                .characterEncoding("UTF-8")
-                .accept(javax.ws.rs.core.MediaType.APPLICATION_SVG_XML))
-                .andReturn().getResponse();
+  @Test
+  public void shouldGetStrokesSVG() throws Exception {
+    String kanji = "猫";
+    String svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
+        "<circle cx=\"100\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"2\" fill=\"red\" />\n"
+        +
+        "</svg> ";
+    byte[] svgBytes = svg.getBytes();
+    when(kanjiService.getStrokesSVG(kanji)).thenReturn(svgBytes);
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertEquals(svg, response.getContentAsString());
-    }
+    MockHttpServletResponse response = mvc.perform(get("/api/dictionary/kanji/svg/" + kanji)
+        .characterEncoding("UTF-8")
+        .accept(javax.ws.rs.core.MediaType.APPLICATION_SVG_XML))
+        .andReturn().getResponse();
+
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    assertEquals(svg, response.getContentAsString());
+  }
 
 }

@@ -1,8 +1,8 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,7 +41,7 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     @Autowired
     public WordEntriesFromXMLToPOJO(WordRepository wordRepository) {
         this.wordRepository = wordRepository;
-        this.partsOfSpeech = getListOfPartsOfSpeech();
+        this.partsOfSpeech = buildListOfPartsOfSpeech();
         this.dictionarySource = "http://ftp.monash.edu/pub/nihongo/JMdict_e.gz";
         this.fileName = "wordEntries.txt";
     }
@@ -62,8 +62,8 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
             Set<String> wordEntries = ((List<Entry>) entries).parallelStream()
                     .filter(Objects::nonNull)
                     .map(entry -> Arrays.asList(
-                            entry.getKEle().stream().map(kEle -> kEle.getKeb()).collect(Collectors.toList()),
-                            entry.getREle().stream().map(kEle -> kEle.getReb()).collect(Collectors.toList()))
+                            entry.getKEle().stream().map(KEle::getKeb).collect(Collectors.toList()),
+                            entry.getREle().stream().map(REle::getReb).collect(Collectors.toList()))
                     ).flatMap(List::stream)
                     .flatMap(List::stream)
                     .collect(Collectors.toSet());
@@ -136,8 +136,8 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
             meaning.setAntonym(String.join("|", sense.getAnt()));
             meaning.setGlosses(String.join("|", sense.getGloss().stream()
                     .map(Gloss::getContent)
-                    .flatMap(serializables -> serializables.stream())
-                    .map(serializable -> serializable.toString())
+                    .flatMap(Collection::stream)
+                    .map(Object::toString)
                     .collect(Collectors.toList())));
 
             meanings.add(meaning);
@@ -146,7 +146,7 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         return meanings;
     }
 
-    private Map<String, String> getListOfPartsOfSpeech() {
+    private Map<String, String> buildListOfPartsOfSpeech() {
         Map<String, String> partsOfSpeechMap = new HashMap<>();
         partsOfSpeechMap.put("adjective (keiyoushi)", "adj-i");
         partsOfSpeechMap.put("adjectival nouns or quasi-adjectives (keiyodoshi)", "adj-na");

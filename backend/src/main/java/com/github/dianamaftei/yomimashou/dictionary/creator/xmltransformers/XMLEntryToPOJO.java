@@ -72,8 +72,4 @@ public abstract class XMLEntryToPOJO {
     abstract void saveToFile(List<? extends DictionaryEntry> entries);
 
     abstract void saveToDB(List<? extends DictionaryEntry> entries);
-
-    void setDictionarySource(String dictionarySource) {
-        this.dictionarySource = dictionarySource;
-    }
 }
