@@ -1,23 +1,15 @@
 import React from 'react';
 import "./add.css";
-import Editor from 'react-pell';
 
-import {
-    Button,
-    Checkbox,
-    Chip,
-    Divider,
-    FormControl,
-    FormControlLabel,
-    MenuItem,
-    Select,
-    Switch,
-    TextField
-} from "@material-ui/core/umd/material-ui.development";
+import {Divider} from "@material-ui/core/umd/material-ui.development";
 import axios from "axios/index";
 import apiUrl from "../../AppUrl";
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom'
+import {connect} from "react-redux";
+import {withRouter} from 'react-router-dom'
+import ActionButtons from "./ActionButtons";
+import Tags from "./Tags";
+import Series from "./Series";
+import Text from "./Text";
 
 const mapStateToProps = (state) => ({
     text: state.add.text,
@@ -83,19 +75,16 @@ class Add extends React.Component {
     }
 
     componentWillMount() {
-       let username = localStorage.getItem('username');
-       if(!username) {
-           this.props.history.push('/');
-       }
+        let username = localStorage.getItem('username');
+        if (!username) {
+            this.props.history.push('/');
+        }
     }
 
     componentDidMount() {
         this.props.resetText();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props.text !== nextProps.text;
-    }
 
     disableAddBtn() {
         let textHasNoTitle = !this.props.text.title || this.props.text.title.length === 0;
@@ -138,7 +127,7 @@ class Add extends React.Component {
 
         text.content = newtext;
 
-        axios.post(apiUrl + '/api/text', text, { headers: { Authorization: token } }).then((response) => {
+        axios.post(apiUrl + '/api/text', text, {headers: {Authorization: token}}).then((response) => {
             this.props.history.push('/read/' + response.data.id);
         });
     }
@@ -151,109 +140,22 @@ class Add extends React.Component {
     }
 
     render() {
-        let editorContent = this.props.text.content != null ? this.props.text.content : '<p id="default-content">Paste your text here</p>';
+        let editorContent = this.props.text.content != null ?
+            this.props.text.content : '<p id="default-content">Paste your text here</p>';
 
         return (
             <div id="add-page">
-                <h1 style={{ textAlign: 'center' }}>Add a text to read</h1>
-                <TextField
-                    required
-                    fullWidth
-                    id="title-required"
-                    label="Title"
-                    value={this.props.text.title || ''}
-                    onChange={this.props.setTitle}
-                    margin="normal"
-                />
-                <input
-                    accept="image/*"
-                    id="outlined-button-file"
-                    multiple
-                    type="file"
-                    style={{ display: 'none' }}
-                />
-                <label htmlFor="outlined-button-file">
-                    <Button variant="outlined" component="span" disabled>
-                        Upload image
-                    </Button>
-                </label>
-
-                <h6><a href="https://anatolt.ru/t/del-timestamp-srt.html" target="_blank">Subtitle?</a></h6>
-                <div onClick={() => this.removePlaceholder()}>
-                    <Editor
-                        defaultContent={editorContent}
-                        actions={[]}
-                        actionBarClass="my-custom-class"
-                        onChange={this.props.setText}
-                        onPaste={this.props.setText}
-                    />
-                </div>
+                <Text title={this.props.text.title} setTitle={this.props.setTitle.bind(this)}
+                      removePlaceholder={this.removePlaceholder.bind(this)} editorContent={editorContent}
+                      setText={this.props.setText.bind(this)}/>
 
                 <div className="add-action-footer">
-                    <div>
-                        <h6>Tags</h6>
-                        <TextField
-                            id="tags"
-                            value={this.props.tagInput}
-                            onChange={this.updateTag.bind(this)}
-                            disabled
-                        />
-                        <Button variant="outlined" component="span" onClick={this.addTag.bind(this)} disabled>
-                            Add
-                        </Button>
-                        <div className="chips-list">
-                            {this.props.text.tags && this.props.text.tags.map((tag, index) =>
-                                <Chip
-                                    key={index}
-                                    label={tag}
-                                    variant="outlined"
-                                    color="primary"
-                                    onDelete={() => this.deleteTag(index)}
-                                    className="tag-chip"
-                                />
-                            )}
-                        </div>
-                        <div className="add-text-series">
-                            <FormControlLabel value="series" control={<Checkbox/>} label="Series" disabled/>
-                            <div>
-                                <FormControl disabled>
-                                    <Select
-                                        value="ceva"
-                                        onChange={() => {
-                                        }}
-                                        style={{ width: 200 }}
-                                    >
-                                        <MenuItem value="Ten">Ten</MenuItem>
-                                        <MenuItem value="Twenty">Twenty</MenuItem>
-                                        <MenuItem value="Thirty">Thirty</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </div>
-                        </div>
-                    </div>
+                    <Tags tagInput={this.props.tagInput} updateTag={this.updateTag.bind(this)}
+                          addTag={this.addTag.bind(this)} tags={this.props.text.tags}
+                          deleteTag={this.deleteTag.bind(this)}/>
+                    <Series/>
                     <Divider/>
-                    <div className="add-action-buttons">
-                        <Button variant="outlined" component="span" disabled> Preview </Button>
-                        <div>
-                            <Switch
-                                checked={true}
-                                onChange={(ceva) => {
-                                    console.log(ceva)
-                                }}
-                                color="primary"
-                                disabled
-                            />
-                            <span>public</span>
-                        </div>
-                        <Button variant="contained"
-                                color="primary"
-                                component="span"
-                                disabled={this.disableAddBtn()}
-                                onClick={this.submitText.bind(this)}
-                        >
-                                Add & Read
-                        </Button>
-                    </div>
+                    <ActionButtons disableAddBtn={this.disableAddBtn()} submitText={this.submitText.bind(this)}/>
                 </div>
             </div>
         );

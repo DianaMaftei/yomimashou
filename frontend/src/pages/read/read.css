@@ -1,23 +1,7 @@
-#read-page .ql-editor {
-    font-size: 20px;
-}
-
-#react-trumbowyg {
-    font-size: 20px!important;
-}
 
 #yomi-text-title {
     text-align: center;
     padding-top: 50px;
-}
-
-#text-box, #reset-btn {
-    text-align: center;
-}
-
-#reset-btn {
-    text-align: center;
-    margin: 5%;
 }
 
 #text-box {

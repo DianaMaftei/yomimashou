@@ -6,18 +6,7 @@ import logo from "./appLogo.svg";
 import './header.css';
 import Link from "react-router-dom/es/Link";
 import userIcon from "../../../userIcon.png";
-import apiUrl from "../../../AppUrl";
-import axios from "axios/index";
-import FormControl from "@material-ui/core/es/FormControl/FormControl";
-import MenuItem from "@material-ui/core/es/MenuItem/MenuItem";
-import Select from "@material-ui/core/es/Select/Select";
-
-
-const logout = () => {
-    localStorage.removeItem('username');
-    localStorage.removeItem('token');
-    axios.get(apiUrl + '/logout');
-};
+import UserMenu from "./UserMenu";
 
 export default (username) => (
     <div className="header">
@@ -30,21 +19,7 @@ export default (username) => (
                     <Link to="/add"><Button color="inherit"
                                             style={{textTransform: 'initial', color: 'white'}}>Add</Button></Link>
                     <img className="userIcon" src={userIcon} alt="userIcon"/>
-                    <FormControl className="user-menu">
-                        <Select
-                            value={username}
-                            displayEmpty
-                            name="user-menu"
-                        >
-                            <MenuItem value={username} disabled>
-                                <span>{username}</span>
-                            </MenuItem>
-                            <MenuItem value="">
-                                <span onClick={logout}><Link to="/">Logout</Link></span>
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
-
+                    <UserMenu username={username}/>
                 </div>
             </Toolbar>
         </AppBar>

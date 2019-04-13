@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import YomiText from '../../containers/YomiText/YomiText';
+import YomiText from './YomiText/YomiText';
 import "./read.css";
 import axios from "axios/index";
 import apiUrl from "../../AppUrl";

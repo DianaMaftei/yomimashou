@@ -31,13 +31,6 @@
     text-transform: capitalize;
 }
 
-.chevron-down {
-    font-size: 30px!important;
-    position: relative;
-    top: 8px;
-    cursor: pointer;
-}
-
 .user-menu {
     position: relative;
     top: 8px;

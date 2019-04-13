@@ -1,17 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import "./style/index.css";
 import registerServiceWorker from "./registerServiceWorker";
 import state from "./State";
-import Register from "./pages/register/Register";
-import Login from "./pages/login/Login";
-import ButtonAppBar from "./pages/`common/header/index";
-import Home from "./pages/home/Home";
-import Add from "./pages/add/Add";
 import axios from "axios";
-import Read from "./pages/read/Read";
+import ButtonAppBar from "./pages/`common/header/index";
+import Routes from "./Routes";
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8';
 
@@ -23,14 +19,7 @@ const render = () => {
                     <div id="app-header">
                         <ButtonAppBar/>
                     </div>
-                    <Switch>
-                        <Route exact path="/" component={() => <Home/>}/>
-                        <Route path="/add" component={() => <Add/>}/>
-                        <Route path="/read/:id" component={Read}/>
-                        <Route path="/read" component={Read}/>
-                        <Route path="/register" component={() => <Register/>}/>
-                        <Route path="/login" component={() => <Login/>}/>
-                    </Switch>
+                    <Routes/>
                 </div>
             </BrowserRouter>
         </Provider>,

@@ -1,7 +1,7 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import popUp from "./reducers/popUp";
 import config from "./reducers/config";
-import yomiText from "./containers/YomiText";
+import yomiText from "./pages/read/YomiText";
 import promiseMiddleware from 'redux-promise-middleware';
 import add from "./pages/add/index";
 import home from "./pages/home";

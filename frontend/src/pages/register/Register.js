@@ -22,15 +22,15 @@ class Register extends React.Component {
     }
 
     emailChange(event) {
-        this.user.email = event;
+        this.user.email = event.target.value;
     }
 
     usernameChange(event) {
-        this.user.username = event;
+        this.user.username = event.target.value;
     }
 
     passwordChange(event) {
-        this.user.password = event;
+        this.user.password = event.target.value;
     }
 
     render() {
@@ -48,7 +48,7 @@ class Register extends React.Component {
                         <input type="email" className="form-control" placeholder="Email" aria-label="Email"
                                aria-describedby="basic-addon1"
                                value={this.user.email}
-                               onChange={event => this.emailChange(event.target.value)}/>
+                               onChange={this.emailChange.bind(this)}/>
                     </div>
 
                     <br/>
@@ -62,7 +62,7 @@ class Register extends React.Component {
                         <input type="text" className="form-control" placeholder="Username" aria-label="Username"
                                aria-describedby="basic-addon1"
                                value={this.user.username}
-                               onChange={event => this.usernameChange(event.target.value)}/>
+                               onChange={this.usernameChange.bind(this)}/>
                     </div>
 
                     <br/>
@@ -76,7 +76,7 @@ class Register extends React.Component {
                         <input type="password" className="form-control" placeholder="Password" aria-label="Password"
                                aria-describedby="basic-addon1"
                                value={this.user.password}
-                               onChange={event => this.passwordChange(event.target.value)}/>
+                               onChange={this.passwordChange.bind(this)}/>
                     </div>
 
                     <button className="btn signInBtn" onClick={this.register.bind(this)}>Register</button>

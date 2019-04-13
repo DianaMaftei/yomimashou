@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getTexts: result => {
+    getTexts: () => {
         dispatch({
             type: 'GET_TEXTS',
             payload: axios.get(apiUrl + '/api/text')
