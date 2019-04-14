@@ -41,7 +41,8 @@
     "react-hot-loader": "^4.1.2",
     "react-hot-loader-loader": "^0.0.5",
     "react-test-renderer": "^16.6.0",
-    "redux-devtools-extension": "^2.13.2"
+    "redux-devtools-extension": "^2.13.2",
+    "talkify-tts": "^2.5.5"
   },
   "jest": {
     "coverageReporters": [

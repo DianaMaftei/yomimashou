@@ -10,8 +10,6 @@ import Replay from '@material-ui/icons/Replay';
 
 window.Raphael = Raphael;
 
-
-
 export default ({character}) => {
     let dmak = new window.Dmak(character, {
         'element': "kanji-draw",

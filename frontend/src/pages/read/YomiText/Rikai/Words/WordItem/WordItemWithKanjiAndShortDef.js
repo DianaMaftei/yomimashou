@@ -1,4 +1,5 @@
 import React from "react";
+import TTS from "../../../../../`common/TTS/TTS";
 
 export default (kanjiList, kanaList, grammar, shortDef, showExamples, wordClassName, showLongDef) => {
     let kanji = kanjiList.map((item, index) => {
@@ -16,6 +17,7 @@ export default (kanjiList, kanaList, grammar, shortDef, showExamples, wordClassN
                 <span className="example-btn" onClick={showExamples}>Ex</span>
             </div>
             <span key={kanaList + grammar}>{kana}</span>
+            <TTS text={kanaList.join()}/>
             <span key={grammar} className="w-grammar">{grammar}</span>
             <p className="w-def shortDef">
                 {shortDef}

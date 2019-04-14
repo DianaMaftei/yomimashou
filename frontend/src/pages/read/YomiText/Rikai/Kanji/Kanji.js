@@ -1,5 +1,6 @@
 import React from "react";
 import KanjiStrokeDiagram from "./KanjiStrokeDiagram";
+import TTS from "../../../../`common/TTS/TTS";
 
 export default ({ result, showWordExamples }) => {
     return (
@@ -15,8 +16,10 @@ export default ({ result, showWordExamples }) => {
                 </div>
             </div>
             <h2 className="k-eigo">{result.eigo}</h2>
-            <h3>Kun: <span className="k-yomi">{result.kunReading || '–' }</span></h3>
-            <h3>On: <span className="k-yomi">{result.onReading  || '–'}</span></h3>
+            <h3>Kun: <span className="k-yomi">{result.kunReading || '–'}</span></h3>
+            {result.kunReading && <TTS text={result.kunReading}/>}
+            <h3>On: <span className="k-yomi">{result.onReading || '–'}</span></h3>
+            {result.onReading && <TTS text={result.onReading}/>}
             <br/>
 
             <h4>See example words:</h4>
