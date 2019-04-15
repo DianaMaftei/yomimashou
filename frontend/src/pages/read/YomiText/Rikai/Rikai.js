@@ -6,6 +6,7 @@ import RikaiWords from './Words/RikaiWords';
 import RikaiKanji from './Kanji/RikaiKanji';
 import RikaiNames from './Name/RikaiNames';
 import RikaiExamples from './Examples/RikaiExamples';
+import RikaiSentences from './Sentence/RikaiSentence';
 import './Rikai.css';
 import apiUrl from "../../../../AppUrl";
 
@@ -82,17 +83,17 @@ const showSentenceExamples = (word, fetchData, updateSearchResult) => {
     let kana = word.kana ? word.kana : [];
     let searchItems = [...kanji, ...kana];
 
-    updateSearchResult({ type: "examples", result: searchItems });
+    updateSearchResult({type: "examples", result: searchItems});
     fetchData(searchItems, "examples");
 };
 
 const showWordExamples = (word, typeOfSearch, fetchData, updateSearchResult) => {
-    updateSearchResult({ type: "wordsByKanji", result: word });
+    updateSearchResult({type: "wordsByKanji", result: word});
     fetchData(word, "words/" + typeOfSearch);
 };
 
 const hidePopup = (popUpSetVisibility) => {
-    popUpSetVisibility({ visibility: false });
+    popUpSetVisibility({visibility: false});
 };
 
 const sortResultsByRelevanceAndAddConjugation = (searchedElements, fetchedList) => {
@@ -108,7 +109,7 @@ const sortResultsByRelevanceAndAddConjugation = (searchedElements, fetchedList) 
         for (let j = 0; j < fetchedListCopy.length; j++) {
             if (fetchedListCopy[j].kanjiElements.indexOf(words[i]) > -1 || fetchedListCopy[j].readingElements.indexOf(words[i]) > -1) {
 
-                let item = { ...fetchedListCopy[j] };
+                let item = {...fetchedListCopy[j]};
                 item.grammarPoint = conjugations[i];
                 sortedList.push(item);
                 fetchedListCopy.splice(j, 1);
@@ -158,7 +159,7 @@ const sortResultsByRelevance = (searchTerms, results) => {
 
     searchTerms.forEach(searchTerm => {
         results.forEach(result => {
-            if(result.kanji === searchTerm || result.reading === searchTerm) {
+            if (result.kanji === searchTerm || result.reading === searchTerm) {
                 resultList.push(result);
             }
         });
@@ -175,20 +176,22 @@ const getResultFromEntry = (searchResult, fetchedResult) => {
     if (fetchedResult.result === null) return;
 
     if (fetchedResult.type === "words") {
-        return { type: 'words', result: getResultFromWordEntry(searchResult.data, fetchedResult.result.slice()) };
+        return {type: 'words', result: getResultFromWordEntry(searchResult.data, fetchedResult.result.slice())};
     }
 
     if (fetchedResult.type === "wordsByKanji") {
-        let words = fetchedResult.result.map(entry => {return {word: entry.kanjiElements}});
-        return { type: 'words', result: getResultFromWordEntry(words, fetchedResult.result.slice()) };
+        let words = fetchedResult.result.map(entry => {
+            return {word: entry.kanjiElements}
+        });
+        return {type: 'words', result: getResultFromWordEntry(words, fetchedResult.result.slice())};
     }
 
     if (fetchedResult.type === "kanji") {
-        return { type: 'kanji', result: getResultFromKanjiEntry(fetchedResult.result) };
+        return {type: 'kanji', result: getResultFromKanjiEntry(fetchedResult.result)};
     }
 
     if (fetchedResult.type === "names") {
-        return { type: 'names', result: getResultFromNameEntry(searchResult.data, fetchedResult.result.slice())};
+        return {type: 'names', result: getResultFromNameEntry(searchResult.data, fetchedResult.result.slice())};
     }
 };
 
@@ -196,6 +199,11 @@ export const getResult = (searchResult, showResult) => {
     if (!searchResult) {
         return;
     }
+
+    if (searchResult.type === "sentence") {
+        return searchResult.result;
+    }
+
     if (showResult.type === "examples") {
         if (!showResult.result) {
             return;
@@ -218,6 +226,7 @@ export class Rikai extends React.Component {
         let result = getResult(this.props.searchResult, this.props.showResult);
 
         if (!result) return RikaiLoading(() => hidePopup(this.props.setPopupInfo), style);
+        else if (!result.type) return RikaiSentences(() => hidePopup(this.props.setPopupInfo), style, result);
         else if (result.type === 'words') return RikaiWords(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit, (word) => showSentenceExamples(word, this.props.fetchData, this.props.updateSearchResult));
         else if (result.type === 'kanji') return RikaiKanji(() => hidePopup(this.props.setPopupInfo), style, result, (kanji, typeOfSearch) => showWordExamples(kanji, typeOfSearch, this.props.fetchData, this.props.updateSearchResult));
         else if (result.type === 'names') return RikaiNames(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit);

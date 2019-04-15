@@ -89,6 +89,10 @@ export class YomiText extends React.Component {
         });
 
         this.keyDownHandler = this.onKeyDown.bind(this);
+
+        window.speechSynthesis.onvoiceschanged = function(e) {
+            window.speechSynthesis.getVoices();
+        };
     }
 
     componentDidMount() {
@@ -149,45 +153,76 @@ export class YomiText extends React.Component {
             let searchResult = search(textAtMouseInfo, currentDictionary, wordList, nameList);
 
             if (searchResult) {
-                let entries = searchResult.entries;
-
-                if (!entries || !entries.result) {
-                    return;
+                if (searchResult.isPointerAtFullStop) {
+                    this.handleEndOfSentence(textAtMouseInfo, updateSearchResult);
                 } else {
-                    if (entries.type === "words" && (!entries.result.data || entries.result.data.length === 0)) {
+                    let entries = searchResult.entries;
+                    if (!entries || !entries.result) {
                         return;
+                    } else {
+                        if (entries.type === "words" && (!entries.result.data || entries.result.data.length === 0)) {
+                            return;
+                        }
+                    }
+
+                    if (!this.props.searchResult || this.props.searchResult.result) {
+                        updateSearchResult(entries);
+                    } else if (JSON.stringify(this.props.searchResult.result) !== JSON.stringify(entries.result)) {
+                        updateSearchResult(entries);
+                    }
+
+                    if (textAtMouseInfo && entries) {
+                        textAtMouseInfo.entries = JSON.stringify(entries.result.data);
+                        textAtMouseInfo.matchLen = entries.result.matchLen || entries.matchLen;
+                        textAtMouseInfo.uofs = (textAtMouseInfo.prevRangeOfs + textAtMouseInfo.uofs);
+                        textAtMouseInfo.prevSelView = textAtMouseInfo.prevRangeNode.ownerDocument.defaultView;
+                        textAtMouseInfo.lastRo = searchResult.lastRo;
+                        textAtMouseInfo.selEndList = searchResult.selEndList;
+
+                        updateTextSelectInfo(textAtMouseInfo);
+
+                        let highlightColors = {
+                            1: "#f0a0a8",
+                            2: "#68b4ee",
+                            3: "#6fbca7"
+                        };
+
+                        highlightMatch(textAtMouseInfo, highlightColors[currentDictionary]);
                     }
                 }
 
-                if (!this.props.searchResult || this.props.searchResult.result) {
-                    updateSearchResult(entries);
-                } else if (JSON.stringify(this.props.searchResult.result) !== JSON.stringify(entries.result)) {
-                    updateSearchResult(entries);
-                }
-
-                if (textAtMouseInfo && entries) {
-                    textAtMouseInfo.entries = JSON.stringify(entries.result.data);
-                    textAtMouseInfo.matchLen = entries.result.matchLen || entries.matchLen;
-                    textAtMouseInfo.uofs = (textAtMouseInfo.prevRangeOfs + textAtMouseInfo.uofs);
-                    textAtMouseInfo.prevSelView = textAtMouseInfo.prevRangeNode.ownerDocument.defaultView;
-                    textAtMouseInfo.lastRo = searchResult.lastRo;
-                    textAtMouseInfo.selEndList = searchResult.selEndList;
-
-                    updateTextSelectInfo(textAtMouseInfo);
-
-                    let highlightColors = {
-                        1: "#f0a0a8",
-                        2: "#68b4ee",
-                        3: "#6fbca7"
-                    };
-
-                    let highlightedText = highlightMatch(textAtMouseInfo, highlightColors[currentDictionary]);
-
-                    // this.props.setText(highlightedText);
-                }
             }
         }
     };
+
+    handleEndOfSentence(textAtMouseInfo, updateSearchResult) {
+        window.getSelection().empty();
+
+        let allText = textAtMouseInfo.prevRangeNode.textContent;
+        let previousSentence = "";
+        for (let i = textAtMouseInfo.prevRangeOfs - 1; i > 0; i--) {
+            if (allText[i] !== "。") {
+                previousSentence += allText[i];
+            } else {
+                break;
+            }
+        }
+
+        updateSearchResult({
+            type: "sentence",
+            result: (previousSentence.split("").reverse().join("") + "。").trim()
+        });
+
+        let highlightInfo = {
+            selEndList: [{offset: 0, node: textAtMouseInfo.prevRangeNode}],
+            matchLen: 1,
+            lastRo: textAtMouseInfo.prevRangeOfs,
+            prevRangeNode: textAtMouseInfo.prevRangeNode,
+
+        };
+
+        highlightMatch(highlightInfo, "#11bc0e");
+    }
 
     getClassForDictionary() {
         return this.props.currentDictionary === 2 ? "word-dict" : "kanji-dict";
@@ -250,16 +285,17 @@ export class YomiText extends React.Component {
                             onClick={this.toggleFurigana.bind(this)}>
                         ルビ
                     </button>
-                    <form id="dld-tts" method="POST" action={'https://talkify.net/api/speech/v1/download?key=' + process.env.REACT_APP_TALKIFY_KEY}>
-                        <input type="hidden" name="text" value={this.props.text.content} />
+                    <form id="dld-tts" method="POST"
+                          action={'https://talkify.net/api/speech/v1/download?key=' + process.env.REACT_APP_TALKIFY_KEY}>
+                        <input type="hidden" name="text" value={this.props.text.content}/>
                         <button type="submit" className="btn btn-light" id="dld-tts-btn">
                             <Save fontSize="small"/>
                         </button>
                     </form>
                 </div>
                 <div id="yomi-text-box"
-                    onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}
-                    onClick={(ev) => this.onMouseClick(ev, this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
+                     onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}
+                     onClick={(ev) => this.onMouseClick(ev, this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
                 >
                     <h3 id="yomi-text-title">{this.props.text.title}</h3>
                     <br/>

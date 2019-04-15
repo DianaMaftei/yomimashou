@@ -16,6 +16,8 @@ describe("YomiText", () => {
     let props;
     let shallowYomiText;
 
+    global.speechSynthesis = jest.fn();
+
     const wrapper = () => {
         if (!shallowYomiText) {
             shallowYomiText = shallow(

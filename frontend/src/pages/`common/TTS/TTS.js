@@ -67,9 +67,7 @@ function cancel() {
 function createNewUtterance(text) {
     let utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "ja-JP";
-    utterance.rate = 0.6;
-    utterance.pitch = 0.1;
-
+    utterance.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == 'Google 日本語'; })[0];
     return utterance;
 }
 

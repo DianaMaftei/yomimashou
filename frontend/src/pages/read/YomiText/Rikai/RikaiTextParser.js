@@ -130,6 +130,7 @@ export function search(textAtMouseInfo, dictOption, wordList, nameList) {
     let text = getTextFromRange(prevRangeNode, prevRangeOfs, selEndList, 13 /*maxlength*/);
 
     let result = {
+        isPointerAtFullStop: text.indexOf("。") === 0,
         entries: RikaiDict.search(text, String(dictOption), wordList, nameList),
         selEndList: selEndList,
         lastRo: prevRangeOfs
@@ -169,20 +170,11 @@ export function highlightMatch(info, highlightColor) {
 
     range.setEnd(selEnd.node, offset);
 
-    let newNode = document.createElement("span");
-    newNode.style.backgroundColor = highlightColor;
+    // let newNode = document.createElement("span");
+    // newNode.style.backgroundColor = highlightColor;
     // range.surroundContents(newNode);
     sel.removeAllRanges();
     sel.addRange(range);
-
-    // let highlight = text.substring(so, offset);
-    // console.log(highlight);
-    // console.log(so);
-    // console.log(offset);
-    // let newText = text.substring(0, so) + "<span id='highlight-selection' style='background-color: " + color + "'>" + highlight + "</span>" + text.substring(offset, text.length);
-
-    // return newText;
-    // parentNode.innerHTML = newText;
 }
 
 // Gets text from a node
