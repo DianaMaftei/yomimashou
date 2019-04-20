@@ -1,6 +1,6 @@
 package com.github.dianamaftei.yomimashou.text;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -14,12 +14,14 @@ public class TextServiceTest {
 
   @Mock
   private TextRepository textRepository;
+  @Mock
+  private KanjiCategories kanjiCategories;
 
   private TextService textService;
 
   @Before
   public void setUp() {
-    textService = new TextService(textRepository);
+    textService = new TextService(textRepository, kanjiCategories);
   }
 
   @Test
@@ -41,8 +43,9 @@ public class TextServiceTest {
     textService.add(text);
 
     assertEquals("Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-        + "Mauris tristique, metus ac convallis condimentum, nunc purus molestie quam, "
-        + "id rutrum risus metus vel lorem. Sed porttitor tempus dui, non placerat ligula. "
-        + "Vivamus pulvinar enim justo, sit amet congue risus dapibus ultricies.", text.getExcerpt());
+            + "Mauris tristique, metus ac convallis condimentum, nunc purus molestie quam, "
+            + "id rutrum risus metus vel lorem. Sed porttitor tempus dui, non placerat ligula. "
+            + "Vivamus pulvinar enim justo, sit amet congue risus dapibus ultricies.",
+        text.getExcerpt());
   }
 }

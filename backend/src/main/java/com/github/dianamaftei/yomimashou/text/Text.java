@@ -1,10 +1,15 @@
 package com.github.dianamaftei.yomimashou.text;
 
 import com.github.dianamaftei.yomimashou.audit.Auditable;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Text extends Auditable<String> {
@@ -26,6 +31,9 @@ public class Text extends Auditable<String> {
 
     @ElementCollection
     private List<String> tags;
+
+  @ElementCollection
+  private Map<String, Integer> kanjiCountByLevel;
 
     public Long getId() {
         return id;
@@ -51,14 +59,6 @@ public class Text extends Auditable<String> {
         this.content = content;
     }
 
-    public String getLevelOfDifficulty() {
-        return levelOfDifficulty;
-    }
-
-    public void setLevelOfDifficulty(String levelOfDifficulty) {
-        this.levelOfDifficulty = levelOfDifficulty;
-    }
-
     public List<String> getTags() {
         return tags;
     }
@@ -74,4 +74,12 @@ public class Text extends Auditable<String> {
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
     }
+
+  public Map<String, Integer> getKanjiCountByLevel() {
+    return kanjiCountByLevel;
+  }
+
+  public void setKanjiCountByLevel(Map<String, Integer> kanjiCountByLevel) {
+    this.kanjiCountByLevel = kanjiCountByLevel;
+  }
 }

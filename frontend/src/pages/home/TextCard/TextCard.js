@@ -10,24 +10,26 @@ import DateRange from '@material-ui/icons/DateRange';
 import Divider from "@material-ui/core/Divider/Divider";
 import "./TextCard.css";
 import Link from "react-router-dom/Link";
+import KanjiPieChart from "./KanjiPieChart";
 
-export default ({ text }) => {
-    if (!text) return <div/>
+export default ({text}) => {
+    if (!text) return <div/>;
 
     return (
-        <Card style={{ maxWidth: 350 }}>
+        <Card style={{maxWidth: 350}}>
             <Link to={"/read/" + text.id} className="text-card-link">
                 <CardActionArea>
                     <TextCardTop text={text}/>
                     <CardContent>
-                        <Typography variant="h5" component="h2">
+                        <KanjiPieChart kanjiCountByLevel={text.kanjiCountByLevel}/>
+                        <Typography variant="h5" component="h2" style={{display: 'inline', float: 'right'}}>
                             {text.title}
                         </Typography>
                         <Typography gutterBottom variant="caption">
                             <DateRange className="text-card-date"/>
 
                             {text.creationDate}
-                            <span style={{ float: 'right' }}>
+                            <span style={{float: 'right'}}>
                             by {text.createdBy}
                         </span>
                         </Typography>

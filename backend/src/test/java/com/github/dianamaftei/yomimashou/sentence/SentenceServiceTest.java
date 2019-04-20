@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.Resource;
@@ -24,8 +23,7 @@ import org.springframework.core.io.ResourceLoader;
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceServiceTest {
 
-  @InjectMocks
-  private SentenceService sentenceService;
+  private static SentenceService sentenceService;
 
   private static Resource resource;
 
@@ -38,6 +36,7 @@ public class SentenceServiceTest {
     resource = mock(Resource.class);
     when(resourceLoader.getResource(anyString())).thenReturn(resource);
     when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("".getBytes()));
+    sentenceService = new SentenceService(resourceLoader);
   }
 
   @Before

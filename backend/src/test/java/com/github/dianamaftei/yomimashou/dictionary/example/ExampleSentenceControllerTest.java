@@ -1,9 +1,13 @@
 package com.github.dianamaftei.yomimashou.dictionary.example;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
@@ -12,64 +16,64 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 @RunWith(MockitoJUnitRunner.class)
 public class ExampleSentenceControllerTest {
-    private MockMvc mvc;
 
-    @Mock
-    private ExampleSentenceService exampleSentenceService;
+  private MockMvc mvc;
 
-    @InjectMocks
-    private ExampleSentenceController exampleSentenceController;
+  @Mock
+  private ExampleSentenceService exampleSentenceService;
 
-    @Before
-    public void setup() {
-        mvc = MockMvcBuilders.standaloneSetup(exampleSentenceController)
-                .build();
-    }
+  private ExampleSentenceController exampleSentenceController;
 
-    @Test
-    public void shouldGetAListOfExampleSentencesBasedOnASearchItem() throws Exception {
-        ExampleSentence exampleSentence = new ExampleSentence();
-        exampleSentence.setSentence("test sentence by search");
-        String searchItem = "test sentence";
-        when(exampleSentenceService.get(new String[]{searchItem})).thenReturn(Collections.singletonList(exampleSentence));
+  @Before
+  public void setup() {
+    exampleSentenceController = new ExampleSentenceController(exampleSentenceService);
+    mvc = MockMvcBuilders.standaloneSetup(exampleSentenceController)
+        .build();
+  }
 
-        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
-                .accept(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
+  @Test
+  public void shouldGetAListOfExampleSentencesBasedOnASearchItem() throws Exception {
+    ExampleSentence exampleSentence = new ExampleSentence();
+    exampleSentence.setSentence("test sentence by search");
+    String searchItem = "test sentence";
+    when(exampleSentenceService.get(new String[]{searchItem}))
+        .thenReturn(Collections.singletonList(exampleSentence));
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString().indexOf("sentence\":\"test sentence by search")).isGreaterThan(0);
-    }
+    MockHttpServletResponse response = mvc
+        .perform(get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
+            .accept(MediaType.APPLICATION_JSON))
+        .andReturn().getResponse();
 
-    @Test
-    public void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
-        String searchItem = null;
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    assertThat(response.getContentAsString().indexOf("sentence\":\"test sentence by search"))
+        .isGreaterThan(0);
+  }
 
-        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/examples?searchItem={non_existent_variable}", searchItem)
-                .accept(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
+  @Test
+  public void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
+    String searchItem = null;
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("[]");
-    }
+    MockHttpServletResponse response = mvc
+        .perform(get("/api/dictionary/examples?searchItem={non_existent_variable}", searchItem)
+            .accept(MediaType.APPLICATION_JSON))
+        .andReturn().getResponse();
 
-    @Test
-    public void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
-        String searchItem = "";
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    assertThat(response.getContentAsString()).isEqualTo("[]");
+  }
 
-        MockHttpServletResponse response = mvc.perform(get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
-                .accept(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
+  @Test
+  public void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
+    String searchItem = "";
 
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("[]");
-    }
+    MockHttpServletResponse response = mvc
+        .perform(get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
+            .accept(MediaType.APPLICATION_JSON))
+        .andReturn().getResponse();
+
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    assertThat(response.getContentAsString()).isEqualTo("[]");
+  }
 }

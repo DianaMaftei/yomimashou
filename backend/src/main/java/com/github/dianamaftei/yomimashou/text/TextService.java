@@ -8,63 +8,65 @@ import org.springframework.stereotype.Service;
 @Service
 public class TextService {
 
-    private final TextRepository textRepository;
-    private static final String[] SENTENCE_ENDING_CHARACTERS = {"。", ".", "…", "‥", "！", "？"};
+  private final TextRepository textRepository;
+  private final KanjiCategories kanjiCategories;
+  private static final String[] SENTENCE_ENDING_CHARACTERS = {"。", ".", "…", "‥", "！", "？"};
 
-    @Autowired
-    public TextService(TextRepository textRepository) {
-        this.textRepository = textRepository;
+  @Autowired
+  public TextService(TextRepository textRepository, KanjiCategories kanjiCategories) {
+    this.textRepository = textRepository;
+    this.kanjiCategories = kanjiCategories;
+  }
+
+  public Text add(Text text) {
+    text.setExcerpt(getExcerpt(text));
+    text.setKanjiCountByLevel(kanjiCategories.getKanjiCountByCategory(text.getContent()));
+    return textRepository.save(text);
+  }
+
+  public List<Text> getAll() {
+    return this.textRepository.findAll(new Sort(Sort.Direction.DESC, "creationDate"));
+  }
+
+  public Text getById(Long id) {
+    return this.textRepository.getOne(id);
+  }
+
+  private String getExcerpt(Text text) {
+    String snippet = text.getContent().substring(0, getIndexOfSentenceEnd(text.getContent()));
+    boolean snippetEndsWithEndingCharacter = false;
+
+    for (String sentenceEndingCharacter : SENTENCE_ENDING_CHARACTERS) {
+      if (snippet.endsWith(sentenceEndingCharacter)) {
+        snippetEndsWithEndingCharacter = true;
+        break;
+      }
     }
 
-    public Text add(Text text) {
-        text.setExcerpt(getExcerpt(text));
-        return textRepository.save(text);
+    if (!snippetEndsWithEndingCharacter) {
+      return snippet + "...";
     }
 
-    public List<Text> getAll() {
-        return this.textRepository.findAll(new Sort(Sort.Direction.DESC, "creationDate"));
+    return snippet;
+  }
+
+  private int getIndexOfSentenceEnd(String text) {
+    int startOfEndingCharacterSearch = 250;
+    int endOfEndingCharacterSearch = 350;
+    int indexOfEndingCharacter = 100;
+
+    if (text.length() < endOfEndingCharacterSearch) {
+      return text.length();
     }
 
-    public Text getById(Long id) {
-        return this.textRepository.getOne(id);
+    String substring = text.substring(startOfEndingCharacterSearch, endOfEndingCharacterSearch + 1);
+
+    for (String character : SENTENCE_ENDING_CHARACTERS) {
+      if (substring.contains(character) && substring.indexOf(character) < indexOfEndingCharacter) {
+        indexOfEndingCharacter = substring.indexOf(character);
+      }
     }
 
-
-    private String getExcerpt(Text text) {
-        String snippet = text.getContent().substring(0, getIndexOfSentenceEnd(text.getContent()));
-        boolean snippetEndsWithEndingCharacter = false;
-
-        for (String sentenceEndingCharacter : SENTENCE_ENDING_CHARACTERS) {
-            if (snippet.endsWith(sentenceEndingCharacter)) {
-                snippetEndsWithEndingCharacter = true;
-                break;
-            }
-        }
-
-        if (!snippetEndsWithEndingCharacter) {
-            return snippet + "...";
-        }
-
-        return snippet;
-    }
-
-    private int getIndexOfSentenceEnd(String text) {
-        int startOfEndingCharacterSearch = 250;
-        int endOfEndingCharacterSearch = 350;
-        int indexOfEndingCharacter = 100;
-
-        if (text.length() < endOfEndingCharacterSearch) {
-            return text.length();
-        }
-
-        String substring = text.substring(startOfEndingCharacterSearch, endOfEndingCharacterSearch + 1);
-
-        for (String character : SENTENCE_ENDING_CHARACTERS) {
-            if (substring.contains(character) && substring.indexOf(character) < indexOfEndingCharacter) {
-                indexOfEndingCharacter = substring.indexOf(character);
-            }
-        }
-
-        return startOfEndingCharacterSearch + indexOfEndingCharacter + 1;
-    }
+    return startOfEndingCharacterSearch + indexOfEndingCharacter + 1;
+  }
 }

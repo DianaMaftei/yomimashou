@@ -58,3 +58,7 @@
 .favorite-icon {
     color: #c80009;
 }
+
+#kanji-pie-chart > div {
+    display: inline;
+}
