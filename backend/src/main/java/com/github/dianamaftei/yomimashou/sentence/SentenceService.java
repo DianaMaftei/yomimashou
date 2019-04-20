@@ -28,10 +28,10 @@ public class SentenceService {
 
   private Tokenizer tokenizer;
 
-  private static Map<String, String> posLvl1Map;
-  private static Map<String, String> posLvl2Map;
-  private static Map<String, String> posLvl3Map;
-  private static Map<String, String> posLvl4Map;
+  private Map<String, String> posLvl1Map;
+  private Map<String, String> posLvl2Map;
+  private Map<String, String> posLvl3Map;
+  private Map<String, String> posLvl4Map;
 
   @Autowired
   public SentenceService(ResourceLoader resourceLoader) {

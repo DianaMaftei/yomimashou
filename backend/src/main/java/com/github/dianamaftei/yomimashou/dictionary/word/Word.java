@@ -1,7 +1,15 @@
 package com.github.dianamaftei.yomimashou.dictionary.word;
 
-import javax.persistence.*;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity
 public class Word implements Comparable<Word>{
@@ -64,4 +72,28 @@ public class Word implements Comparable<Word>{
     public int compareTo(Word o) {
         return this.priority - o.priority;
     }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Word word = (Word) o;
+
+    return new EqualsBuilder()
+        .append(priority, word.priority)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(priority)
+        .toHashCode();
+  }
 }

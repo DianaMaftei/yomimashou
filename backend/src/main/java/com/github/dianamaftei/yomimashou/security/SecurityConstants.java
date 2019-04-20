@@ -5,4 +5,7 @@ public class SecurityConstants {
     static final String TOKEN_PREFIX = "Bearer ";
     static final String HEADER_STRING = "Authorization";
     static final String SIGN_UP_URL = "/api/users/register";
+
+  private SecurityConstants() {
+  }
 }

@@ -11,8 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WordDictionary {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(WordDictionary.class);
 
   private static final Object lock = new Object();
   private static volatile WordDictionary instance;
@@ -54,7 +58,7 @@ public class WordDictionary {
         result.append(line);
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.error("Could not read from file: " + fileName, e);
     }
 
     return result.toString();

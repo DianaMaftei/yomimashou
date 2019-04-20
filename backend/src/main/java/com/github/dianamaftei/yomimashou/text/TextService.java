@@ -1,16 +1,15 @@
 package com.github.dianamaftei.yomimashou.text;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TextService {
 
     private final TextRepository textRepository;
-    private final String[] SENTENCE_ENDING_CHARACTERS = {"。", ".", "…", "‥", "！", "？"};
+    private static final String[] SENTENCE_ENDING_CHARACTERS = {"。", ".", "…", "‥", "！", "？"};
 
     @Autowired
     public TextService(TextRepository textRepository) {

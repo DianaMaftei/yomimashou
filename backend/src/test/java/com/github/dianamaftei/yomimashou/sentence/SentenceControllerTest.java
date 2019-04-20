@@ -42,10 +42,10 @@ public class SentenceControllerTest {
     when(sentenceService.analyze(anyString()))
         .thenReturn(Collections.singletonList(new SentenceToken()));
 
-    MockHttpServletResponse response = mvc.perform(post("/api/sentence")
+    mvc.perform(post("/api/sentence")
         .content(sentence)
         .accept(MediaType.APPLICATION_JSON))
-        .andReturn().getResponse();
+        .andReturn();
 
     verify(sentenceService, times(1)).analyze(sentence);
   }

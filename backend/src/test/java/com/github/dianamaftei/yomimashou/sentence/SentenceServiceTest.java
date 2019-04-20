@@ -27,8 +27,6 @@ public class SentenceServiceTest {
   @InjectMocks
   private SentenceService sentenceService;
 
-  private static ResourceLoader resourceLoader;
-
   private static Resource resource;
 
   @Mock
@@ -36,7 +34,7 @@ public class SentenceServiceTest {
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-    resourceLoader = mock(ResourceLoader.class);
+    ResourceLoader resourceLoader = mock(ResourceLoader.class);
     resource = mock(Resource.class);
     when(resourceLoader.getResource(anyString())).thenReturn(resource);
     when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("".getBytes()));
