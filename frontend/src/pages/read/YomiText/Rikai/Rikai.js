@@ -201,7 +201,17 @@ export const getResult = (searchResult, showResult) => {
     }
 
     if (searchResult.type === "sentence") {
-        return searchResult.result;
+        if (!showResult.result) {
+            return;
+        }
+
+        let sentenceTokens = showResult && showResult.result;
+        return {
+            text: searchResult.result,
+            tokens: sentenceTokens,
+            translation: showResult.translation && showResult.translation.data &&  showResult.translation.data.responseData.translatedText,
+            furigana:  showResult.furigana
+        }
     }
 
     if (showResult.type === "examples") {

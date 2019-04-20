@@ -64,11 +64,27 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_FURIGANA_TITLE',
             title
         });
+    },
+    setFuriganaSentence: sentence => {
+        dispatch({
+            type: 'SET_FURIGANA_SENTENCE',
+            sentence
+        });
     }, setAnalyzer: analyzer => {
         dispatch({
             type: 'SET_ANALYZER',
             analyzer
         });
+    }, fetchWordList: (sentence) => {
+        dispatch({
+            type: 'FETCH_WORD_LIST',
+            payload: axios.post(apiUrl + '/api/sentence/', sentence)
+        });
+    }, fetchTranslation: (sentence) => {
+        dispatch({
+            type: 'FETCH_TRANSLATION',
+            payload: axios.get('https://api.mymemory.translated.net/get?q=' + sentence +  '&langpair=ja|en')
+        })
     }
 });
 
@@ -90,7 +106,7 @@ export class YomiText extends React.Component {
 
         this.keyDownHandler = this.onKeyDown.bind(this);
 
-        window.speechSynthesis.onvoiceschanged = function(e) {
+        window.speechSynthesis.onvoiceschanged = function (e) {
             window.speechSynthesis.getVoices();
         };
     }
@@ -126,6 +142,7 @@ export class YomiText extends React.Component {
     onMouseClick(ev, searchResult, fetchData, setPopupInfo) {
         if (!searchResult.type) return;
 
+        let self = this;
         if (!isVisible()) {
             if (searchResult.type === "words") {
                 fetchData(searchResult.result.data.map(item => item.word), searchResult.type);
@@ -133,6 +150,15 @@ export class YomiText extends React.Component {
                 fetchData(searchResult.result, searchResult.type);
             } else if (searchResult.type === "names") {
                 fetchData(searchResult.result.data, searchResult.type);
+            } else if (searchResult.type === "sentence") {
+                this.props.fetchWordList(searchResult.result);
+                this.props.fetchTranslation(searchResult.result);
+                this.kuroshiro.convert(searchResult.result, {
+                    to: "hiragana",
+                    mode: "furigana"
+                }).then(function (result) {
+                    self.props.setFuriganaSentence(result);
+                });
             }
 
             if (!document.getSelection().getRangeAt(0).getClientRects()[0]) return;
@@ -200,7 +226,7 @@ export class YomiText extends React.Component {
 
         let allText = textAtMouseInfo.prevRangeNode.textContent;
         let previousSentence = "";
-        for (let i = textAtMouseInfo.prevRangeOfs - 1; i > 0; i--) {
+        for (let i = textAtMouseInfo.prevRangeOfs - 1; i >= 0; i--) {
             if (allText[i] !== "。") {
                 previousSentence += allText[i];
             } else {

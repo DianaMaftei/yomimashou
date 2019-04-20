@@ -182,3 +182,21 @@
 #sample-btn {
    text-align: center;
 }
+
+#sentence {
+    font-size: 20px;
+}
+
+#sentence > ruby {
+    font-size: 20px;
+}
+
+#sentence > ruby > rt {
+    display: block;
+    font-size: 50%;
+    text-align: start;
+}
+
+.rikai-display {
+    padding: 10px !important;
+}
