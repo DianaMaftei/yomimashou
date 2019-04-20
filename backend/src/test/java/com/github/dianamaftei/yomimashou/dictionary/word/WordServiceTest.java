@@ -54,10 +54,13 @@ public class WordServiceTest {
     verify(jpaQuery).where(predicateArgumentCaptor.capture());
     String conditions = predicateArgumentCaptor.getAllValues().toString();
 
-    assertEquals("[word.readingElements like searchItem || "
-        + "word.kanjiElements like searchItem || word.readingElements like searchItem|% || "
-        + "word.kanjiElements like searchItem|% || word.readingElements like %|searchItem|% || "
-        + "word.kanjiElements like %|searchItem|% || word.readingElements like %|searchItem || "
+    assertEquals("[word.readingElements = searchItem || "
+        + "word.readingElements like searchItem|% || "
+        + "word.readingElements like %|searchItem|% || "
+        + "word.readingElements like %|searchItem || "
+        + "word.kanjiElements = searchItem || "
+        + "word.kanjiElements like searchItem|% || "
+        + "word.kanjiElements like %|searchItem|% || "
         + "word.kanjiElements like %|searchItem]", conditions);
     assertEquals(words, wordList);
   }
