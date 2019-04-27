@@ -8,9 +8,8 @@ export default ({tagInput, updateTag, addTag, tags, deleteTag}) => (
             id="tags"
             value={tagInput}
             onChange={updateTag}
-            disabled
         />
-        <Button variant="outlined" component="span" onClick={addTag} disabled>
+        <Button variant="outlined" component="span" onClick={addTag}>
             Add
         </Button>
         <div className="chips-list">
