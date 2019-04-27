@@ -5,7 +5,7 @@ import TextCardTopNoImage from "./TextCardTopNoImage";
 export default ({text}) => {
     if(!text) return <div/>
 
-    if(text.image) {
+    if(text.imageFileName) {
         return TextCardTopWithImage(text);
     }
 

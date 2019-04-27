@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import Add from "./Add";
-import Text from "./Text";
+import Text from "./text/Text";
 import Tags from "./Tags";
 import Series from "./Series";
 import ActionButtons from "./ActionButtons";

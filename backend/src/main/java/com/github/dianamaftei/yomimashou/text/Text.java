@@ -13,67 +13,68 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Text extends Auditable<String> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @NotNull
-    private String title;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NotNull
-    @Column(columnDefinition = "TEXT")
-    private String content;
+  @NotNull
+  private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String excerpt;
+  @NotNull
+  @Column(columnDefinition = "TEXT")
+  private String content;
 
-    private String levelOfDifficulty;
+  @Column(columnDefinition = "TEXT")
+  private String excerpt;
 
-    @ElementCollection
-    private List<String> tags;
+  private String imageFileName;
+
+  @ElementCollection
+  private List<String> tags;
 
   @ElementCollection
   private Map<String, Integer> kanjiCountByLevel;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public String getContent() {
-        return content;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public List<String> getTags() {
-        return tags;
-    }
+  public List<String> getTags() {
+    return tags;
+  }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
+  public void setTags(List<String> tags) {
+    this.tags = tags;
+  }
 
-    public String getExcerpt() {
-        return excerpt;
-    }
+  public String getExcerpt() {
+    return excerpt;
+  }
 
-    public void setExcerpt(String excerpt) {
-        this.excerpt = excerpt;
-    }
+  public void setExcerpt(String excerpt) {
+    this.excerpt = excerpt;
+  }
 
   public Map<String, Integer> getKanjiCountByLevel() {
     return kanjiCountByLevel;
@@ -81,5 +82,13 @@ public class Text extends Auditable<String> {
 
   public void setKanjiCountByLevel(Map<String, Integer> kanjiCountByLevel) {
     this.kanjiCountByLevel = kanjiCountByLevel;
+  }
+
+  public String getImageFileName() {
+    return imageFileName;
+  }
+
+  public void setImageFileName(String imageFileName) {
+    this.imageFileName = imageFileName;
   }
 }

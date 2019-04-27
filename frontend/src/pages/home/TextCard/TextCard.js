@@ -11,6 +11,8 @@ import Divider from "@material-ui/core/Divider/Divider";
 import "./TextCard.css";
 import Link from "react-router-dom/Link";
 import KanjiPieChart from "./KanjiPieChart";
+import axios from "axios/index";
+import apiUrl from "../../../AppUrl";
 
 export default ({text}) => {
     if (!text) return <div/>;
@@ -21,8 +23,8 @@ export default ({text}) => {
                 <CardActionArea>
                     <TextCardTop text={text}/>
                     <CardContent>
-                        <KanjiPieChart kanjiCountByLevel={text.kanjiCountByLevel}/>
-                        <Typography variant="h5" component="h2" style={{display: 'inline', float: 'right'}}>
+                        <KanjiPieChart kanjiCountByLevel={text.kanjiCountByLevel} className={text.imageFileName ? 'absolute-pos' : 'relative-pos'}/>
+                        <Typography variant="h5" component="h2" style={!text.imageFileName ? {display: 'block', float: 'right'} : {}}>
                             {text.title}
                         </Typography>
                         <Typography gutterBottom variant="caption">

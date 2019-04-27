@@ -1,8 +1,8 @@
 package com.github.dianamaftei.yomimashou.security;
 
+import com.github.dianamaftei.yomimashou.user.ApplicationUserService;
 import java.util.Arrays;
 import java.util.Collections;
-import com.github.dianamaftei.yomimashou.user.ApplicationUserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -34,6 +34,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.logout().permitAll().logoutSuccessUrl("/api/users/afterLogout")
                 .and().cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/text").authenticated()
+            .antMatchers(HttpMethod.POST, "/api/file").authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), SECRET))

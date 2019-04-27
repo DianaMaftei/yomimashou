@@ -4,6 +4,7 @@ import apiUrl from "../../AppUrl";
 import axios from "axios";
 import { connect } from "react-redux";
 import MasonryLayout from "./MasonryLayout/MasonryLayout";
+import 'react-image-crop/dist/ReactCrop.css';
 
 const mapStateToProps = (state) => ({
     texts: state.home.texts

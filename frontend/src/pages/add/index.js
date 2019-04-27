@@ -2,6 +2,7 @@ let defaultState = {
     words: [],
     names: [],
     text: {},
+    textImage: {},
     tagInput: "",
     analyzer: null
 };
@@ -15,6 +16,11 @@ const addYomi = (state = defaultState, action) => {
                     ...state.text,
                     content: action.text.content
                 }
+            };
+        case 'SET_TEXT_IMAGE':
+            return {
+                ...state,
+                textImage: action.image
             };
         case 'GET_TEXT_BY_ID_PENDING':
             return {
@@ -47,7 +53,7 @@ const addYomi = (state = defaultState, action) => {
                     furigana: action.text
                 }
             };
-            case 'SET_FURIGANA_TITLE':
+        case 'SET_FURIGANA_TITLE':
             return {
                 ...state,
                 text: {
@@ -65,7 +71,7 @@ const addYomi = (state = defaultState, action) => {
                 ...state,
                 text: {}
             };
-         case 'RESET_DICTIONARIES':
+        case 'RESET_DICTIONARIES':
             return {
                 ...state,
                 words: [],

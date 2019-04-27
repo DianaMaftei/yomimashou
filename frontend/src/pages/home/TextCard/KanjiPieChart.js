@@ -2,7 +2,7 @@ import React from 'react';
 import "./TextCard.css";
 import { Cell, Pie, PieChart } from "recharts";
 
-export default ({kanjiCountByLevel}) => {
+export default ({kanjiCountByLevel, className}) => {
     if (!kanjiCountByLevel) return <div/>;
 
     const COLORS = {
@@ -26,11 +26,11 @@ export default ({kanjiCountByLevel}) => {
     });
 
     return (
-        <span id="kanji-pie-chart">
+        <span id="kanji-pie-chart" className={className}>
             <PieChart width={30} height={30}>
-                <Pie stroke="none" data={data} outerRadius={15}>
+                <Pie stroke="none" data={data} outerRadius={15} dataKey="value">
                     {
-                        data.map((entry, index) => <Cell fill={entry.color}/>)
+                        data.map((entry, index) => <Cell key={index} fill={entry.color}/>)
                     }
                 </Pie>
             </PieChart>

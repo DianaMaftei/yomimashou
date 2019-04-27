@@ -59,6 +59,15 @@
     color: #c80009;
 }
 
+.absolute-pos {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    padding: 4px 4px 0 4px;
+    border-radius: 3px 0 5px 0;
+}
+
 #kanji-pie-chart > div {
     display: inline;
 }

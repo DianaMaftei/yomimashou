@@ -1,19 +1,20 @@
 import React from 'react';
 import "./add.css";
 
-import {Divider} from "@material-ui/core/umd/material-ui.development";
+import { Divider } from "@material-ui/core/umd/material-ui.development";
 import axios from "axios/index";
 import apiUrl from "../../AppUrl";
-import {connect} from "react-redux";
-import {withRouter} from 'react-router-dom'
+import { connect } from "react-redux";
+import { withRouter } from 'react-router-dom'
 import ActionButtons from "./ActionButtons";
 import Tags from "./Tags";
 import Series from "./Series";
-import Text from "./Text";
+import Text from "./text/Text";
 
 const mapStateToProps = (state) => ({
     text: state.add.text,
-    tagInput: state.add.tagInput
+    tagInput: state.add.tagInput,
+    textImage: state.add.textImage
 });
 
 const stripRubyAndFormatting = html => {
@@ -113,21 +114,22 @@ class Add extends React.Component {
     }
 
     submitText() {
-        let text = this.props.text;
+        let inputText = this.props.text;
         const username = localStorage.getItem('username');
         const token = localStorage.getItem('token');
-        text.user = {
-            username: username
-        };
 
         let doc = new DOMParser().parseFromString(this.props.text.content, "text/html");
         doc.body.innerHTML = doc.body.innerHTML.replace(/<\/p><p/g, '</p>\n<p');
         let newtext = doc.body.innerText.replace(/\n/g, '<br>');
         this.props.setText(newtext);
 
-        text.content = newtext;
+        inputText.content = newtext;
 
-        axios.post(apiUrl + '/api/text', text, {headers: {Authorization: token}}).then((response) => {
+        let data = new FormData();
+        data.append('file', this.props.textImage);
+        data.append('text', new Blob([JSON.stringify(inputText)], {type: "application/json"}));
+
+        axios.post(apiUrl + '/api/text', data, { headers: {Authorization: token}}).then((response) => {
             this.props.history.push('/read/' + response.data.id);
         });
     }
