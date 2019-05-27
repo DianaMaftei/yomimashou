@@ -9,7 +9,7 @@ import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyze
 import Kuroshiro from "kuroshiro";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import apiUrl from "../../../AppUrl";
-import Save from '@material-ui/icons/SaveAlt';
+import DownloadIcon from 'mdi-react/DownloadIcon';
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
@@ -315,7 +315,7 @@ export class YomiText extends React.Component {
                           action={'https://talkify.net/api/speech/v1/download?key=' + process.env.REACT_APP_TALKIFY_KEY}>
                         <input type="hidden" name="text" value={this.props.text.content}/>
                         <button type="submit" className="btn btn-light" id="dld-tts-btn">
-                            <Save fontSize="small"/>
+                            <DownloadIcon size={24}/>
                         </button>
                     </form>
                 </div>

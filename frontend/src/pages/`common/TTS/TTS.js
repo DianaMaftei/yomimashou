@@ -1,8 +1,9 @@
 import React from "react";
-import PauseCircleOutline from '@material-ui/icons/PauseCircleOutline';
-import PlayCircleOutline from '@material-ui/icons/PlayCircleOutline';
-import Replay from '@material-ui/icons/Replay';
-import Stop from '@material-ui/icons/Stop';
+import PauseCircleOutline from 'mdi-react/PauseCircleOutlineIcon';
+import PlayCircleOutline from 'mdi-react/PlayCircleOutlineIcon';
+import Replay from 'mdi-react/ReplayIcon';
+import Stop from 'mdi-react/StopIcon';
+import StepForward from 'mdi-react/StepForwardIcon';
 import "./tts.css";
 
 const CHUNK_LENGTH_OF_TEXT = 120;
@@ -78,15 +79,12 @@ export default ({text}) => {
     return (
         <div id="TTS-btns">
             <button id="play" className="btn" onClick={() => play(utterance, isTextLong)}><PlayCircleOutline
-                fontSize="small"/></button>
-            <button id="pause" className="btn" onClick={pause}><PauseCircleOutline fontSize="small"/></button>
-            <button id="resume" className="btn" onClick={resume}>
-                <img
-                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACZSURBVEhLYxgFIxv8h2IYmAPEHBAmdQC6BSD2GSBWBPOoALBZAMJvgNgTJEApwGUBCP8F4nogZgJisgE+C2B4GxALAzFZAGYIDCAbjIzvAbEREJMMYAbAALKh6Pg7ECcDMUkAphkGkA1ExzS1ABRExkBMMoAZAAPIhsIwzSIZlEwbgJgmyZSmGe0sENOsqKB6YTcKhgVgYAAA6bRapjM7RDAAAAAASUVORK5CYII="/>
-            </button>
-            <button id="cancel" className="btn" onClick={cancel}><Stop fontSize="small"/></button>
+                size={16}/></button>
+            <button id="pause" className="btn" onClick={pause}><PauseCircleOutline size={16}/></button>
+            <button id="resume" className="btn" onClick={resume}><StepForward size={16}/></button>
+            <button id="cancel" className="btn" onClick={cancel}><Stop size={16}/></button>
             <button id="replay" className="btn" onClick={() => replay(utterance, text, isTextLong)}><Replay
-                fontSize="small"/></button>
+                size={16}/></button>
 
         </div>
 );

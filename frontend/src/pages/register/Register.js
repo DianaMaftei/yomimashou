@@ -1,9 +1,9 @@
 import React from "react";
 import apiUrl from "../../AppUrl";
 import axios from "axios/index";
-import Person from '@material-ui/icons/Person';
-import Email from '@material-ui/icons/Email';
-import Lock from '@material-ui/icons/Lock';
+import Person from 'mdi-react/PersonIcon';
+import Email from 'mdi-react/EmailIcon';
+import Lock from 'mdi-react/LockIcon';
 import "../../style/signIn.css";
 import { withRouter } from 'react-router-dom'
 

@@ -2,8 +2,8 @@ import React from "react";
 import axios from "axios/index";
 import apiUrl from "../../AppUrl";
 import "../../style/signIn.css";
-import Email from '@material-ui/icons/Email';
-import Lock from '@material-ui/icons/Lock';
+import Email from 'mdi-react/EmailIcon';
+import Lock from 'mdi-react/LockIcon';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom'
 

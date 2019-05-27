@@ -4,7 +4,7 @@ import { Button, TextField } from "@material-ui/core/umd/material-ui.development
 import ReactCrop from 'react-image-crop';
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import Check from '@material-ui/icons/Check';
+import Check from 'mdi-react/CheckIcon';
 
 const mapDispatchToProps = (dispatch) => ({
     setTextImage: (image) => {

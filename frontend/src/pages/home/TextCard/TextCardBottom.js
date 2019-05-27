@@ -1,6 +1,6 @@
 import React from 'react';
-import LocalOffer from '@material-ui/icons/LocalOffer';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import LocalOffer from 'mdi-react/LocalOfferIcon';
+import FavoriteBorder from 'mdi-react/FavoriteBorderIcon';
 
 export default ({ text }) => (
     <div className="text-card-bottom">

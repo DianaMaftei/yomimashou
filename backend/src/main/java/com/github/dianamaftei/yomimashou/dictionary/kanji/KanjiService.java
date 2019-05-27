@@ -35,7 +35,6 @@ public class KanjiService {
         .fetchOne();
   }
 
-  @ResponseBody
   public byte[] getStrokesSVG(String kanji) {
     try (InputStream in = new FileInputStream(kanjiPath + File.separator + kanji);
         ByteArrayOutputStream baos = new ByteArrayOutputStream()) {

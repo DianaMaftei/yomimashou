@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import logo from "./appLogo.svg";
 import './header.css';
 import Link from "react-router-dom/es/Link";
-import userIcon from "../../../userIcon.png";
+import userIcon from "../../../resources/userIcon.png";
 import UserMenu from "./UserMenu";
 
 export default (username) => (

@@ -6,7 +6,7 @@ import TextCardBottom from "./TextCardBottom";
 import CardContent from "@material-ui/core//CardContent/CardContent";
 import Typography from "@material-ui/core/Typography/Typography";
 import CardActions from "@material-ui/core/CardActions/CardActions";
-import DateRange from '@material-ui/icons/DateRange';
+import DateRange from 'mdi-react/DateRangeIcon';
 import Divider from "@material-ui/core/Divider/Divider";
 import "./TextCard.css";
 import Link from "react-router-dom/Link";

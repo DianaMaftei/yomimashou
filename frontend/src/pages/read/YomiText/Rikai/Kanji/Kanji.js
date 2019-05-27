@@ -1,6 +1,8 @@
 import React from "react";
 import KanjiStrokeDiagram from "./KanjiStrokeDiagram";
 import TTS from "../../../../`common/TTS/TTS";
+import KanjiDrawPad from "./KanjiDrawPad"
+import SimpleModal from "../../../../`common/modal/SimpleModal";
 
 export default ({ result, showWordExamples }) => {
     return (
@@ -14,6 +16,9 @@ export default ({ result, showWordExamples }) => {
                     {result.oldJLPT && <span className="k-main-data-line">Old JLPT: {result.oldJLPT}</span>}
                     {result.newJLPT && <span className="k-main-data-line">New JLPT: {result.newJLPT}</span>}
                 </div>
+                <SimpleModal label={'Practice'}>
+                    <KanjiDrawPad character={result.character}/>
+                </SimpleModal>
             </div>
             <h2 className="k-eigo">{result.eigo}</h2>
             <h3>Kun: <span className="k-yomi">{result.kunReading || '–'}</span></h3>

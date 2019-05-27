@@ -1,0 +1,12 @@
+#canvas-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+#toggle-hint .hint-on{
+    fill: yellow;
+}
+
+#toggle-hint .hint-off{
+    fill: #52550b;
+}
