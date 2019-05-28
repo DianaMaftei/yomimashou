@@ -1,9 +1,9 @@
 import React from "react";
-import apiUrl from "../../../../../AppUrl";
-import grid from "../../../../../resources/grid.png";
-import solidWhite from "../../../../../resources/solid-white.jpg";
+import apiUrl from "../../../../../../AppUrl";
+import grid from "../../../../../../resources/grid.png";
+import solidWhite from "../../../../../../resources/solid-white.jpg";
 import { fabric } from "fabric";
-import "./KanjiDrawPas.css";
+import "./KanjiDrawPad.css";
 import DeleteOutlineIcon from 'mdi-react/DeleteOutlineIcon';
 import LightbulbOnIcon from 'mdi-react/LightbulbOnOutlineIcon';
 

@@ -2,6 +2,7 @@ import React from "react";
 import {shallow} from "enzyme";
 import Text from "./Text";
 import Editor from "react-pell";
+import TextField from "@material-ui/core/TextField/TextField";
 
 describe("Text", () => {
     let props;
@@ -26,7 +27,6 @@ describe("Text", () => {
         };
         shallowText = undefined;
     });
-
 
     it("should render the title field", () => {
         expect(wrapper().find("#title-required")).toHaveLength(1);

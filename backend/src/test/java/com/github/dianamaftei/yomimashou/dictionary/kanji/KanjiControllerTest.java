@@ -59,7 +59,7 @@ public class KanjiControllerTest {
 
     MockHttpServletResponse response = mvc.perform(get("/api/dictionary/kanji/svg/" + kanji)
         .characterEncoding("UTF-8")
-        .accept(javax.ws.rs.core.MediaType.APPLICATION_SVG_XML))
+        .accept("image/svg+xml"))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

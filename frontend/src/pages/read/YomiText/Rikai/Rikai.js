@@ -132,6 +132,10 @@ const getResultFromKanjiEntry = (entry) => {
     kanji.onReading = entry.onReading ? entry.onReading.replace(/\|/g, ", ") : null;
     kanji.oldJLPT = entry.references ? entry.references.jlptOldLevel : null;
     kanji.newJLPT = entry.references ? entry.references.jlptNewLevel : null;
+    kanji.keyword = entry.keyword;
+    kanji.components = entry.components;
+    kanji.story1 = entry.story1;
+    kanji.story2 = entry.story2;
     return kanji;
 };
 

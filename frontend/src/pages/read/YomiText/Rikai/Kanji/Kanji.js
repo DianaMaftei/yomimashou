@@ -1,8 +1,9 @@
 import React from "react";
 import KanjiStrokeDiagram from "./KanjiStrokeDiagram";
 import TTS from "../../../../`common/TTS/TTS";
-import KanjiDrawPad from "./KanjiDrawPad"
+import KanjiDrawPad from "./KanjiDrawPad/KanjiDrawPad"
 import SimpleModal from "../../../../`common/modal/SimpleModal";
+import RtkInfo from "./RtkInfo";
 
 export default ({ result, showWordExamples }) => {
     return (
@@ -26,7 +27,8 @@ export default ({ result, showWordExamples }) => {
             <h3>On: <span className="k-yomi">{result.onReading || '–'}</span></h3>
             {result.onReading && <TTS text={result.onReading}/>}
             <br/>
-
+            <RtkInfo keyword={result.keyword} components={result.components} story1={result.story1}
+                     story2={result.story2}/>
             <h4>See example words:</h4>
             <br/>
             <div className="example-words-search">

@@ -46,6 +46,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
 
   private final KanjiRepository kanjiRepository;
   private final Map<String, String> kanjiJLPTLevelMap = getKanjiAndCorrespondingJLPTLevel();
+  private final Map<String, RtkKanji> rtkKanjiMap = getRtkKanji();
 
   @Autowired
   public KanjiEntriesFromXMLToPOJO(KanjiRepository kanjiRepository) {
@@ -107,6 +108,34 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     }
 
     return kanjiJLPTLevel;
+  }
+
+  private Map<String, RtkKanji> getRtkKanji() {
+    ClassPathResource resource = new ClassPathResource("dictionaries" + File.separator + "rtk.csv");
+
+    Map<String, RtkKanji> rtkKanjis = new HashMap<>();
+    String line;
+    try (BufferedReader reader = new BufferedReader(
+        new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
+      while ((line = reader.readLine()) != null) {
+        RtkKanji rtkKanji = new RtkKanji();
+        rtkKanji.setKanji(line.split("\t")[0]);
+        if (line.split("\t").length > 1) {
+          rtkKanji.setComponents(line.split("\t")[1]);
+        }
+        if (line.split("\t").length > 2) {
+          rtkKanji.setKeyword(line.split("\t")[2]);
+          rtkKanji.setStory1(line.split("\t")[3]);
+          rtkKanji.setStory2(line.split("\t")[4]);
+        }
+
+        rtkKanjis.put(rtkKanji.getKanji(), rtkKanji);
+      }
+    } catch (IOException e) {
+      LOGGER.error("Could not get rtk info from file", e);
+    }
+
+    return rtkKanjis;
   }
 
   private Kanji buildKanjiEntry(Character character) {
@@ -173,6 +202,14 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
 
     if (kanjiJLPTLevelMap.get(kanji) != null) {
       kanjiEntry.getReferences().setJlptNewLevel(kanjiJLPTLevelMap.get(kanji));
+    }
+
+    RtkKanji rtkKanji = rtkKanjiMap.get(kanji);
+    if (rtkKanji != null) {
+      kanjiEntry.setKeyword(rtkKanji.getKeyword());
+      kanjiEntry.setComponents(rtkKanji.getComponents());
+      kanjiEntry.setStory1(rtkKanji.getStory1());
+      kanjiEntry.setStory2(rtkKanji.getStory2());
     }
 
     return kanjiEntry;
