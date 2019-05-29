@@ -10,6 +10,7 @@ import Kuroshiro from "kuroshiro";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import apiUrl from "../../../AppUrl";
 import DownloadIcon from 'mdi-react/DownloadIcon';
+import { isAuthenticated, withHeaders } from "../../../auth/auth";
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
@@ -109,6 +110,8 @@ export class YomiText extends React.Component {
         window.speechSynthesis.onvoiceschanged = function (e) {
             window.speechSynthesis.getVoices();
         };
+
+        this.isAuthenticated = isAuthenticated();
     }
 
     componentDidMount() {
@@ -301,6 +304,10 @@ export class YomiText extends React.Component {
         }
     }
 
+    markAsRead = () => {
+        axios.post(apiUrl + '/api/users/textStatus?progressStatus=READ&textId=' + this.props.id, {}, withHeaders());
+    };
+
     render() {
         return (
             <div id="yomi-text" className={this.getClassForDictionary()}>
@@ -311,6 +318,13 @@ export class YomiText extends React.Component {
                             onClick={this.toggleFurigana.bind(this)}>
                         ルビ
                     </button>
+                    {
+                        this.isAuthenticated &&
+                        <button className="btn btn-light" id="mark-read"
+                                onClick={this.markAsRead}>
+                            Mark as Read
+                        </button>
+                    }
                     <form id="dld-tts" method="POST"
                           action={'https://talkify.net/api/speech/v1/download?key=' + process.env.REACT_APP_TALKIFY_KEY}>
                         <input type="hidden" name="text" value={this.props.text.content}/>
@@ -327,8 +341,6 @@ export class YomiText extends React.Component {
                     <br/>
                     <div id="yomi-text-container"/>
                 </div>
-
-
                 <RikaiPopUp/>
             </div>);
     }

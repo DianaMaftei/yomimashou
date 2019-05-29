@@ -5,9 +5,11 @@ import axios from "axios";
 import { connect } from "react-redux";
 import MasonryLayout from "./MasonryLayout/MasonryLayout";
 import 'react-image-crop/dist/ReactCrop.css';
+import { isAuthenticated, withHeaders } from "../../auth/auth";
 
 const mapStateToProps = (state) => ({
-    texts: state.home.texts
+    texts: state.home.texts,
+    textsStatuses: state.home.textsStatuses
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -16,6 +18,12 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'GET_TEXTS',
             payload: axios.get(apiUrl + '/api/text')
         });
+    },
+    getTextsStatuses: () => {
+        dispatch({
+            type: 'GET_TEXTS_STATUSES',
+            payload: axios.get(apiUrl + '/api/users/textStatus', withHeaders())
+        });
     }
 });
 
@@ -23,6 +31,9 @@ export class Home extends React.Component {
     constructor(props) {
         super(props);
         props.getTexts();
+        if(isAuthenticated()) {
+            props.getTextsStatuses();
+        }
     }
 
     render() {
@@ -32,7 +43,7 @@ export class Home extends React.Component {
 
         return (
             <div className="home-container">
-                <MasonryLayout texts={this.props.texts}/>
+                <MasonryLayout texts={this.props.texts} textsStatuses={this.props.textsStatuses}/>
             </div>
         );
     }

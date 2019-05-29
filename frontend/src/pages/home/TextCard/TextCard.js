@@ -2,7 +2,7 @@ import React from 'react';
 import Card from "@material-ui/core/Card/Card";
 import CardActionArea from "@material-ui/core/CardActionArea/CardActionArea";
 import TextCardTop from "./TextCardTop";
-import TextCardBottom from "./TextCardBottom";
+import TextCardBottom from "./TextCardBottom/TextCardBottom";
 import CardContent from "@material-ui/core//CardContent/CardContent";
 import Typography from "@material-ui/core/Typography/Typography";
 import CardActions from "@material-ui/core/CardActions/CardActions";
@@ -11,10 +11,8 @@ import Divider from "@material-ui/core/Divider/Divider";
 import "./TextCard.css";
 import Link from "react-router-dom/Link";
 import KanjiPieChart from "./KanjiPieChart";
-import axios from "axios/index";
-import apiUrl from "../../../AppUrl";
 
-export default ({text}) => {
+export default ({text, status}) => {
     if (!text) return <div/>;
 
     return (
@@ -23,8 +21,10 @@ export default ({text}) => {
                 <CardActionArea>
                     <TextCardTop text={text}/>
                     <CardContent>
-                        <KanjiPieChart kanjiCountByLevel={text.kanjiCountByLevel} className={text.imageFileName ? 'absolute-pos' : 'relative-pos'}/>
-                        <Typography variant="h5" component="h2" style={!text.imageFileName ? {display: 'block', float: 'right'} : {}}>
+                        <KanjiPieChart kanjiCountByLevel={text.kanjiCountByLevel}
+                                       className={text.imageFileName ? 'absolute-pos' : 'relative-pos'}/>
+                        <Typography variant="h5" component="h2"
+                                    style={!text.imageFileName ? {display: 'block', float: 'right'} : {}}>
                             {text.title}
                         </Typography>
                         <Typography gutterBottom variant="caption">
@@ -47,7 +47,7 @@ export default ({text}) => {
             </Link>
             <Divider/>
             <CardActions className="text-card-bottom-container">
-                <TextCardBottom text={text}/>
+                <TextCardBottom text={text} status={status}/>
             </CardActions>
         </Card>
     );

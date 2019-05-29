@@ -1,5 +1,6 @@
 let defaultState = {
-    texts: []
+    texts: [],
+    textsStatuses: {}
 };
 
 const home = (state = defaultState, action) => {
@@ -17,6 +18,23 @@ const home = (state = defaultState, action) => {
             };
 
         case 'GET_TEXTS_REJECTED':
+            return {
+                ...state,
+                error: action.payload
+            };
+        case 'GET_TEXTS_STATUSES_PENDING':
+            return {
+                ...state,
+                textsStatuses: {}
+            };
+
+        case 'GET_TEXTS_STATUSES_FULFILLED':
+            return {
+                ...state,
+                textsStatuses: action.payload.data
+            };
+
+        case 'GET_TEXTS_STATUSES_REJECTED':
             return {
                 ...state,
                 error: action.payload

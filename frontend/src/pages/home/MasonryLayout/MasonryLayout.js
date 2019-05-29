@@ -2,7 +2,7 @@ import React from 'react';
 import MasonryInfiniteScroller from 'react-masonry-infinite';
 import TextCard from "../TextCard/TextCard";
 
-export default ({ texts, hasMore, loadMore }) => {
+export default ({ texts, hasMore, loadMore, textsStatuses}) => {
 
     let sizes = [
         { mq: '375px', columns: 1, gutter: 25 },
@@ -14,7 +14,7 @@ export default ({ texts, hasMore, loadMore }) => {
         <div id="bricks-layout">
             <MasonryInfiniteScroller hasMore={false} loadMore={() => {}} sizes={sizes}>
                 {
-                    texts && texts.map(text => <TextCard key={text.id} text={text}/>)
+                    texts && texts.map(text => <TextCard key={text.id} text={text} status={textsStatuses[text.id]}/>)
                 }
             </MasonryInfiniteScroller>
         </div>

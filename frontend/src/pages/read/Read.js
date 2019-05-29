@@ -4,6 +4,7 @@ import YomiText from './YomiText/YomiText';
 import "./read.css";
 import axios from "axios/index";
 import apiUrl from "../../AppUrl";
+import { isAuthenticated, withHeaders } from "../../auth/auth";
 
 const mapStateToProps = (state) => ({
     text: state.add.text
@@ -40,6 +41,10 @@ export class Read extends React.Component {
     componentDidMount() {
         const { id } = this.props.match.params;
         if (id) {
+            if(isAuthenticated()) {
+                axios.post(apiUrl + '/api/users/textStatus?progressStatus=OPEN&textId=' +id, {}, withHeaders());
+            }
+
             this.props.getTextById(id);
         } else {
             if (!this.props.text || !this.props.text.content) {
@@ -72,7 +77,7 @@ export class Read extends React.Component {
     render() {
         return (
             <div id="read-page">
-                <YomiText text={this.props.text}/>
+                <YomiText text={this.props.text} id={this.props.match.params.id}/>
             </div>
         )
     };
