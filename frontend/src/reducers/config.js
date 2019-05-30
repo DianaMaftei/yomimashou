@@ -4,7 +4,8 @@ let defaultState = {
         // totalDictionaries: 3,
         currentDictionary: 2,
         limit: 5
-    }
+    },
+    kanjiLevel: null
 };
 
 const getNextDictionary = (popUp) => {
@@ -21,6 +22,11 @@ const config = (state = defaultState, action) => {
                     ...state.popUp,
                     currentDictionary: state.popUp.currentDictionary === 2 ? 1 : 2
                 }
+            };
+        case 'SET_KANJI_LEVEL' :
+            return {
+                ...state,
+                kanjiLevel: action.kanjiLevel
             };
 
         default:

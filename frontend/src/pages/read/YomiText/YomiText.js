@@ -11,6 +11,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import apiUrl from "../../../AppUrl";
 import DownloadIcon from 'mdi-react/DownloadIcon';
 import { isAuthenticated, withHeaders } from "../../../auth/auth";
+import { filterTextFuriganaByKanjiCategory } from "./furigana/FuriganaFilterByKanjiCategory";
+import FuriganaOptions from "./furigana/FuriganaOptions";
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
@@ -21,7 +23,8 @@ const mapStateToProps = (state) => ({
     showResult: state.popUp.showResult,
     limit: state.config.popUp.limit,
     currentDictionary: state.config.popUp.currentDictionary,
-    popupInfo: state.popUp.popupInfo
+    popupInfo: state.popUp.popupInfo,
+    kanjiLevel: state.config.kanjiLevel
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -76,6 +79,11 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_ANALYZER',
             analyzer
         });
+    }, setKanjiLevel: (event, value) => {
+        dispatch({
+            type: 'SET_KANJI_LEVEL',
+            kanjiLevel: value
+        });
     }, fetchWordList: (sentence) => {
         dispatch({
             type: 'FETCH_WORD_LIST',
@@ -129,7 +137,8 @@ export class YomiText extends React.Component {
         return (this.props.text !== nextProps.text) ||
             (this.props.analyzer !== nextProps.analyzer) ||
             (this.props.currentDictionary !== nextProps.currentDictionary) ||
-            (this.props.words !== nextProps.words);
+            (this.props.words !== nextProps.words) ||
+            (this.props.kanjiLevel !== nextProps.kanjiLevel);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -276,8 +285,8 @@ export class YomiText extends React.Component {
         ev.preventDefault();
     };
 
-    toggleFurigana() {
-        if (this.props.text.furigana) {
+    toggleFurigana = () => {
+        if (this.props.kanjiLevel === "None") {
             this.props.setFuriganaText(null);
             this.props.setFuriganaTitle(null);
 
@@ -288,21 +297,22 @@ export class YomiText extends React.Component {
             let text = this.props.text.content;
             let title = this.props.text.title;
 
+            let self = this;
             this.kuroshiro.convert(text, {
                 to: "hiragana",
                 mode: "furigana"
             }).then(function (result) {
-                setFuriganaText(result);
+                setFuriganaText(filterTextFuriganaByKanjiCategory(result, self.props.kanjiLevel));
             });
 
             this.kuroshiro.convert(title, {
                 to: "hiragana",
                 mode: "furigana"
             }).then(function (result) {
-                setFuriganaTitle(result);
+                setFuriganaTitle(filterTextFuriganaByKanjiCategory(result, self.props.kanjiLevel));
             });
         }
-    }
+    };
 
     markAsRead = () => {
         axios.post(apiUrl + '/api/users/textStatus?progressStatus=READ&textId=' + this.props.id, {}, withHeaders());
@@ -313,11 +323,7 @@ export class YomiText extends React.Component {
             <div id="yomi-text" className={this.getClassForDictionary()}>
                 {(!this.props.words || this.props.words.length === 0) && <LinearProgress/>}
                 <div id="yomi-text-options">
-                    <button className="btn btn-light" id="toggle-furigana"
-                            disabled={!this.props.analyzer}
-                            onClick={this.toggleFurigana.bind(this)}>
-                        ルビ
-                    </button>
+                    <FuriganaOptions analyzer={this.props.analyzer} toggleFurigana={this.toggleFurigana} kanjiLevel={this.props.kanjiLevel} setLevel={this.props.setKanjiLevel}/>
                     {
                         this.isAuthenticated &&
                         <button className="btn btn-light" id="mark-read"
