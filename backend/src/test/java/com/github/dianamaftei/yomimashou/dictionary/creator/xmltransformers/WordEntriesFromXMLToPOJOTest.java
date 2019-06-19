@@ -1,117 +1,111 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.*;
-import com.github.dianamaftei.yomimashou.dictionary.word.Word;
-import com.github.dianamaftei.yomimashou.dictionary.word.WordMeaning;
-import com.github.dianamaftei.yomimashou.dictionary.word.WordRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
-public class WordEntriesFromXMLToPOJOTest {
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Entry;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Gloss;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.JMdict;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.KEle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.REle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Sense;
+import com.github.dianamaftei.yomimashou.dictionary.word.Word;
+import com.github.dianamaftei.yomimashou.dictionary.word.WordMeaning;
+import com.github.dianamaftei.yomimashou.dictionary.word.WordRepository;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-    @InjectMocks
-    private WordEntriesFromXMLToPOJO wordEntriesFromXMLToPOJO;
+@ExtendWith(MockitoExtension.class)
+class WordEntriesFromXMLToPOJOTest {
 
-    @Mock
-    private JMdict dictionaryFile;
+  @InjectMocks
+  private WordEntriesFromXMLToPOJO wordEntriesFromXMLToPOJO;
 
-    @Mock
-    private WordRepository wordRepository;
+  @Mock
+  private JMdict dictionaryFile;
 
-    @Captor
-    private ArgumentCaptor<Word> wordArgumentCaptor;
+  @Mock
+  private WordRepository wordRepository;
 
-    @Test
-    public void getEntriesShouldReturnAListOfEntryObjects() {
-        List<Entry> entries = wordEntriesFromXMLToPOJO.getEntries(dictionaryFile);
-        verify(dictionaryFile, times(1)).getEntry();
-        assertEquals(entries, dictionaryFile.getEntry());
-    }
+  @Captor
+  private ArgumentCaptor<Word> wordArgumentCaptor;
 
-    @Test
-    public void getClassForJaxbShouldReturnJMdict() {
-        assertEquals(JMdict.class, wordEntriesFromXMLToPOJO.getClassForJaxb());
-    }
+  @Test
+  void getEntriesShouldReturnAListOfEntryObjects() {
+    List<Entry> entries = wordEntriesFromXMLToPOJO.getEntries(dictionaryFile);
+    verify(dictionaryFile, times(1)).getEntry();
+    assertEquals(entries, dictionaryFile.getEntry());
+  }
 
-    @Test
-    public void saveToFile() {
-        //TODO test this method
-    }
+  @Test
+  void getClassForJaxbShouldReturnJMdict() {
+    assertEquals(JMdict.class, wordEntriesFromXMLToPOJO.getClassForJaxb());
+  }
 
-    @Test
-    public void saveToDBShouldAddAllEntriesToTheDatabase() {
-        List<Entry> entries = dictionaryFile.getEntry();
-        entries.add(new Entry());
-        entries.add(new Entry());
+  @Test
+  void saveToFile() {
+    // TODO test this method
+  }
 
-        wordEntriesFromXMLToPOJO.saveToDB(entries);
+  @Test
+  void saveToDBShouldAddAllEntriesToTheDatabase() {
+    List<Entry> entries = dictionaryFile.getEntry();
+    entries.add(new Entry());
+    entries.add(new Entry());
+    wordEntriesFromXMLToPOJO.saveToDB(entries);
+    verify(wordRepository, times(2)).save(any());
+  }
 
-        verify(wordRepository, times(2)).save(any());
-    }
+  @Test
+  void fillDatabaseShouldParseWordComponentsCorrectly() {
+    List<Entry> entries = dictionaryFile.getEntry();
+    entries.add(getMockEntry());
+    wordEntriesFromXMLToPOJO.saveToDB(entries);
+    verify(wordRepository).save(wordArgumentCaptor.capture());
+    Word word = wordArgumentCaptor.getValue();
+    WordMeaning wordMeaning = word.getMeanings().get(0);
+    assertTrue(wordMeaning.getGlosses().contains("meaning"));
+    assertEquals("kanji|kanji2", word.getKanjiElements());
+    assertEquals("reading|reading2", word.getReadingElements());
+    assertEquals("field of application", wordMeaning.getFieldOfApplication());
+    assertEquals("iv", wordMeaning.getPartOfSpeech());
+    assertEquals("antonym", wordMeaning.getAntonym());
+    assertEquals(1, word.getPriority());
+  }
 
-    @Test
-    public void fillDatabaseShouldParseWordComponentsCorrectly() {
-        List<Entry> entries = dictionaryFile.getEntry();
-        entries.add(getMockEntry());
-
-        wordEntriesFromXMLToPOJO.saveToDB(entries);
-
-        verify(wordRepository).save(wordArgumentCaptor.capture());
-        Word word = wordArgumentCaptor.getValue();
-        WordMeaning wordMeaning = word.getMeanings().get(0);
-
-        assertTrue(wordMeaning.getGlosses().contains("meaning"));
-        assertEquals("kanji|kanji2", word.getKanjiElements());
-        assertEquals("reading|reading2", word.getReadingElements());
-        assertEquals("field of application", wordMeaning.getFieldOfApplication());
-        assertEquals("iv", wordMeaning.getPartOfSpeech());
-        assertEquals("antonym", wordMeaning.getAntonym());
-        assertEquals(1, word.getPriority());
-    }
-
-    private Entry getMockEntry() {
-        Entry entry = new Entry();
-        KEle kanjiElement = new KEle();
-        kanjiElement.setKeb("kanji");
-        kanjiElement.getKePri().add("news1");
-
-        KEle kanjiElement2 = new KEle();
-        kanjiElement2.setKeb("kanji2");
-        kanjiElement2.getKePri().add("news1");
-
-        entry.getKEle().add(kanjiElement);
-        entry.getKEle().add(kanjiElement2);
-
-        REle readingElement = new REle();
-        readingElement.setReb("reading");
-
-        REle readingElement2 = new REle();
-        readingElement2.setReb("reading2");
-        entry.getREle().add(readingElement);
-        entry.getREle().add(readingElement2);
-
-        Sense sense = new Sense();
-        Gloss meaning = new Gloss();
-        meaning.getContent().add("meaning");
-        sense.getGloss().add(meaning);
-        sense.getPos().add("irregular verb");
-        sense.getField().add("field of application");
-        sense.getAnt().add("antonym");
-        entry.getSense().add(sense);
-
-        return entry;
-    }
+  private Entry getMockEntry() {
+    Entry entry = new Entry();
+    KEle kanjiElement = new KEle();
+    kanjiElement.setKeb("kanji");
+    kanjiElement.getKePri().add("news1");
+    KEle kanjiElement2 = new KEle();
+    kanjiElement2.setKeb("kanji2");
+    kanjiElement2.getKePri().add("news1");
+    entry.getKEle().add(kanjiElement);
+    entry.getKEle().add(kanjiElement2);
+    REle readingElement = new REle();
+    readingElement.setReb("reading");
+    REle readingElement2 = new REle();
+    readingElement2.setReb("reading2");
+    entry.getREle().add(readingElement);
+    entry.getREle().add(readingElement2);
+    Sense sense = new Sense();
+    Gloss meaning = new Gloss();
+    meaning.getContent().add("meaning");
+    sense.getGloss().add(meaning);
+    sense.getPos().add("irregular verb");
+    sense.getField().add("field of application");
+    sense.getAnt().add("antonym");
+    entry.getSense().add(sense);
+    return entry;
+  }
 }

@@ -1,8 +1,8 @@
 package com.github.dianamaftei.yomimashou.dictionary.example;
 
 import static com.github.dianamaftei.yomimashou.dictionary.example.QExampleSentence.exampleSentence;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -13,35 +13,35 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-
-@RunWith(MockitoJUnitRunner.class)
-public class ExampleSentenceServiceTest {
+@ExtendWith(MockitoExtension.class)
+class ExampleSentenceServiceTest {
 
   private ExampleSentenceService exampleSentenceService;
 
   @Mock
   private JPAQueryFactory jpaQueryFactory;
+
   @Mock
   private JPAQuery jpaQuery;
 
   @Captor
   private ArgumentCaptor<Predicate> predicateArgumentCaptor;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     exampleSentenceService = new ExampleSentenceService(jpaQueryFactory);
   }
 
   @Test
-  public void get() {
+  void get() {
     String[] searchItems = {"searchItem"};
     when(jpaQueryFactory.query()).thenReturn(jpaQuery);
     when(jpaQuery.from(exampleSentence)).thenReturn(jpaQuery);
@@ -49,9 +49,7 @@ public class ExampleSentenceServiceTest {
     when(jpaQuery.where(any(Predicate.class))).thenReturn(jpaQuery);
     when(jpaQuery.distinct()).thenReturn(jpaQuery);
     when(jpaQuery.limit(10)).thenReturn(jpaQuery);
-
     List<ExampleSentence> exampleSentences = exampleSentenceService.get(searchItems);
-
     verify(jpaQuery).where(predicateArgumentCaptor.capture());
     Predicate value = predicateArgumentCaptor.getValue();
     assertEquals(

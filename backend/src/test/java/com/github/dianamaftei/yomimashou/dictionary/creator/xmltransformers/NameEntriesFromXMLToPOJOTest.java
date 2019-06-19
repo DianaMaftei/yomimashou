@@ -1,98 +1,96 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.*;
-import com.github.dianamaftei.yomimashou.dictionary.name.Name;
-import com.github.dianamaftei.yomimashou.dictionary.name.NameRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
-public class NameEntriesFromXMLToPOJOTest {
-    @InjectMocks
-    private NameEntriesFromXMLToPOJO nameEntriesFromXMLToPOJO;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.Entry;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.JMnedict;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.KEle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.REle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.Trans;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.TransDet;
+import com.github.dianamaftei.yomimashou.dictionary.name.Name;
+import com.github.dianamaftei.yomimashou.dictionary.name.NameRepository;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-    @Mock
-    private JMnedict dictionaryFile;
+@ExtendWith(MockitoExtension.class)
+class NameEntriesFromXMLToPOJOTest {
 
-    @Captor
-    private ArgumentCaptor<Name> nameArgumentCaptor;
+  @InjectMocks
+  private NameEntriesFromXMLToPOJO nameEntriesFromXMLToPOJO;
 
-    @Mock
-    private NameRepository nameRepository;
+  @Mock
+  private JMnedict dictionaryFile;
 
-    @Test
-    public void fillDatabaseShouldAddAllNamesToTheDB() {
-        List<Entry> entries = dictionaryFile.getEntry();
-        entries.add(new Entry());
-        entries.add(new Entry());
-        entries.add(new Entry());
-        entries.add(new Entry());
+  @Captor
+  private ArgumentCaptor<Name> nameArgumentCaptor;
 
-        nameEntriesFromXMLToPOJO.saveToDB(entries);
+  @Mock
+  private NameRepository nameRepository;
 
-        verify(nameRepository, times(4)).save(any());
-    }
+  @Test
+  void fillDatabaseShouldAddAllNamesToTheDB() {
+    List<Entry> entries = dictionaryFile.getEntry();
+    entries.add(new Entry());
+    entries.add(new Entry());
+    entries.add(new Entry());
+    entries.add(new Entry());
+    nameEntriesFromXMLToPOJO.saveToDB(entries);
+    verify(nameRepository, times(4)).save(any());
+  }
 
-    @Test
-    public void fillDatabaseShouldParseEntryComponentsCorrectly() {
-        List<Entry> entries = dictionaryFile.getEntry();
-        entries.add(getAMockEntry());
+  @Test
+  void fillDatabaseShouldParseEntryComponentsCorrectly() {
+    List<Entry> entries = dictionaryFile.getEntry();
+    entries.add(getAMockEntry());
+    nameEntriesFromXMLToPOJO.saveToDB(entries);
+    verify(nameRepository).save(nameArgumentCaptor.capture());
+    Name name = nameArgumentCaptor.getValue();
+    assertEquals("reading", name.getReading());
+    assertEquals("kanji", name.getKanji());
+    assertEquals("translation", name.getTranslations());
+  }
 
-        nameEntriesFromXMLToPOJO.saveToDB(entries);
+  @Test
+  void getEntriesShouldReturnAListOfEntryObjects() {
+    List<Entry> entries = nameEntriesFromXMLToPOJO.getEntries(dictionaryFile);
+    verify(dictionaryFile, times(1)).getEntry();
+    assertEquals(entries, dictionaryFile.getEntry());
+  }
 
-        verify(nameRepository).save(nameArgumentCaptor.capture());
-        Name name = nameArgumentCaptor.getValue();
+  @Test
+  void getClassForJaxbShouldReturnJMnedict() {
+    assertEquals(JMnedict.class, nameEntriesFromXMLToPOJO.getClassForJaxb());
+  }
 
-        assertEquals("reading", name.getReading());
-        assertEquals("kanji", name.getKanji());
-        assertEquals("translation", name.getTranslations());
-    }
+  private Entry getAMockEntry() {
+    Entry entry = new Entry();
+    List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
+    KEle kEle = new KEle();
+    kEle.setKeb("kanji");
+    REle rEle = new REle();
+    rEle.setReb("reading");
+    Trans trans = new Trans();
+    TransDet transDet = new TransDet();
+    transDet.setvalue("translation");
+    trans.getTransDet().add(transDet);
+    entSeqOrKEleOrREleOrTrans.add(kEle);
+    entSeqOrKEleOrREleOrTrans.add(rEle);
+    entSeqOrKEleOrREleOrTrans.add(trans);
+    return entry;
+  }
 
-    @Test
-    public void getEntriesShouldReturnAListOfEntryObjects() {
-        List<Entry> entries = nameEntriesFromXMLToPOJO.getEntries(dictionaryFile);
-        verify(dictionaryFile, times(1)).getEntry();
-        assertEquals(entries, dictionaryFile.getEntry());
-    }
-
-    @Test
-    public void getClassForJaxbShouldReturnJMnedict() {
-        assertEquals(JMnedict.class, nameEntriesFromXMLToPOJO.getClassForJaxb());
-    }
-
-    private Entry getAMockEntry() {
-        Entry entry = new Entry();
-        List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
-        KEle kEle = new KEle();
-        kEle.setKeb("kanji");
-        REle rEle = new REle();
-        rEle.setReb("reading");
-        Trans trans = new Trans();
-        TransDet transDet = new TransDet();
-        transDet.setvalue("translation");
-        trans.getTransDet().add(transDet);
-
-        entSeqOrKEleOrREleOrTrans.add(kEle);
-        entSeqOrKEleOrREleOrTrans.add(rEle);
-        entSeqOrKEleOrREleOrTrans.add(trans);
-        return entry;
-    }
-
-
-    @Test
-    public void saveToFile() {
-        //TODO test this method
-    }
+  @Test
+  void saveToFile() {
+    // TODO test this method
+  }
 }

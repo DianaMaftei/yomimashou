@@ -1,6 +1,6 @@
 package com.github.dianamaftei.yomimashou.sentence;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -11,17 +11,17 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SentenceServiceTest {
+@ExtendWith(MockitoExtension.class)
+class SentenceServiceTest {
 
   private static SentenceService sentenceService;
 
@@ -30,8 +30,8 @@ public class SentenceServiceTest {
   @Mock
   private static Tokenizer tokenizer;
 
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
+  @BeforeAll
+  static void setUpBeforeClass() throws Exception {
     ResourceLoader resourceLoader = mock(ResourceLoader.class);
     resource = mock(Resource.class);
     when(resourceLoader.getResource(anyString())).thenReturn(resource);
@@ -39,20 +39,20 @@ public class SentenceServiceTest {
     sentenceService = new SentenceService(resourceLoader);
   }
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     sentenceService.setTokenizer(tokenizer);
   }
 
   @Test
-  public void analyzeShouldReturnAnEmptyListForEmptySentence() {
+  void analyzeShouldReturnAnEmptyListForEmptySentence() {
     when(tokenizer.tokenize(anyString())).thenReturn(new ArrayList<>());
     List<SentenceToken> tokens = sentenceService.analyze("");
     assertEquals(0, tokens.size());
   }
 
   @Test
-  public void analyzeShouldReturnASentenceTokenForASingleWordSentence() {
+  void analyzeShouldReturnASentenceTokenForASingleWordSentence() {
     Token token = mock(Token.class);
     when(tokenizer.tokenize(anyString())).thenReturn(Collections.singletonList(token));
     List<SentenceToken> tokens = sentenceService.analyze("word");
@@ -60,7 +60,7 @@ public class SentenceServiceTest {
   }
 
   @Test
-  public void analyzeShouldPopulateTheSentenceTokenWithTheBaseForm() {
+  void analyzeShouldPopulateTheSentenceTokenWithTheBaseForm() {
     Token token = mock(Token.class);
     String baseForm = "base form";
     when(token.getBaseForm()).thenReturn(baseForm);
@@ -71,7 +71,7 @@ public class SentenceServiceTest {
   }
 
   @Test
-  public void analyzeShouldPopulateTheSentenceTokenWithTheSurfaceForm() {
+  void analyzeShouldPopulateTheSentenceTokenWithTheSurfaceForm() {
     Token token = mock(Token.class);
     String surface = "surface";
     when(token.getSurface()).thenReturn(surface);
@@ -82,7 +82,7 @@ public class SentenceServiceTest {
   }
 
   @Test
-  public void analyzeShouldPopulateTheSentenceTokenWithTheReadingForm() {
+  void analyzeShouldPopulateTheSentenceTokenWithTheReadingForm() {
     Token token = mock(Token.class);
     String reading = "reading";
     when(token.getReading()).thenReturn(reading);
@@ -93,7 +93,7 @@ public class SentenceServiceTest {
   }
 
   @Test
-  public void analyzeShouldPopulateTheSentenceTokenWithTheSemanticInfo() {
+  void analyzeShouldPopulateTheSentenceTokenWithTheSemanticInfo() {
     Token token = mock(Token.class);
     String semanticInfo = "semantic info";
     when(token.getSemanticInformation()).thenReturn(semanticInfo);

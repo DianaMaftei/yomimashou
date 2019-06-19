@@ -1,7 +1,7 @@
 package com.github.dianamaftei.yomimashou.dictionary.kanji;
 
 import static com.github.dianamaftei.yomimashou.dictionary.kanji.QKanji.kanji;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,34 +10,35 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class KanjiServiceTest {
+@ExtendWith(MockitoExtension.class)
+class KanjiServiceTest {
 
   private KanjiService kanjiService;
 
   @Mock
   private JPAQuery jpaQuery;
+
   @Mock
   private JPAQueryFactory jpaQueryFactory;
 
   @Captor
   private ArgumentCaptor<Predicate> predicateArgumentCaptor;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  void setUp() throws Exception {
     kanjiService = new KanjiService(jpaQueryFactory);
   }
 
   @Test
-  public void get() {
+  void get() {
     String searchItem = "searchItem";
     Kanji kanjiEntry = new Kanji();
     kanjiEntry.setCharacter("kanji");
@@ -45,9 +46,7 @@ public class KanjiServiceTest {
     when(jpaQuery.from(kanji)).thenReturn(jpaQuery);
     when(jpaQuery.fetchOne()).thenReturn(kanjiEntry);
     when(jpaQuery.where(any(Predicate.class))).thenReturn(jpaQuery);
-
     Kanji result = kanjiService.get(searchItem);
-
     verify(jpaQuery).where(predicateArgumentCaptor.capture());
     Predicate value = predicateArgumentCaptor.getValue();
     assertEquals("kanji.character = searchItem", value.toString());
@@ -57,7 +56,7 @@ public class KanjiServiceTest {
   }
 
   @Test
-  public void getKanjiSVG() {
-    //TODO test this method
+  void getKanjiSVG() {
+    // TODO test this method
   }
 }
