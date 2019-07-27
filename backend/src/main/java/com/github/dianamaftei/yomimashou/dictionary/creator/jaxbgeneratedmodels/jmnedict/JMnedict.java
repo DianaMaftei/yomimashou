@@ -1,12 +1,12 @@
 
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -43,7 +43,7 @@ public class JMnedict {
      */
     public List<Entry> getEntry() {
         if (entry == null) {
-            entry = new ArrayList<Entry>();
+          entry = new ArrayList<>();
         }
         return this.entry;
     }

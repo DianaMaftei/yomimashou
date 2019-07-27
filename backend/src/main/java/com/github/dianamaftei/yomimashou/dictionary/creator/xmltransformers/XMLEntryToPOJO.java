@@ -28,8 +28,8 @@ public abstract class XMLEntryToPOJO {
     @Value("${file.path}")
     private String filePath;
 
-    protected String dictionarySource;
-    protected String fileName;
+    String dictionarySource;
+    String fileName;
 
     public void processEntries() {
         try {

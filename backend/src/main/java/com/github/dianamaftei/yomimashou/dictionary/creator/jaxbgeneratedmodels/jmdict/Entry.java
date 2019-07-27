@@ -2,10 +2,13 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict;
 
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.DictionaryEntry;
-
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -89,7 +92,7 @@ public class Entry implements DictionaryEntry {
      */
     public List<KEle> getKEle() {
         if (kEle == null) {
-            kEle = new ArrayList<KEle>();
+          kEle = new ArrayList<>();
         }
         return this.kEle;
     }
@@ -116,7 +119,7 @@ public class Entry implements DictionaryEntry {
      */
     public List<REle> getREle() {
         if (rEle == null) {
-            rEle = new ArrayList<REle>();
+          rEle = new ArrayList<>();
         }
         return this.rEle;
     }
@@ -143,7 +146,7 @@ public class Entry implements DictionaryEntry {
      */
     public List<Sense> getSense() {
         if (sense == null) {
-            sense = new ArrayList<Sense>();
+          sense = new ArrayList<>();
         }
         return this.sense;
     }

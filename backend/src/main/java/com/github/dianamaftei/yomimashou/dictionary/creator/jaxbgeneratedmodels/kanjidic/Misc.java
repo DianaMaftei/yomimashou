@@ -1,9 +1,13 @@
 
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic;
 
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -91,7 +95,7 @@ public class Misc {
      */
     public List<String> getStrokeCount() {
         if (strokeCount == null) {
-            strokeCount = new ArrayList<String>();
+          strokeCount = new ArrayList<>();
         }
         return this.strokeCount;
     }
@@ -118,7 +122,7 @@ public class Misc {
      */
     public List<Variant> getVariant() {
         if (variant == null) {
-            variant = new ArrayList<Variant>();
+          variant = new ArrayList<>();
         }
         return this.variant;
     }
@@ -165,7 +169,7 @@ public class Misc {
      */
     public List<String> getRadName() {
         if (radName == null) {
-            radName = new ArrayList<String>();
+          radName = new ArrayList<>();
         }
         return this.radName;
     }

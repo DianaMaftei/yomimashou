@@ -1,9 +1,13 @@
 
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict;
 
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -85,7 +89,7 @@ public class Sense {
      */
     public List<String> getStagk() {
         if (stagk == null) {
-            stagk = new ArrayList<String>();
+            stagk = new ArrayList<>();
         }
         return this.stagk;
     }
@@ -112,7 +116,7 @@ public class Sense {
      */
     public List<String> getStagr() {
         if (stagr == null) {
-            stagr = new ArrayList<String>();
+            stagr = new ArrayList<>();
         }
         return this.stagr;
     }
@@ -139,7 +143,7 @@ public class Sense {
      */
     public List<String> getPos() {
         if (pos == null) {
-            pos = new ArrayList<String>();
+            pos = new ArrayList<>();
         }
         return this.pos;
     }
@@ -166,7 +170,7 @@ public class Sense {
      */
     public List<String> getXref() {
         if (xref == null) {
-            xref = new ArrayList<String>();
+            xref = new ArrayList<>();
         }
         return this.xref;
     }
@@ -193,7 +197,7 @@ public class Sense {
      */
     public List<String> getAnt() {
         if (ant == null) {
-            ant = new ArrayList<String>();
+            ant = new ArrayList<>();
         }
         return this.ant;
     }
@@ -220,7 +224,7 @@ public class Sense {
      */
     public List<String> getField() {
         if (field == null) {
-            field = new ArrayList<String>();
+            field = new ArrayList<>();
         }
         return this.field;
     }
@@ -247,7 +251,7 @@ public class Sense {
      */
     public List<String> getMisc() {
         if (misc == null) {
-            misc = new ArrayList<String>();
+            misc = new ArrayList<>();
         }
         return this.misc;
     }
@@ -274,7 +278,7 @@ public class Sense {
      */
     public List<String> getSInf() {
         if (sInf == null) {
-            sInf = new ArrayList<String>();
+            sInf = new ArrayList<>();
         }
         return this.sInf;
     }
@@ -301,7 +305,7 @@ public class Sense {
      */
     public List<Lsource> getLsource() {
         if (lsource == null) {
-            lsource = new ArrayList<Lsource>();
+            lsource = new ArrayList<>();
         }
         return this.lsource;
     }
@@ -328,7 +332,7 @@ public class Sense {
      */
     public List<String> getDial() {
         if (dial == null) {
-            dial = new ArrayList<String>();
+            dial = new ArrayList<>();
         }
         return this.dial;
     }
@@ -355,7 +359,7 @@ public class Sense {
      */
     public List<Gloss> getGloss() {
         if (gloss == null) {
-            gloss = new ArrayList<Gloss>();
+            gloss = new ArrayList<>();
         }
         return this.gloss;
     }

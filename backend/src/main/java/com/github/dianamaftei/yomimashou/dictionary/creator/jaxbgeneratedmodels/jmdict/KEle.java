@@ -1,9 +1,13 @@
 
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict;
 
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -83,7 +87,7 @@ public class KEle {
      */
     public List<String> getKeInf() {
         if (keInf == null) {
-            keInf = new ArrayList<String>();
+          keInf = new ArrayList<>();
         }
         return this.keInf;
     }
@@ -110,7 +114,7 @@ public class KEle {
      */
     public List<String> getKePri() {
         if (kePri == null) {
-            kePri = new ArrayList<String>();
+          kePri = new ArrayList<>();
         }
         return this.kePri;
     }

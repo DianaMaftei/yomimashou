@@ -1,9 +1,13 @@
 
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict;
 
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -111,7 +115,7 @@ public class REle {
      */
     public List<String> getReRestr() {
         if (reRestr == null) {
-            reRestr = new ArrayList<String>();
+          reRestr = new ArrayList<>();
         }
         return this.reRestr;
     }
@@ -138,7 +142,7 @@ public class REle {
      */
     public List<String> getReInf() {
         if (reInf == null) {
-            reInf = new ArrayList<String>();
+          reInf = new ArrayList<>();
         }
         return this.reInf;
     }
@@ -165,7 +169,7 @@ public class REle {
      */
     public List<String> getRePri() {
         if (rePri == null) {
-            rePri = new ArrayList<String>();
+          rePri = new ArrayList<>();
         }
         return this.rePri;
     }

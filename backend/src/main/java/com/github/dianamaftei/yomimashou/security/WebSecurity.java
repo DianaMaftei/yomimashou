@@ -22,7 +22,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
 
     @Value("${security.SECRET}")
-    public String SECRET;
+    public String secret;
 
     public WebSecurity(ApplicationUserService applicationUserService, PasswordEncoder passwordEncoder) {
         this.applicationUserService = applicationUserService;
@@ -39,8 +39,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/users/textStatus").authenticated()
                 .anyRequest().permitAll()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), SECRET))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(), SECRET))
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(), secret))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), secret))
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

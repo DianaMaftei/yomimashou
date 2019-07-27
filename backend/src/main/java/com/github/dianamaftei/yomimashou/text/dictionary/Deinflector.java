@@ -52,9 +52,9 @@ public class Deinflector {
   private Map<Integer, List<DeinflectRule>> buildRuleList(String filePath) {
         List<DeinflectRule> ruleList = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(getReader(filePath))) {
+    try (BufferedReader bufferedReader = new BufferedReader(getReader(filePath))) {
             String line;
-            while ((line = reader.readLine()) != null) {
+      while ((line = bufferedReader.readLine()) != null) {
                 String[] ruleComponents = line.split("\t");
                 String from = ruleComponents[0];
                 String to = ruleComponents.length > 1 ? ruleComponents[1] : "";

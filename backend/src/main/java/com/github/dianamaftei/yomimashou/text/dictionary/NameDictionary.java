@@ -47,9 +47,9 @@ public class NameDictionary {
   private String getFile(String fileName) {
     StringBuilder result = new StringBuilder();
 
-    try (BufferedReader reader = new BufferedReader(getReader(fileName))) {
+    try (BufferedReader bufferedReader = new BufferedReader(getReader(fileName))) {
       String line;
-      while ((line = reader.readLine()) != null) {
+      while ((line = bufferedReader.readLine()) != null) {
         result.append(line);
       }
     } catch (IOException e) {

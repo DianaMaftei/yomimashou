@@ -23,16 +23,16 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _FileVersion_QNAME = new QName("", "file_version");
-    private final static QName _RadName_QNAME = new QName("", "rad_name");
-    private final static QName _Nanori_QNAME = new QName("", "nanori");
-    private final static QName _Grade_QNAME = new QName("", "grade");
-    private final static QName _Jlpt_QNAME = new QName("", "jlpt");
-    private final static QName _Freq_QNAME = new QName("", "freq");
-    private final static QName _DateOfCreation_QNAME = new QName("", "date_of_creation");
-    private final static QName _DatabaseVersion_QNAME = new QName("", "database_version");
-    private final static QName _StrokeCount_QNAME = new QName("", "stroke_count");
-    private final static QName _Literal_QNAME = new QName("", "literal");
+    private static final QName _FileVersion_QNAME = new QName("", "file_version");
+    private static final QName _RadName_QNAME = new QName("", "rad_name");
+    private static final QName _Nanori_QNAME = new QName("", "nanori");
+    private static final QName _Grade_QNAME = new QName("", "grade");
+    private static final QName _Jlpt_QNAME = new QName("", "jlpt");
+    private static final QName _Freq_QNAME = new QName("", "freq");
+    private static final QName _DateOfCreation_QNAME = new QName("", "date_of_creation");
+    private static final QName _DatabaseVersion_QNAME = new QName("", "database_version");
+    private static final QName _StrokeCount_QNAME = new QName("", "stroke_count");
+    private static final QName _Literal_QNAME = new QName("", "literal");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: jaxbgeneratedmodels
@@ -164,7 +164,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "file_version")
     public JAXBElement<String> createFileVersion(String value) {
-        return new JAXBElement<String>(_FileVersion_QNAME, String.class, null, value);
+        return new JAXBElement<>(_FileVersion_QNAME, String.class, null, value);
     }
 
     /**
@@ -172,7 +172,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "rad_name")
     public JAXBElement<String> createRadName(String value) {
-        return new JAXBElement<String>(_RadName_QNAME, String.class, null, value);
+        return new JAXBElement<>(_RadName_QNAME, String.class, null, value);
     }
 
     /**
@@ -180,7 +180,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "nanori")
     public JAXBElement<String> createNanori(String value) {
-        return new JAXBElement<String>(_Nanori_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Nanori_QNAME, String.class, null, value);
     }
 
     /**
@@ -188,7 +188,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "grade")
     public JAXBElement<String> createGrade(String value) {
-        return new JAXBElement<String>(_Grade_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Grade_QNAME, String.class, null, value);
     }
 
     /**
@@ -196,7 +196,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "jlpt")
     public JAXBElement<String> createJlpt(String value) {
-        return new JAXBElement<String>(_Jlpt_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Jlpt_QNAME, String.class, null, value);
     }
 
     /**
@@ -204,7 +204,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "freq")
     public JAXBElement<String> createFreq(String value) {
-        return new JAXBElement<String>(_Freq_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Freq_QNAME, String.class, null, value);
     }
 
     /**
@@ -212,7 +212,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "date_of_creation")
     public JAXBElement<String> createDateOfCreation(String value) {
-        return new JAXBElement<String>(_DateOfCreation_QNAME, String.class, null, value);
+        return new JAXBElement<>(_DateOfCreation_QNAME, String.class, null, value);
     }
 
     /**
@@ -220,7 +220,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "database_version")
     public JAXBElement<String> createDatabaseVersion(String value) {
-        return new JAXBElement<String>(_DatabaseVersion_QNAME, String.class, null, value);
+        return new JAXBElement<>(_DatabaseVersion_QNAME, String.class, null, value);
     }
 
     /**
@@ -228,7 +228,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "stroke_count")
     public JAXBElement<String> createStrokeCount(String value) {
-        return new JAXBElement<String>(_StrokeCount_QNAME, String.class, null, value);
+        return new JAXBElement<>(_StrokeCount_QNAME, String.class, null, value);
     }
 
     /**
@@ -236,7 +236,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "", name = "literal")
     public JAXBElement<String> createLiteral(String value) {
-        return new JAXBElement<String>(_Literal_QNAME, String.class, null, value);
+        return new JAXBElement<>(_Literal_QNAME, String.class, null, value);
     }
 
 }

@@ -1,12 +1,12 @@
 
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -60,7 +60,7 @@ public class ReadingMeaning {
      */
     public List<Rmgroup> getRmgroup() {
         if (rmgroup == null) {
-            rmgroup = new ArrayList<Rmgroup>();
+            rmgroup = new ArrayList<>();
         }
         return this.rmgroup;
     }
@@ -87,7 +87,7 @@ public class ReadingMeaning {
      */
     public List<String> getNanori() {
         if (nanori == null) {
-            nanori = new ArrayList<String>();
+            nanori = new ArrayList<>();
         }
         return this.nanori;
     }

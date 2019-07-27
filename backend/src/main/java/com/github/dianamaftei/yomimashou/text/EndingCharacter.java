@@ -32,6 +32,7 @@ public enum EndingCharacter {
     this.symbol = symbol;
   }
 
+  @Override
   public String toString() {
     return symbol;
   }

@@ -2,10 +2,14 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict;
 
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.DictionaryEntry;
-
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -51,7 +55,7 @@ public class Entry implements DictionaryEntry {
      */
     public List<Object> getEntSeqOrKEleOrREleOrTrans() {
         if (entSeqOrKEleOrREleOrTrans == null) {
-            entSeqOrKEleOrREleOrTrans = new ArrayList<Object>();
+          entSeqOrKEleOrREleOrTrans = new ArrayList<>();
         }
         return this.entSeqOrKEleOrREleOrTrans;
     }

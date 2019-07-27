@@ -1,9 +1,13 @@
 
 package com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict;
 
-import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -46,7 +50,7 @@ public class Trans {
      */
     public List<NameType> getNameType() {
         if (nameType == null) {
-            nameType = new ArrayList<NameType>();
+            nameType = new ArrayList<>();
         }
         return this.nameType;
     }
@@ -73,7 +77,7 @@ public class Trans {
      */
     public List<Xref> getXref() {
         if (xref == null) {
-            xref = new ArrayList<Xref>();
+            xref = new ArrayList<>();
         }
         return this.xref;
     }
@@ -100,7 +104,7 @@ public class Trans {
      */
     public List<TransDet> getTransDet() {
         if (transDet == null) {
-            transDet = new ArrayList<TransDet>();
+            transDet = new ArrayList<>();
         }
         return this.transDet;
     }
