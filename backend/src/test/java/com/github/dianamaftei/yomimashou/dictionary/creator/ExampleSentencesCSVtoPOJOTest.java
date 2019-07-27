@@ -1,5 +1,6 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,7 +43,9 @@ class ExampleSentencesCSVtoPOJOTest {
         ("3400993\tjpn\tこれ、可愛いな。\tThis is cute.\n"
             + "1204364\tjpn\t明日の午前２時４０分てそれ１回目？それとも２回目？\tIs it the first time at 2:40AM tomorrow? Or is it the second time?")
             .getBytes()));
+
     exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+
     verify(exampleSentenceRepository, times(2)).save(any());
   }
 
@@ -51,12 +54,17 @@ class ExampleSentencesCSVtoPOJOTest {
     exampleSentencesCSVtoPOJO.setResource(classPathResource);
     when(classPathResource.getInputStream())
         .thenReturn(new ByteArrayInputStream("3400993\tjpn\tこれ、可愛いな。\tThis is cute.".getBytes()));
+
     exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+
     verify(exampleSentenceRepository).save(argumentCaptor.capture());
     ExampleSentence exampleSentence = argumentCaptor.getValue();
-    assertEquals("これ、可愛いな。", exampleSentence.getSentence());
-    assertEquals("This is cute.", exampleSentence.getMeaning());
-    assertNull(exampleSentence.getTextBreakdown());
+
+    assertAll("Should extract the sentence, meaning and breakdown from the text",
+        () -> assertEquals("これ、可愛いな。", exampleSentence.getSentence()),
+        () -> assertEquals("This is cute.", exampleSentence.getMeaning()),
+        () -> assertNull(exampleSentence.getTextBreakdown())
+    );
   }
 
   @Test
@@ -64,7 +72,9 @@ class ExampleSentencesCSVtoPOJOTest {
       throws IOException {
     exampleSentencesCSVtoPOJO.setResource(classPathResource);
     when(classPathResource.getInputStream()).thenThrow(new IOException());
+
     exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+
     verify(exampleSentenceRepository, times(0)).save(any());
   }
 }

@@ -10,18 +10,19 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class DeinflectorTest {
 
+  @InjectMocks
   private Deinflector deinflector;
 
   @BeforeEach
   void setUp() {
-    Deinflector.setReader(new StringReader(
+    deinflector.setReader(new StringReader(
         "た\tる\n" + "ない\tる\n" + "い\tいる\n" + "い\tう\n" + "い\tる\n" + "え\tう\n" + "え\tえる\n" + "な"));
-    deinflector = Deinflector.getInstance("");
   }
 
   @Test

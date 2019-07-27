@@ -2,7 +2,6 @@ package com.github.dianamaftei.yomimashou.text;
 
 import com.github.dianamaftei.yomimashou.uploads.FileService;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class TextController {
   private final TextParserService textParserService;
   private final TextService textService;
   private final FileService fileService;
-  private final static String MEDIA_UPLOAD_PREFIX = "text_";
+  private static final String MEDIA_UPLOAD_PREFIX = "text_";
 
   @Autowired
   public TextController(TextParserService textParserService, TextService textService,
@@ -54,18 +53,11 @@ public class TextController {
 
   @PostMapping(value = "/parse/words")
   public Set<String> getWords(@RequestBody String text) {
-    if (text != null && text.length() > 0) {
-      return textParserService.parseWords(text);
-    }
-    return Collections.emptySet();
+    return textParserService.parseWords(text);
   }
 
   @PostMapping(value = "/parse/names")
   public Set<String> getNames(@RequestBody String text) {
-    if (text != null && text.length() > 0) {
-      return textParserService.parseNames(text);
-    }
-    return Collections.emptySet();
+    return textParserService.parseNames(text);
   }
-
 }

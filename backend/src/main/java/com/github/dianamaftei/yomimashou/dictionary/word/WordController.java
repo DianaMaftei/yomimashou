@@ -1,10 +1,12 @@
 package com.github.dianamaftei.yomimashou.dictionary.word;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Collections;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/dictionary/words")
@@ -18,9 +20,9 @@ public class WordController {
     }
 
     @GetMapping
-    public List<Word> get(@RequestParam("searchItem") String searchItem) {
+    public List<Word> getByEqualsKanji(@RequestParam("searchItem") String searchItem) {
         if (searchItem != null && searchItem.length() > 0) {
-            List<Word> words = wordService.get(searchItem.split(","));
+            List<Word> words = wordService.getByEqualsKanji(searchItem.split(","));
             Collections.sort(words);
             return words;
         }

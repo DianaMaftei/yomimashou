@@ -65,4 +65,12 @@ public class FileService {
       throw new FileException("Could not read file", exception);
     }
   }
+
+  public String getFilePath() {
+    return filePath;
+  }
+
+  public void setFilePath(String filePath) {
+    this.filePath = filePath;
+  }
 }

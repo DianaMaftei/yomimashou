@@ -1,39 +1,55 @@
 package com.github.dianamaftei.yomimashou.text.dictionary;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import java.io.*;
-import java.util.*;
-import java.util.stream.Collectors;
-
+@Component
 public class Deinflector {
 
-    private static final Object lock = new Object();
     private static final Logger LOGGER = LoggerFactory.getLogger(Deinflector.class);
-    private static Map<Integer, List<DeinflectRule>> rulesGroupedByRuleLength;
-    private static volatile Deinflector instance;
-    private static Reader reader;
-    private Deinflector() {
+
+  @Value("${file.path}")
+  private String filePath;
+
+  private Reader reader;
+  private Map<Integer, List<DeinflectRule>> rulesGroupedByRuleLength;
+
+  public Set<String> getDeinflectedWords(String textFragmentWithInflectedWords) {
+    Set<String> deinflectedWords = new HashSet<>();
+
+    if (rulesGroupedByRuleLength == null) {
+      rulesGroupedByRuleLength = buildRuleList(filePath);
     }
 
-    public static Deinflector getInstance(String filePath) {
+    while (textFragmentWithInflectedWords.length() > 0) {
+      String textFragment = textFragmentWithInflectedWords;
+      rulesGroupedByRuleLength.forEach((ruleLength, listOfRules) -> listOfRules.forEach(
+          rule -> getDeinflectedWordIfEndingMatchesRule(rule, ruleLength, textFragment)
+              .ifPresent(deinflectedWords::add)));
 
-        Deinflector deinflector = instance;
-        if (deinflector == null) {
-            synchronized (lock) {
-                deinflector = instance;
-                if (deinflector == null) {
-                    deinflector = new Deinflector();
-                    rulesGroupedByRuleLength = buildRuleList(filePath);
-                    instance = deinflector;
-                }
-            }
+      textFragmentWithInflectedWords = textFragmentWithInflectedWords
+          .substring(0, textFragmentWithInflectedWords.length() - 1);
         }
-        return deinflector;
+
+    return deinflectedWords;
     }
 
-    private static Map<Integer, List<DeinflectRule>> buildRuleList(String filePath) {
+  private Map<Integer, List<DeinflectRule>> buildRuleList(String filePath) {
         List<DeinflectRule> ruleList = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(getReader(filePath))) {
@@ -51,23 +67,10 @@ public class Deinflector {
         return ruleList.stream().collect(Collectors.groupingBy(item -> item.from.length()));
     }
 
-    static Reader getReader(String filePath) throws FileNotFoundException {
+  private Reader getReader(String filePath) throws FileNotFoundException {
         if(reader != null) return reader;
 
         return new FileReader(filePath + File.separator + "dictionaries" + File.separator + "deinflect.txt");
-    }
-
-    public Set<String> getDeinflectedWords(String textFragmentWithInflectedWords) {
-        Set<String> deinflectedWords = new HashSet<>();
-
-        while (textFragmentWithInflectedWords.length() > 0) {
-            String textFragment = textFragmentWithInflectedWords;
-            rulesGroupedByRuleLength.forEach((ruleLength, listOfRules) -> listOfRules.forEach(rule -> getDeinflectedWordIfEndingMatchesRule(rule, ruleLength, textFragment).ifPresent(deinflectedWords::add)));
-
-            textFragmentWithInflectedWords = textFragmentWithInflectedWords.substring(0, textFragmentWithInflectedWords.length() - 1);
-        }
-
-        return deinflectedWords;
     }
 
     private Optional<String> getDeinflectedWordIfEndingMatchesRule(DeinflectRule rule, int ruleLength, String textFragment) {
@@ -83,8 +86,8 @@ public class Deinflector {
         return Optional.empty();
     }
 
-    public static void setReader(Reader reader) {
-        Deinflector.reader = reader;
+  public void setReader(Reader reader) {
+    this.reader = reader;
     }
 
     private static class DeinflectRule {

@@ -1,5 +1,15 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.DictionaryEntry;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Entry;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Gloss;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.JMdict;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.KEle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.REle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Sense;
+import com.github.dianamaftei.yomimashou.dictionary.word.Word;
+import com.github.dianamaftei.yomimashou.dictionary.word.WordMeaning;
+import com.github.dianamaftei.yomimashou.dictionary.word.WordRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,16 +21,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.DictionaryEntry;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Entry;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Gloss;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.JMdict;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.KEle;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.REle;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Sense;
-import com.github.dianamaftei.yomimashou.dictionary.word.Word;
-import com.github.dianamaftei.yomimashou.dictionary.word.WordMeaning;
-import com.github.dianamaftei.yomimashou.dictionary.word.WordRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +36,11 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     private static final int LOW_PRIORITY = 3;
 
     private final WordRepository wordRepository;
-    private final Map<String, String> partsOfSpeech;
+  private Map<String, String> partsOfSpeech;
 
     @Autowired
     public WordEntriesFromXMLToPOJO(WordRepository wordRepository) {
         this.wordRepository = wordRepository;
-        this.partsOfSpeech = buildListOfPartsOfSpeech();
         this.dictionarySource = "http://ftp.monash.edu/pub/nihongo/JMdict_e.gz";
         this.fileName = "wordEntries.txt";
     }
@@ -75,14 +74,14 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     }
 
     @Override
-    void saveToDB(List<? extends DictionaryEntry> entries) {
+    void saveToDb(List<? extends DictionaryEntry> entries) {
         ((List<Entry>) entries).parallelStream().forEach(entry -> {
             Word word = buildWordEntry(entry);
             wordRepository.save(word);
         });
     }
 
-    private Word buildWordEntry(Entry entry) {
+  Word buildWordEntry(Entry entry) {
         Word word = new Word();
 
         word.setKanjiElements(entry.getKEle().stream().map(KEle::getKeb).collect(Collectors.joining("|")));
@@ -126,7 +125,11 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     private List<WordMeaning> buildMeaningsList(Entry entry) {
         List<WordMeaning> meanings = new ArrayList<>();
 
-        for (Sense sense : entry.getSense()) {
+      if (this.partsOfSpeech == null) {
+        this.partsOfSpeech = buildListOfPartsOfSpeech();
+      }
+
+      for (Sense sense : entry.getSense()) {
             WordMeaning meaning = new WordMeaning();
             meaning.setPartOfSpeech(String.join("|", sense.getPos().stream()
                     .map(partsOfSpeech::get)
@@ -146,7 +149,7 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         return meanings;
     }
 
-    private Map<String, String> buildListOfPartsOfSpeech() {
+  private Map<String, String> buildListOfPartsOfSpeech() {
         Map<String, String> partsOfSpeechMap = new HashMap<>();
         partsOfSpeechMap.put("adjective (keiyoushi)", "adj-i");
         partsOfSpeechMap.put("adjectival nouns or quasi-adjectives (keiyodoshi)", "adj-na");

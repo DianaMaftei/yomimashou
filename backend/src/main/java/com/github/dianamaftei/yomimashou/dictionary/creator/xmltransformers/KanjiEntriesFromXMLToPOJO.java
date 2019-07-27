@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
@@ -45,8 +46,8 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   private static final Logger LOGGER = LoggerFactory.getLogger(KanjiEntriesFromXMLToPOJO.class);
 
   private final KanjiRepository kanjiRepository;
-  private final Map<String, String> kanjiJLPTLevelMap = getKanjiAndCorrespondingJLPTLevel();
-  private final Map<String, RtkKanji> rtkKanjiMap = getRtkKanji();
+  private Map<String, String> kanjiJLPTLevelMap;
+  private Map<String, RtkKanji> rtkKanjiMap;
 
   @Autowired
   public KanjiEntriesFromXMLToPOJO(KanjiRepository kanjiRepository) {
@@ -56,7 +57,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   }
 
   @Override
-  void saveToDB(List<? extends DictionaryEntry> characters) {
+  void saveToDb(List<? extends DictionaryEntry> characters) {
     ((List<Character>) characters).parallelStream().forEach(character -> {
       Kanji kanji = buildKanjiEntry(character);
       kanjiRepository.save(kanji);
@@ -92,6 +93,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     ClassPathResource resource = new ClassPathResource(
         "dictionaries" + File.separator + "kanjiByJLPTLevel.csv");
 
+    //TODO use Kanji Categories
     Map<String, String> kanjiJLPTLevel = new HashMap<>();
     String line;
     String kanji;
@@ -104,7 +106,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         kanjiJLPTLevel.put(kanji, level);
       }
     } catch (IOException e) {
-      LOGGER.error("Could not get kanji and JLPT levels", e);
+      LOGGER.error("Could not getByEqualsKanji kanji and JLPT levels", e);
     }
 
     return kanjiJLPTLevel;
@@ -132,13 +134,13 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         rtkKanjis.put(rtkKanji.getKanji(), rtkKanji);
       }
     } catch (IOException e) {
-      LOGGER.error("Could not get rtk info from file", e);
+      LOGGER.error("Could not getByEqualsKanji rtk info from file", e);
     }
 
     return rtkKanjis;
   }
 
-  private Kanji buildKanjiEntry(Character character) {
+  Kanji buildKanjiEntry(Character character) {
     Kanji kanjiEntry = new Kanji();
     kanjiEntry.setReferences(new KanjiReferences());
 
@@ -157,34 +159,40 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
           break;
         case CODEPOINT:
           List<String> codepoints = new ArrayList<>();
-          for (CpValue cpValue : ((Codepoint) component).getCpValue()) {
-            codepoints.add(cpValue.getContent() + ";" + cpValue.getCpType());
+          if (!CollectionUtils.isEmpty(((Codepoint) component).getCpValue())) {
+            for (CpValue cpValue : ((Codepoint) component).getCpValue()) {
+              codepoints.add(cpValue.getContent() + ";" + cpValue.getCpType());
+            }
+
+            kanjiEntry.setCodepoint(String.join("|", codepoints));
           }
 
-          kanjiEntry.setCodepoint(String.join("|", codepoints));
           break;
         case RADICAL:
           // only one main radical
-          kanjiEntry.setRadical(((Radical) component).getRadValue().get(0).getContent());
+          if (!CollectionUtils.isEmpty(((Radical) component).getRadValue())) {
+            kanjiEntry.setRadical(((Radical) component).getRadValue().get(0).getContent());
+          }
           break;
         case MISC:
           Misc misc = (Misc) component;
-          if (misc.getGrade() != null) {
+          if (!StringUtils.isEmpty(misc.getGrade())) {
             kanjiEntry.setGrade(Integer.valueOf(misc.getGrade()));
           }
           //  the first is the accepted count, the rest are common miscounts
-          if (misc.getStrokeCount() != null && misc.getStrokeCount().get(0) != null) {
+          if (!CollectionUtils.isEmpty(misc.getStrokeCount()) && !StringUtils
+              .isEmpty(misc.getStrokeCount().get(0))) {
             kanjiEntry.setStrokeCount(Integer.valueOf(misc.getStrokeCount().get(0)));
           }
 
-          if (misc.getFreq() != null) {
+          if (!StringUtils.isEmpty(misc.getFreq())) {
             kanjiEntry.setFrequency(Integer.valueOf(misc.getFreq()));
           }
 
           kanjiEntry.getReferences().setJlptOldLevel(misc.getJlpt());
           break;
         case DICNUMBER:
-          setKanjiReferences(kanjiEntry.getReferences(), (DicNumber) component);
+          setAllKanjiDictionaryReferences(kanjiEntry.getReferences(), (DicNumber) component);
           break;
         case QUERYCODE:
           QueryCode queryCode = (QueryCode) component;
@@ -195,13 +203,21 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
           }
           break;
         case READINGMEANING:
-          addReadingsAndMeanings(kanjiEntry, (ReadingMeaning) component);
+          addReadingsAndMeaningsToKanji(kanjiEntry, (ReadingMeaning) component);
           break;
       }
     }
 
+    if (kanjiJLPTLevelMap == null) {
+      kanjiJLPTLevelMap = getKanjiAndCorrespondingJLPTLevel();
+    }
+
     if (kanjiJLPTLevelMap.get(kanji) != null) {
       kanjiEntry.getReferences().setJlptNewLevel(kanjiJLPTLevelMap.get(kanji));
+    }
+
+    if (rtkKanjiMap == null) {
+      rtkKanjiMap = getRtkKanji();
     }
 
     RtkKanji rtkKanji = rtkKanjiMap.get(kanji);
@@ -215,7 +231,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     return kanjiEntry;
   }
 
-  private void addReadingsAndMeanings(Kanji kanji, ReadingMeaning component) {
+  private void addReadingsAndMeaningsToKanji(Kanji kanji, ReadingMeaning component) {
     List<String> onReadings = new ArrayList<>();
     List<String> kunReadings = new ArrayList<>();
     List<String> meanings = new ArrayList<>();
@@ -238,7 +254,6 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
           meanings.add(meaning.getContent());
         }
       }
-
     }
 
     kanji.setOnReading(String.join("|", onReadings));
@@ -246,7 +261,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     kanji.setMeaning(String.join("|", meanings));
   }
 
-  private void setKanjiReferences(KanjiReferences references, DicNumber component) {
+  private void setAllKanjiDictionaryReferences(KanjiReferences references, DicNumber component) {
     List<DicRef> dicRefs = component.getDicRef();
 
     for (DicRef dicRef : dicRefs) {
@@ -266,5 +281,13 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
 
   private enum KanjiComponentClass {
     STRING, CODEPOINT, RADICAL, MISC, DICNUMBER, QUERYCODE, READINGMEANING
+  }
+
+  void setKanjiJLPTLevelMap(Map<String, String> kanjiJLPTLevelMap) {
+    this.kanjiJLPTLevelMap = kanjiJLPTLevelMap;
+  }
+
+  void setRtkKanjiMap(Map<String, RtkKanji> rtkKanjiMap) {
+    this.rtkKanjiMap = rtkKanjiMap;
   }
 }

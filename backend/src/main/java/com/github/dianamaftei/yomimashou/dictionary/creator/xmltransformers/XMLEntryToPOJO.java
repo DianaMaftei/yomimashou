@@ -1,21 +1,24 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.DictionaryEntry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 public abstract class XMLEntryToPOJO {
@@ -34,7 +37,7 @@ public abstract class XMLEntryToPOJO {
             unmarshalledFile.ifPresent(dictionaryFile -> {
                 List<? extends DictionaryEntry> dictionaryEntries = getEntries(dictionaryFile);
                 saveToFile(dictionaryEntries);
-                saveToDB(dictionaryEntries);
+                saveToDb(dictionaryEntries);
             });
         } catch (JAXBException e) {
             LOGGER.error("could not process entries from XML", e);
@@ -58,7 +61,8 @@ public abstract class XMLEntryToPOJO {
     }
 
     void writeToFile(Set<String> entries, String filename) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filePath + File.separator + "dictionaries" + File.separator + filename)))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(
+            new File(filePath + File.separator + "dictionaries" + File.separator + filename)))) {
             writer.write(entries.stream().collect(Collectors.joining("|")));
         } catch (IOException e) {
             LOGGER.error("could not write entries to file " + filename, e);
@@ -71,5 +75,5 @@ public abstract class XMLEntryToPOJO {
 
     abstract void saveToFile(List<? extends DictionaryEntry> entries);
 
-    abstract void saveToDB(List<? extends DictionaryEntry> entries);
+    abstract void saveToDb(List<? extends DictionaryEntry> entries);
 }

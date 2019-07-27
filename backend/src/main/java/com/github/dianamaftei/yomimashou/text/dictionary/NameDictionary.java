@@ -11,35 +11,29 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class NameDictionary {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(NameDictionary.class);
 
-  private static final Object lock = new Object();
-  private static volatile NameDictionary instance;
-  private static Reader reader;
-  private static BloomFilter<String> bloomFilterForNames;
+  @Value("${file.path}")
+  private String filePath;
 
-  private NameDictionary() {
-  }
+  private Reader reader;
+  private BloomFilter<String> bloomFilterForNames;
 
-  public static NameDictionary getInstance(String filePath) {
-    NameDictionary wordDictionary = instance;
-    if (wordDictionary == null) {
-      synchronized (lock) {
-        wordDictionary = instance;
-        if (wordDictionary == null) {
-          wordDictionary = new NameDictionary();
-          buildNamesDictionary(filePath);
-          instance = wordDictionary;
-        }
-      }
+  public boolean isNameInDictionary(String item) {
+    if (bloomFilterForNames == null) {
+      buildNamesDictionary(filePath);
     }
-    return wordDictionary;
+
+    return bloomFilterForNames.contains(item);
   }
 
-  private static void buildNamesDictionary(String filePath) {
+  private void buildNamesDictionary(String filePath) {
     String file = getFile(filePath);
     Set<String> names = Arrays.stream(file.split("\\|")).parallel().collect(Collectors.toSet());
 
@@ -50,8 +44,7 @@ public class NameDictionary {
     names.forEach(bloomFilterForNames::add);
   }
 
-
-  static String getFile(String fileName) {
+  private String getFile(String fileName) {
     StringBuilder result = new StringBuilder();
 
     try (BufferedReader reader = new BufferedReader(getReader(fileName))) {
@@ -60,17 +53,13 @@ public class NameDictionary {
         result.append(line);
       }
     } catch (IOException e) {
-      LOGGER.error("Could not get file " + fileName, e);
+      LOGGER.error("Could not getByEqualsKanji file " + fileName, e);
     }
 
     return result.toString();
   }
 
-  public boolean isNameInDictionary(String item) {
-    return bloomFilterForNames.contains(item);
-  }
-
-  static Reader getReader(String filePath) throws FileNotFoundException {
+  private Reader getReader(String filePath) throws FileNotFoundException {
     if (reader != null) {
       return reader;
     }
@@ -79,7 +68,7 @@ public class NameDictionary {
         filePath + File.separator + "dictionaries" + File.separator + "nameEntries.txt");
   }
 
-  public static void setReader(Reader reader) {
-    NameDictionary.reader = reader;
+  public void setReader(Reader reader) {
+    this.reader = reader;
   }
 }

@@ -1,6 +1,5 @@
 package com.github.dianamaftei.yomimashou.text;
 
-import com.github.dianamaftei.yomimashou.dictionary.name.NameService;
 import com.github.dianamaftei.yomimashou.text.dictionary.Deinflector;
 import com.github.dianamaftei.yomimashou.text.dictionary.NameDictionary;
 import com.github.dianamaftei.yomimashou.text.dictionary.WordDictionary;
@@ -8,32 +7,22 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TextParserService {
 
-  @Value("${file.path}")
-  private String filePath;
-
-  private final NameService nameService;
-  private static Deinflector deinflector;
-  private static WordDictionary wordDictionary;
-  private static NameDictionary nameDictionary;
+  private Deinflector deinflector;
+  private WordDictionary wordDictionary;
+  private NameDictionary nameDictionary;
 
   @Autowired
-  public TextParserService(NameService nameService) {
-    this.nameService = nameService;
-  }
-
-  @PostConstruct
-  public void initDictionaries() {
-    deinflector = Deinflector.getInstance(filePath);
-    wordDictionary = WordDictionary.getInstance(filePath);
-    nameDictionary = NameDictionary.getInstance(filePath);
+  public TextParserService(Deinflector deinflector, WordDictionary wordDictionary,
+      NameDictionary nameDictionary) {
+    this.deinflector = deinflector;
+    this.wordDictionary = wordDictionary;
+    this.nameDictionary = nameDictionary;
   }
 
   Set<String> parseWords(String text) {
@@ -43,7 +32,7 @@ public class TextParserService {
 
       Set<String> deinflectedWords = deinflector.getDeinflectedWords(textFragment);
       Set<String> validWords = deinflectedWords.stream().filter(wordDictionary::isWordInDictionary)
-          .distinct().collect(Collectors.toSet());
+          .collect(Collectors.toSet());
 
       if (wordDictionary.isWordInDictionary(word)) {
         validWords.add(word);
@@ -103,10 +92,10 @@ public class TextParserService {
   }
 
   private String getValidTextFragment(String text) {
-    String[] endingCharacters = {"。", "、", ".", ",", "！", "？"};
+    EndingCharacter[] endingCharacters = EndingCharacter.values();
     int indexOfEndingCharacter = -1;
-    for (String endingCharacter : endingCharacters) {
-      int index = text.indexOf(endingCharacter);
+    for (EndingCharacter endingCharacter : endingCharacters) {
+      int index = text.indexOf(endingCharacter.toString());
       if (index != -1 && (indexOfEndingCharacter == -1 || index < indexOfEndingCharacter)) {
         indexOfEndingCharacter = index;
       }

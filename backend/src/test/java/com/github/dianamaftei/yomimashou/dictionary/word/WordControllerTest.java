@@ -38,7 +38,8 @@ class WordControllerTest {
     Word word = new Word();
     word.setKanjiElements("猫");
     String searchItem = "猫";
-    when(wordService.get(new String[]{searchItem})).thenReturn(Collections.singletonList(word));
+    when(wordService.getByEqualsKanji(new String[]{searchItem}))
+        .thenReturn(Collections.singletonList(word));
     MockHttpServletResponse response = mvc.perform(
         get("/api/dictionary/words?searchItem={attribute_uri}", "猫")
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();

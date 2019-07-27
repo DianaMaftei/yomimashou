@@ -1,25 +1,27 @@
 package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Entry;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Gloss;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.JMdict;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.KEle;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.REle;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmdict.Sense;
 import com.github.dianamaftei.yomimashou.dictionary.word.Word;
-import com.github.dianamaftei.yomimashou.dictionary.word.WordMeaning;
 import com.github.dianamaftei.yomimashou.dictionary.word.WordRepository;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,14 +38,10 @@ class WordEntriesFromXMLToPOJOTest {
   @Mock
   private WordRepository wordRepository;
 
-  @Captor
-  private ArgumentCaptor<Word> wordArgumentCaptor;
-
   @Test
   void getEntriesShouldReturnAListOfEntryObjects() {
     List<Entry> entries = wordEntriesFromXMLToPOJO.getEntries(dictionaryFile);
-    verify(dictionaryFile, times(1)).getEntry();
-    assertEquals(entries, dictionaryFile.getEntry());
+    assertEquals(dictionaryFile.getEntry(), entries);
   }
 
   @Test
@@ -52,60 +50,45 @@ class WordEntriesFromXMLToPOJOTest {
   }
 
   @Test
-  void saveToFile() {
-    // TODO test this method
+  void saveToFileShouldExtractASetOfDistinctKanjiLiteralsAndReadingsFromEntries() {
+    Entry entry = new Entry();
+    KEle kanjiElement = new KEle();
+    kanjiElement.setKeb("大");
+    entry.getKEle().add(kanjiElement);
+    REle readingElement = new REle();
+    readingElement.setReb("おお.きい");
+    entry.getREle().add(readingElement);
+
+    Entry entry2 = new Entry();
+    KEle kanjiElement2 = new KEle();
+    kanjiElement2.setKeb("国");
+    entry2.getKEle().add(kanjiElement2);
+    REle readingElement2 = new REle();
+    readingElement2.setReb("おお.きい");
+    entry2.getREle().add(readingElement2);
+
+    WordEntriesFromXMLToPOJO spyWordEntriesFromXMLToPOJO = spy(wordEntriesFromXMLToPOJO);
+    doNothing().when((XMLEntryToPOJO) spyWordEntriesFromXMLToPOJO).writeToFile(any(), any());
+    ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
+    spyWordEntriesFromXMLToPOJO.saveToFile(Arrays.asList(entry, entry2));
+
+    verify(spyWordEntriesFromXMLToPOJO).writeToFile(argument.capture(), any(String.class));
+
+    assertAll("Should contain the kanji literals and readings from the Dictionary Entries list",
+        () -> assertTrue(argument.getValue().contains("大")),
+        () -> assertTrue(argument.getValue().contains("おお.きい")),
+        () -> assertTrue(argument.getValue().contains("国")),
+        () -> assertEquals(3, argument.getValue().size())
+    );
   }
 
   @Test
   void saveToDBShouldAddAllEntriesToTheDatabase() {
-    List<Entry> entries = dictionaryFile.getEntry();
+    List<Entry> entries = new ArrayList<>();
     entries.add(new Entry());
     entries.add(new Entry());
-    wordEntriesFromXMLToPOJO.saveToDB(entries);
-    verify(wordRepository, times(2)).save(any());
+    wordEntriesFromXMLToPOJO.saveToDb(entries);
+    verify(wordRepository, times(2)).save(any(Word.class));
   }
 
-  @Test
-  void fillDatabaseShouldParseWordComponentsCorrectly() {
-    List<Entry> entries = dictionaryFile.getEntry();
-    entries.add(getMockEntry());
-    wordEntriesFromXMLToPOJO.saveToDB(entries);
-    verify(wordRepository).save(wordArgumentCaptor.capture());
-    Word word = wordArgumentCaptor.getValue();
-    WordMeaning wordMeaning = word.getMeanings().get(0);
-    assertTrue(wordMeaning.getGlosses().contains("meaning"));
-    assertEquals("kanji|kanji2", word.getKanjiElements());
-    assertEquals("reading|reading2", word.getReadingElements());
-    assertEquals("field of application", wordMeaning.getFieldOfApplication());
-    assertEquals("iv", wordMeaning.getPartOfSpeech());
-    assertEquals("antonym", wordMeaning.getAntonym());
-    assertEquals(1, word.getPriority());
-  }
-
-  private Entry getMockEntry() {
-    Entry entry = new Entry();
-    KEle kanjiElement = new KEle();
-    kanjiElement.setKeb("kanji");
-    kanjiElement.getKePri().add("news1");
-    KEle kanjiElement2 = new KEle();
-    kanjiElement2.setKeb("kanji2");
-    kanjiElement2.getKePri().add("news1");
-    entry.getKEle().add(kanjiElement);
-    entry.getKEle().add(kanjiElement2);
-    REle readingElement = new REle();
-    readingElement.setReb("reading");
-    REle readingElement2 = new REle();
-    readingElement2.setReb("reading2");
-    entry.getREle().add(readingElement);
-    entry.getREle().add(readingElement2);
-    Sense sense = new Sense();
-    Gloss meaning = new Gloss();
-    meaning.getContent().add("meaning");
-    sense.getGloss().add(meaning);
-    sense.getPos().add("irregular verb");
-    sense.getField().add("field of application");
-    sense.getAnt().add("antonym");
-    entry.getSense().add(sense);
-    return entry;
-  }
 }

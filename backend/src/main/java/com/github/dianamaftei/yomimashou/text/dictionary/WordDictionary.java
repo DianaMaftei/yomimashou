@@ -13,43 +13,36 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WordDictionary {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WordDictionary.class);
 
-  private static final Object lock = new Object();
-  private static volatile WordDictionary instance;
-  private static Reader reader;
-  private static final Map<String, String> wordsMap = new HashMap();
+  @Value("${file.path}")
+  private String filePath;
 
-  private WordDictionary() {
-  }
+  private Reader reader;
+  private Map<String, String> wordsMap;
 
-  public static WordDictionary getInstance(String filePath) {
-
-    WordDictionary wordDictionary = instance;
-    if (wordDictionary == null) {
-      synchronized (lock) {
-        wordDictionary = instance;
-        if (wordDictionary == null) {
-          wordDictionary = new WordDictionary();
-          buildWordDictionary(filePath);
-          instance = wordDictionary;
-        }
-      }
+  public boolean isWordInDictionary(String item) {
+    if (wordsMap == null) {
+      buildWordDictionary(filePath);
     }
-    return wordDictionary;
+    return wordsMap.containsKey(item);
   }
 
-  private static void buildWordDictionary(String filePath) {
+  private void buildWordDictionary(String filePath) {
+    wordsMap = new HashMap<>();
     String file = getFile(filePath);
     Set<String> words = Arrays.stream(file.split("\\|")).parallel().collect(Collectors.toSet());
 
     words.forEach(item -> wordsMap.put(item, null));
   }
 
-  private static String getFile(String fileName) {
+  private String getFile(String fileName) {
     StringBuilder result = new StringBuilder();
 
     try (BufferedReader reader = new BufferedReader(getReader(fileName))) {
@@ -64,12 +57,7 @@ public class WordDictionary {
     return result.toString();
   }
 
-
-  public boolean isWordInDictionary(String item) {
-    return wordsMap.containsKey(item);
-  }
-
-  static Reader getReader(String filePath) throws FileNotFoundException {
+  private Reader getReader(String filePath) throws FileNotFoundException {
     if (reader != null) {
       return reader;
     }
@@ -78,7 +66,7 @@ public class WordDictionary {
         filePath + File.separator + "dictionaries" + File.separator + "wordEntries.txt");
   }
 
-  public static void setReader(Reader reader) {
-    WordDictionary.reader = reader;
+  public void setReader(Reader reader) {
+    this.reader = reader;
   }
 }

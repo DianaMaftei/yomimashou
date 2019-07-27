@@ -1,5 +1,6 @@
 import React from 'react';
 import TTS from "../../../../`common/TTS/TTS";
+import STT from "../../../../`common/STT/STT";
 
 function escapeHtmlSpecialCharacters(string) {
     let elem = document.createElement('textarea');
@@ -60,6 +61,8 @@ export default (hidePopup, style, sentence) => {
                 {!sentence.furigana && <div id="sentence">{sentence.text}</div>}
                 {sentence.furigana && <div id="sentence" dangerouslySetInnerHTML={{__html: htmlDecode(sentence.furigana)}}/>}
                 <TTS text={sentence.text}/>
+                <br/>
+                <STT />
                 <br/>
                 <div>{sentence.translation && escapeHtmlSpecialCharacters(sentence.translation)}</div>
                 <br/>

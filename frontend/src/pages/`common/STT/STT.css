@@ -1,0 +1,9 @@
+#start_button {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+#start_button:focus {
+    background: red;
+}

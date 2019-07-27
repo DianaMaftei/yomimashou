@@ -35,7 +35,7 @@ class SentenceServiceTest {
     ResourceLoader resourceLoader = mock(ResourceLoader.class);
     resource = mock(Resource.class);
     when(resourceLoader.getResource(anyString())).thenReturn(resource);
-    when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("".getBytes()));
+    when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("abcd".getBytes()));
     sentenceService = new SentenceService(resourceLoader);
   }
 
