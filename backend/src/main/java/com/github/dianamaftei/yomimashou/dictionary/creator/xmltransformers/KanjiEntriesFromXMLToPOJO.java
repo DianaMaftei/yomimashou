@@ -18,6 +18,7 @@ import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.
 import com.github.dianamaftei.yomimashou.dictionary.kanji.Kanji;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.KanjiReferences;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.KanjiRepository;
+import com.github.dianamaftei.yomimashou.text.KanjiCategories;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +49,12 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   private final KanjiRepository kanjiRepository;
   private Map<String, String> kanjiJLPTLevelMap;
   private Map<String, RtkKanji> rtkKanjiMap;
+  private static final String ON_READING = "ja_on";
+  private static final String KUN_READING = "ja_kun";
+  private static final char UNDERSCORE = '_';
+  private static final String SKIP = "skip";
+  private static final String TAB = "\t";
+  private static final String SETTER_METHOD_PREFIX = "set";
 
   @Autowired
   public KanjiEntriesFromXMLToPOJO(KanjiRepository kanjiRepository) {
@@ -89,30 +96,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     }
   }
 
-  private Map<String, String> getKanjiAndCorrespondingJLPTLevel() {
-    ClassPathResource resource = new ClassPathResource(
-        "dictionaries" + File.separator + "kanjiByJLPTLevel.csv");
-
-    //TODO use Kanji Categories
-    Map<String, String> kanjiJLPTLevel = new HashMap<>();
-    String line;
-    String kanji;
-    String level;
-    try (BufferedReader reader = new BufferedReader(
-        new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
-      while ((line = reader.readLine()) != null) {
-        kanji = line.split("\t")[0];
-        level = line.split("\t")[1];
-        kanjiJLPTLevel.put(kanji, level);
-      }
-    } catch (IOException e) {
-      LOGGER.error("Could not getByEqualsKanji kanji and JLPT levels", e);
-    }
-
-    return kanjiJLPTLevel;
-  }
-
-  private Map<String, RtkKanji> getRtkKanji() {
+  private Map<String, RtkKanji> loadRtkKanji() {
     ClassPathResource resource = new ClassPathResource("dictionaries" + File.separator + "rtk.csv");
 
     Map<String, RtkKanji> rtkKanjis = new HashMap<>();
@@ -121,20 +105,21 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
       while ((line = reader.readLine()) != null) {
         RtkKanji rtkKanji = new RtkKanji();
-        rtkKanji.setKanji(line.split("\t")[0]);
-        if (line.split("\t").length > 1) {
-          rtkKanji.setComponents(line.split("\t")[1]);
+        String[] splitLine = line.split(TAB);
+        rtkKanji.setKanji(splitLine[0]);
+        if (splitLine.length > 1) {
+          rtkKanji.setComponents(splitLine[1]);
         }
-        if (line.split("\t").length > 2) {
-          rtkKanji.setKeyword(line.split("\t")[2]);
-          rtkKanji.setStory1(line.split("\t")[3]);
-          rtkKanji.setStory2(line.split("\t")[4]);
+        if (splitLine.length > 2) {
+          rtkKanji.setKeyword(splitLine[2]);
+          rtkKanji.setStory1(splitLine[3]);
+          rtkKanji.setStory2(splitLine[4]);
         }
 
         rtkKanjis.put(rtkKanji.getKanji(), rtkKanji);
       }
     } catch (IOException e) {
-      LOGGER.error("Could not getByEqualsKanji rtk info from file", e);
+      LOGGER.error("Could not get rtk info from file", e);
     }
 
     return rtkKanjis;
@@ -197,27 +182,36 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
         case QUERYCODE:
           QueryCode queryCode = (QueryCode) component;
           for (QCode qCode : queryCode.getQCode()) {
-            if ("skip".equals(qCode.getQcType())) {
+            if (SKIP.equals(qCode.getQcType())) {
               kanjiEntry.setSkipCode(qCode.getContent());
             }
           }
           break;
         case READINGMEANING:
-          addReadingsAndMeaningsToKanji(kanjiEntry, (ReadingMeaning) component);
+          enrichKanjiEntryWithReadingsAndMeanings(kanjiEntry, (ReadingMeaning) component);
           break;
       }
     }
 
+    enrichKanjiEntryWithJLPTInfo(kanji, kanjiEntry);
+    enrichKanjiEntryWithRtkInfo(kanji, kanjiEntry);
+
+    return kanjiEntry;
+  }
+
+  private void enrichKanjiEntryWithJLPTInfo(String kanji, Kanji kanjiEntry) {
     if (kanjiJLPTLevelMap == null) {
-      kanjiJLPTLevelMap = getKanjiAndCorrespondingJLPTLevel();
+      kanjiJLPTLevelMap = KanjiCategories.getKanjiByCategory();
     }
 
     if (kanjiJLPTLevelMap.get(kanji) != null) {
       kanjiEntry.getReferences().setJlptNewLevel(kanjiJLPTLevelMap.get(kanji));
     }
+  }
 
+  private void enrichKanjiEntryWithRtkInfo(String kanji, Kanji kanjiEntry) {
     if (rtkKanjiMap == null) {
-      rtkKanjiMap = getRtkKanji();
+      rtkKanjiMap = loadRtkKanji();
     }
 
     RtkKanji rtkKanji = rtkKanjiMap.get(kanji);
@@ -227,11 +221,9 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
       kanjiEntry.setStory1(rtkKanji.getStory1());
       kanjiEntry.setStory2(rtkKanji.getStory2());
     }
-
-    return kanjiEntry;
   }
 
-  private void addReadingsAndMeaningsToKanji(Kanji kanji, ReadingMeaning component) {
+  private void enrichKanjiEntryWithReadingsAndMeanings(Kanji kanji, ReadingMeaning component) {
     List<String> onReadings = new ArrayList<>();
     List<String> kunReadings = new ArrayList<>();
     List<String> meanings = new ArrayList<>();
@@ -239,12 +231,12 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     for (Rmgroup rmgroup : component.getRmgroup()) {
 
       for (Reading reading : rmgroup.getReading()) {
-        if ("ja_on".equals(reading.getRType())) {
+        if (ON_READING.equals(reading.getRType())) {
           onReadings.add(reading.getContent());
           continue;
         }
 
-        if ("ja_kun".equals(reading.getRType())) {
+        if (KUN_READING.equals(reading.getRType())) {
           kunReadings.add(reading.getContent());
         }
       }
@@ -267,7 +259,8 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     for (DicRef dicRef : dicRefs) {
       try {
         KanjiReferences.class
-            .getMethod("set" + convertSnakeCaseToPascalCase(dicRef.getDrType()), String.class)
+            .getMethod(SETTER_METHOD_PREFIX + convertSnakeCaseToPascalCase(dicRef.getDrType()),
+                String.class)
             .invoke(references, dicRef.getContent());
       } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
         LOGGER.error("Could not set field: " + dicRef.getDrType(), e);
@@ -276,7 +269,7 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   }
 
   private String convertSnakeCaseToPascalCase(String snakeCaseText) {
-    return StringUtils.remove(WordUtils.capitalizeFully(snakeCaseText, '_'), "_");
+    return StringUtils.remove(WordUtils.capitalizeFully(snakeCaseText, UNDERSCORE), UNDERSCORE);
   }
 
   private enum KanjiComponentClass {

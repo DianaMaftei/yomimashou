@@ -23,6 +23,7 @@ public class SentenceService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SentenceService.class);
   private static final String KUROMOJI_PATH = "kuromoji";
+  private static final String TAB = "\t";
 
   private ResourceLoader resourceLoader;
 
@@ -80,7 +81,7 @@ public class SentenceService {
     try (BufferedReader lineReader = new BufferedReader(
         new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
       lineReader.lines().forEach(line -> {
-        String[] columns = line.split("\t");
+        String[] columns = line.split(TAB);
         map.put(columns[0], columns.length > 1 ? columns[1] : "");
       });
 

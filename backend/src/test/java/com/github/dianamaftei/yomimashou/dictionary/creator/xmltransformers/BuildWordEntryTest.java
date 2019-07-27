@@ -69,13 +69,13 @@ class BuildWordEntryTest {
   void buildWordEntryShouldParsePartOfSpeechCorrectly() {
     Entry entry = new Entry();
     Sense sense = new Sense();
-    sense.getPos().add("irregular verb");
+    sense.getPos().add("Godan verb with 'bu' ending");
     entry.getSense().add(sense);
 
     Word word = wordEntriesFromXMLToPOJO.buildWordEntry(entry);
     WordMeaning wordMeaning = word.getMeanings().get(0);
 
-    assertEquals("iv", wordMeaning.getPartOfSpeech());
+    assertEquals("v5b", wordMeaning.getPartOfSpeech());
   }
 
   @Test

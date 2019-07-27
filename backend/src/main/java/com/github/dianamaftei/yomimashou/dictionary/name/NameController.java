@@ -21,7 +21,7 @@ public class NameController {
 
   @GetMapping
   public List<Name> get(@RequestParam("searchItem") String searchItem) {
-    if (searchItem != null && searchItem.length() > 0) {
+    if (searchItem.length() > 0) {
       return nameService.get(searchItem.split(","));
     }
     return Collections.emptyList();

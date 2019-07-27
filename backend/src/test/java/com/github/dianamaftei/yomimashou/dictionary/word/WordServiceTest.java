@@ -48,6 +48,7 @@ class WordServiceTest {
   void getByEqualsKanjiSearchesByFixedMatchForKanjiOrReadingElements() {
     String[] searchItems = {"searchItem"};
     List<Word> words = Collections.emptyList();
+    when(jpaQuery.orderBy(any(OrderSpecifier.class))).thenReturn(jpaQuery);
     when(jpaQuery.leftJoin(word.meanings)).thenReturn(jpaQuery);
     when(jpaQuery.fetchJoin()).thenReturn(jpaQuery);
     when(jpaQuery.fetch()).thenReturn(words);

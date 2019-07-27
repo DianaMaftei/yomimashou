@@ -23,8 +23,8 @@ public class WordService {
     for (String wordString : words) {
       booleanBuilder.or(byReadingElements(wordString)).or(byKanjiElements(wordString));
     }
-    return (List<Word>) jpaQueryFactory.query().from(word).where(booleanBuilder).distinct()
-        .leftJoin(word.meanings).fetchJoin().fetch();
+    return (List<Word>) jpaQueryFactory.query().from(word).where(booleanBuilder)
+        .orderBy(word.priority.asc()).distinct().leftJoin(word.meanings).fetchJoin().fetch();
   }
 
   public List<Word> getByStartingKanji(String searchItem) {

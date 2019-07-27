@@ -1,8 +1,5 @@
 package com.github.dianamaftei.yomimashou.dictionary.kanji;
 
-import static com.github.dianamaftei.yomimashou.dictionary.kanji.QKanji.kanji;
-
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,19 +16,18 @@ public class KanjiService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(KanjiService.class);
 
-  private final JPAQueryFactory jpaQueryFactory;
+  private final KanjiRepository kanjiRepository;
 
   @Value("${kanji.path}")
   private String kanjiPath;
 
   @Autowired
-  public KanjiService(JPAQueryFactory jpaQueryFactory) {
-    this.jpaQueryFactory = jpaQueryFactory;
+  public KanjiService(KanjiRepository kanjiRepository) {
+    this.kanjiRepository = kanjiRepository;
   }
 
   public Kanji get(String searchItem) {
-    return (Kanji) jpaQueryFactory.query().from(kanji).where(kanji.character.eq(searchItem))
-        .fetchOne();
+    return kanjiRepository.findByCharacter(searchItem);
   }
 
   public byte[] getStrokesSVG(String kanji) {

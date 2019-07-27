@@ -239,4 +239,8 @@ public class KanjiCategories {
             + "膨 謀 墨 撲 翻 摩 磨 魔 繭 魅 霧 黙 躍 癒 諭 憂 融 慰 窯 謡 翼 羅 頼 欄 濫 履 離 慮 寮 療 糧 "
             + "隣 隷 霊 麗 齢 擁 露");
   }
+
+  public static Map<String, String> getKanjiByCategory() {
+    return kanjiByCategory;
+  }
 }
