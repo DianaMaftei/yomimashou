@@ -20,11 +20,13 @@ const mapStateToProps = (state) => ({
     analyzer: state.add.analyzer,
     textSelectInfo: state.yomiText.textSelectInfo,
     searchResult: state.popUp.searchResult,
+    previousSearchResult: state.popUp.previousSearchResult,
     showResult: state.popUp.showResult,
-    limit: state.config.popUp.limit,
     currentDictionary: state.config.popUp.currentDictionary,
     popupInfo: state.popUp.popupInfo,
-    kanjiLevel: state.config.kanjiLevel
+    kanjiLevel: state.config.kanjiLevel,
+    limit: state.popUp.popupInfo.limit,
+    number: state.popUp.popupInfo.number,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -34,10 +36,10 @@ const mapDispatchToProps = (dispatch) => ({
             textSelectInfo
         });
     },
-    fetchData: (list, url) => {
+    fetchData: (list, url, number, limit) => {
         dispatch({
             type: 'FETCH_DATA',
-            payload: axios.get(apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString())
+            payload: axios.get(apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString() + `&page=${number}&size=${limit}`)
         });
     },
     updateSearchResult: result => {
@@ -155,9 +157,12 @@ export class YomiText extends React.Component {
         if (!searchResult.type) return;
 
         let self = this;
+
+        let number = this.props.previousSearchResult.result !== this.props.searchResult.result ?0: this.props.number+1;
+
         if (!isVisible()) {
             if (searchResult.type === "words") {
-                fetchData(searchResult.result.data.map(item => item.word), searchResult.type);
+                fetchData(searchResult.result.data.map(item => item.word), searchResult.type, number, this.props.limit);
             } else if (searchResult.type === "kanji") {
                 fetchData(searchResult.result, searchResult.type);
             } else if (searchResult.type === "names") {

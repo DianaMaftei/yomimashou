@@ -2,8 +2,7 @@ let defaultState = {
     popUp: {
         totalDictionaries: 2,
         // totalDictionaries: 3,
-        currentDictionary: 2,
-        limit: 5
+        currentDictionary: 2
     },
     kanjiLevel: null
 };

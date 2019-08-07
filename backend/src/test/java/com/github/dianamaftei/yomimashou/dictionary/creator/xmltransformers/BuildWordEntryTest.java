@@ -34,7 +34,7 @@ class BuildWordEntryTest {
 
     Word word = wordEntriesFromXMLToPOJO.buildWordEntry(entry);
 
-    assertEquals("kanji|kanji2", word.getKanjiElements());
+    assertEquals("[kanji, kanji2]", word.getKanjiElements().toString());
   }
 
   @Test
@@ -49,7 +49,7 @@ class BuildWordEntryTest {
 
     Word word = wordEntriesFromXMLToPOJO.buildWordEntry(entry);
 
-    assertEquals("reading|reading2", word.getReadingElements());
+    assertEquals("[reading2, reading]", word.getReadingElements().toString());
   }
 
   @Test

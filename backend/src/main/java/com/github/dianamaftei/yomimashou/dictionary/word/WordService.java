@@ -1,75 +1,38 @@
 package com.github.dianamaftei.yomimashou.dictionary.word;
 
-import static com.github.dianamaftei.yomimashou.dictionary.word.QWord.word;
-
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WordService {
 
-  private final JPAQueryFactory jpaQueryFactory;
+  private final WordRepository wordRepository;
 
   @Autowired
-  public WordService(JPAQueryFactory jpaQueryFactory) {
-    this.jpaQueryFactory = jpaQueryFactory;
+  public WordService(WordRepository wordRepository) {
+    this.wordRepository = wordRepository;
   }
 
-  public List<Word> getByEqualsKanji(String[] words) {
-    BooleanBuilder booleanBuilder = new BooleanBuilder();
-    for (String wordString : words) {
-      booleanBuilder.or(byReadingElements(wordString)).or(byKanjiElements(wordString));
-    }
-    return (List<Word>) jpaQueryFactory.query().from(word).where(booleanBuilder)
-        .orderBy(word.priority.asc()).distinct().leftJoin(word.meanings).fetchJoin().fetch();
+  public Page<Word> getByReadingElemOrKanjiElem(String[] searchItems, Pageable pageable) {
+    return wordRepository
+        .findDistinctByKanjiElementsInOrReadingElementsIn(searchItems, searchItems, pageable);
   }
 
-  public List<Word> getByStartingKanji(String searchItem) {
-    return (List<Word>) jpaQueryFactory.query().from(word).where(
-        word.kanjiElements.like("%|" + searchItem).or(word.kanjiElements.like(searchItem + "%"))
-    ).orderBy(word.priority.asc()).distinct().limit(10).fetch();
+  public Page<Word> getByStartingKanji(String searchItem, Pageable pageable) {
+    return wordRepository.findDistinctByKanjiElementsLikeOrderByPriority(
+        searchItem + "%", pageable);
   }
 
-  public List<Word> getByEndingKanji(String searchItem) {
-    return (List<Word>) jpaQueryFactory.query().from(word).where(
-        word.kanjiElements.like(searchItem + "|%").or(word.kanjiElements.like("%" + searchItem)))
-        .orderBy(word.priority.asc()).distinct().limit(10).fetch();
+
+  public Page<Word> getByEndingKanji(String searchItem, Pageable pageable) {
+    return wordRepository.findDistinctByKanjiElementsLikeOrderByPriority(
+        "%" + searchItem, pageable);
   }
 
-  public List<Word> getByContainingKanji(String searchItem) {
-    BooleanBuilder booleanBuilder = new BooleanBuilder();
-    booleanBuilder.or(word.kanjiElements.like("%" + searchItem + "%"));
-    booleanBuilder.andNot(word.kanjiElements.like("%|" + searchItem + "%"));
-    booleanBuilder.andNot(word.kanjiElements.like("%" + searchItem));
-    booleanBuilder.andNot(word.kanjiElements.like(searchItem + "%"));
-    booleanBuilder.andNot(word.kanjiElements.like("%" + searchItem + "|%"));
-
-    return (List<Word>) jpaQueryFactory.query().from(word)
-        .where(booleanBuilder).distinct().orderBy(word.priority.asc()).limit(10).fetch();
-  }
-
-  private BooleanBuilder byReadingElements(String wordString) {
-    BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-    booleanBuilder.or(word.readingElements.eq(wordString))
-        .or(word.readingElements.like(wordString + "|%"))
-        .or(word.readingElements.like("%|" + wordString + "|%"))
-        .or(word.readingElements.like("%|" + wordString));
-
-    return booleanBuilder;
-  }
-
-  private BooleanBuilder byKanjiElements(String wordString) {
-    BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-    booleanBuilder.or(word.kanjiElements.eq(wordString))
-        .or(word.kanjiElements.like(wordString + "|%"))
-        .or(word.kanjiElements.like("%|" + wordString + "|%"))
-        .or(word.kanjiElements.like("%|" + wordString));
-
-    return booleanBuilder;
+  public Page<Word> getByContainingKanji(String searchItem, Pageable pageable) {
+    return wordRepository.findDistinctByKanjiElementsLikeOrderByPriority(
+        "%" + searchItem + "%", pageable);
   }
 }

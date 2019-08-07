@@ -6,9 +6,6 @@ class WordList extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            limit: true
-        };
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -18,18 +15,19 @@ class WordList extends React.Component {
     }
 
     showMoreResults() {
-        this.setState({ limit: false });
+        const searchResult = this.props.searchResult;
+        this.props.showMore();
     }
 
     render() {
         if (!this.props.resultList) {
             return <div/>;
         }
-        else if (!this.state.limit || this.props.resultList.length < this.props.limit) {
+        else if (this.props.last) {
             return WordListFull(this.props.resultList, this.props.showExamples)
         }
-        else if (this.state.limit) {
-            return WordListLimited(this.props.resultList, this.props.limit, this.props.showExamples, this.showMoreResults.bind(this))
+        else if (!this.props.last) {
+            return WordListLimited(this.props.resultList, this.props.showExamples, this.showMoreResults.bind(this))
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.github.dianamaftei.yomimashou.dictionary.word;
 
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,9 +18,11 @@ public class Word {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String kanjiElements;
+  @ElementCollection
+  private Set<String> kanjiElements;
 
-  private String readingElements;
+  @ElementCollection
+  private Set<String> readingElements;
 
   @OneToMany(cascade = {CascadeType.ALL})
   @JoinColumn(name = "word_id")
@@ -34,19 +38,19 @@ public class Word {
     this.id = id;
   }
 
-  public String getKanjiElements() {
+  public Set<String> getKanjiElements() {
     return kanjiElements;
   }
 
-  public void setKanjiElements(String kanjiElements) {
+  public void setKanjiElements(Set<String> kanjiElements) {
     this.kanjiElements = kanjiElements;
   }
 
-  public String getReadingElements() {
+  public Set<String> getReadingElements() {
     return readingElements;
   }
 
-  public void setReadingElements(String readingElements) {
+  public void setReadingElements(Set<String> readingElements) {
     this.readingElements = readingElements;
   }
 

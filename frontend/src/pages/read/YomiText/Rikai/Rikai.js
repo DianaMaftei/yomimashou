@@ -12,7 +12,12 @@ import apiUrl from "../../../../AppUrl";
 
 const mapStateToProps = (state) => ({
     ...state.popUp,
-    limit: state.config.popUp.limit,
+    last: state.popUp.popupInfo.last,
+    limit: state.popUp.popupInfo.limit,
+    number: state.popUp.popupInfo.number,
+    searchResult: state.popUp.searchResult,
+    previousSearchResult: state.popUp.previousSearchResult
+
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -21,10 +26,10 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_POPUP_INFO',
             popupInfo: popupInfo
         });
-    }, fetchData: (list, url) => {
+    }, fetchData: (list, url, number, limit) => {
         dispatch({
             type: 'FETCH_DATA',
-            payload: axios.get(apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString())
+            payload: axios.get(apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString() + `&page=${number}&size=${limit}`)
         });
     }, updateSearchResult: result => {
         dispatch({
@@ -148,8 +153,8 @@ const getResultFromWordEntry = (searchTerms, results) => {
 
     for (let i = 0; i < resultList.length; i++) {
         let word = {};
-        word.kanji = resultList[i].kanjiElements !== "" ? resultList[i].kanjiElements.split("|") : null;
-        word.kana = resultList[i].readingElements.split("|");
+        word.kanji = resultList[i].kanjiElements;
+        word.kana = resultList[i].readingElements;
         word.longDef = resultList[i].meanings.map(meaning => ((meaning.partOfSpeech ? "(" + meaning.partOfSpeech + ") " : "") + meaning.glosses.replace(/\|/g, ", "))).join("; ");
         word.showShortDef = word.longDef.length > 140 ? word.longDef.substring(0, 140) : null;
         word.grammar = resultList[i].grammarPoint !== "" ? resultList[i].grammarPoint : null;
@@ -180,7 +185,7 @@ const getResultFromEntry = (searchResult, fetchedResult) => {
     if (fetchedResult.result === null) return;
 
     if (fetchedResult.type === "words") {
-        return {type: 'words', result: getResultFromWordEntry(searchResult.data, fetchedResult.result.slice())};
+        return {type: 'words', result: getResultFromWordEntry(searchResult.data, fetchedResult.result)};
     }
 
     if (fetchedResult.type === "wordsByKanji") {
@@ -235,15 +240,22 @@ export class Rikai extends React.Component {
         return (this.props.showResult !== nextProps.showResult) || (this.props.popupInfo.visibility !== nextProps.popupInfo.visibility);
     }
 
+    showMore = () => {
+        let number = this.props.previousSearchResult.result !== this.props.searchResult.result ? 0: this.props.number+1;
+
+        this.props.fetchData (this.props.searchResult.result.data.map(item => item.word), this.props.searchResult.type,
+            number, this.props.limit);
+    };
+
     render() {
         let style = getPopupStyle(this.props.popupInfo);
         let result = getResult(this.props.searchResult, this.props.showResult);
 
         if (!result) return RikaiLoading(() => hidePopup(this.props.setPopupInfo), style);
         else if (!result.type) return RikaiSentences(() => hidePopup(this.props.setPopupInfo), style, result);
-        else if (result.type === 'words') return RikaiWords(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit, (word) => showSentenceExamples(word, this.props.fetchData, this.props.updateSearchResult));
+        else if (result.type === 'words') return RikaiWords(() => hidePopup(this.props.setPopupInfo), style, result, this.props.last, (word) => showSentenceExamples(word, this.props.fetchData, this.props.updateSearchResult), () => this.showMore());
         else if (result.type === 'kanji') return RikaiKanji(() => hidePopup(this.props.setPopupInfo), style, result, (kanji, typeOfSearch) => showWordExamples(kanji, typeOfSearch, this.props.fetchData, this.props.updateSearchResult));
-        else if (result.type === 'names') return RikaiNames(() => hidePopup(this.props.setPopupInfo), style, result, this.props.limit);
+        else if (result.type === 'names') return RikaiNames(() => hidePopup(this.props.setPopupInfo), style, result, this.props.last);
         else if (result.type === 'examples') return RikaiExamples(() => hidePopup(this.props.setPopupInfo), style, result);
     }
 }

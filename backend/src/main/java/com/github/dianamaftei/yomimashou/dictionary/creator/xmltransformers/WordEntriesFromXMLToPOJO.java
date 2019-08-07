@@ -74,19 +74,19 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
 
   @Override
   void saveToDb(List<? extends DictionaryEntry> entries) {
-    ((List<Entry>) entries).parallelStream().forEach(entry -> {
-      Word word = buildWordEntry(entry);
-      wordRepository.save(word);
-    });
+    ((List<Entry>) entries).parallelStream()
+        .map(this::buildWordEntry)
+        .collect(Collectors.toList())
+        .forEach(wordRepository::save);
   }
 
   Word buildWordEntry(Entry entry) {
     Word word = new Word();
 
     word.setKanjiElements(
-        entry.getKEle().stream().map(KEle::getKeb).collect(Collectors.joining("|")));
+        entry.getKEle().stream().map(KEle::getKeb).collect(Collectors.toSet()));
     word.setReadingElements(
-        entry.getREle().stream().map(REle::getReb).collect(Collectors.joining("|")));
+        entry.getREle().stream().map(REle::getReb).collect(Collectors.toSet()));
     word.setMeanings(buildMeaningsList(entry));
     word.setPriority(extractHighestPriority(entry));
 

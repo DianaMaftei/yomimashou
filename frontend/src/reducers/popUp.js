@@ -1,9 +1,20 @@
+const defaultPagination = {
+    first: false,
+    last: false,
+    number: 0,
+    totalPages: 0,
+    limit: 10
+};
+
 let defaultState = {
     searchResult: {},
     showResult: {},
+    previousSearchResult:{},
+    previousShowResult:{},
     popupInfo: {
         position: {},
-        visible: false
+        visible: false,
+        ...defaultPagination
     }
 };
 
@@ -15,22 +26,34 @@ const popUp = (state = defaultState, action) => {
                 searchResult: action.result
             };
 
-        case 'UPDATE_SHOW_RESULT':
-            return {
-                ...state,
-                showResult: action.result
-            };
-
         case 'FETCH_DATA_PENDING':
             return {
                 ...state,
+                popupInfo: {
+                    ...state.popupInfo,
+                    ...defaultPagination
+                },
+                previousShowResult: state.showResult,
                 showResult: {...state.showResult, result: null, type: state.searchResult.type}
             };
 
         case 'FETCH_DATA_FULFILLED':
             return {
                 ...state,
-                showResult: {...state.showResult, result: action.payload.data, type: state.searchResult.type}
+                popupInfo: {
+                    ...state.popupInfo,
+                    first: action.payload.data.first,
+                    last: action.payload.data.last,
+                    number: action.payload.data.number,
+                    totalPages: action.payload.data.totalPages,
+                    limit: action.payload.data.size
+                },
+                showResult: {
+                    ...state.showResult,
+                    result: state.previousSearchResult.result !== state.searchResult.result ? action.payload.data.content : state.previousShowResult.result.concat(action.payload.data.content),
+                    type: state.searchResult.type
+                },
+                previousSearchResult: state.searchResult,
             };
 
         case 'FETCH_DATA_REJECTED':
@@ -82,7 +105,10 @@ const popUp = (state = defaultState, action) => {
         case 'SET_POPUP_INFO':
             return {
                 ...state,
-                popupInfo: action.popupInfo
+                popupInfo: {
+                    ...state.popupInfo,
+                    ...action.popupInfo
+                }
             };
         default:
             return state
