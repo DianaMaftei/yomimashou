@@ -23,7 +23,7 @@ public class Deinflector {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Deinflector.class);
 
-  @Value("${file.path}")
+  @Value("${path.deinflect.rules}")
   private String filePath;
 
   private Reader reader;
@@ -74,8 +74,7 @@ public class Deinflector {
       return reader;
     }
 
-    return new FileReader(
-        filePath + File.separator + "dictionaries" + File.separator + "deinflect.txt");
+    return new FileReader(filePath);
   }
 
   private Optional<String> getDeinflectedWordIfEndingMatchesRule(DeinflectRule rule, int ruleLength,

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -39,7 +40,7 @@ class NameEntriesFromXMLToPOJOTest {
 
   @Test
   void saveToDbShouldAddAllNamesToTheDB() {
-    List<Entry> entries = new ArrayList<>();
+    final List<Entry> entries = new ArrayList<>();
     entries.add(new Entry());
     entries.add(new Entry());
     entries.add(new Entry());
@@ -50,7 +51,7 @@ class NameEntriesFromXMLToPOJOTest {
 
   @Test
   void saveToDbShouldFilterOutNullEntries() {
-    List<Entry> entries = new ArrayList<>();
+    final List<Entry> entries = new ArrayList<>();
     entries.add(new Entry());
     entries.add(null);
     nameEntriesFromXMLToPOJO.saveToDb(entries);
@@ -59,7 +60,7 @@ class NameEntriesFromXMLToPOJOTest {
 
   @Test
   void getEntriesShouldReturnAListOfEntryObjects() {
-    List<Entry> entries = nameEntriesFromXMLToPOJO.getEntries(dictionaryFile);
+    final List<Entry> entries = nameEntriesFromXMLToPOJO.getEntries(dictionaryFile);
     assertEquals(dictionaryFile.getEntry(), entries);
   }
 
@@ -70,24 +71,24 @@ class NameEntriesFromXMLToPOJOTest {
 
   @Test
   void saveToFileShouldParseAllKanjiAndReadingsOfTheNameEntries() {
-    List<Entry> entries = new ArrayList<>();
-    Entry entry = new Entry();
-    List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
-    KEle kEle = new KEle();
+    final List<Entry> entries = new ArrayList<>();
+    final Entry entry = new Entry();
+    final List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
+    final KEle kEle = new KEle();
     kEle.setKeb("大");
     entSeqOrKEleOrREleOrTrans.add(kEle);
-    REle rEle = new REle();
+    final REle rEle = new REle();
     rEle.setReb("あべこうへい");
     entSeqOrKEleOrREleOrTrans.add(rEle);
     entries.add(entry);
 
-    NameEntriesFromXMLToPOJO spyNameEntriesFromXMLToPOJO = spy(nameEntriesFromXMLToPOJO);
+    final NameEntriesFromXMLToPOJO spyNameEntriesFromXMLToPOJO = spy(nameEntriesFromXMLToPOJO);
     doNothing().when((XMLEntryToPOJO) spyNameEntriesFromXMLToPOJO).writeToFile(any(), any());
 
-    ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
+    final ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
     spyNameEntriesFromXMLToPOJO.saveToFile(entries);
 
-    verify(spyNameEntriesFromXMLToPOJO).writeToFile(argument.capture(), any(String.class));
+    verify(spyNameEntriesFromXMLToPOJO).writeToFile(argument.capture(), isNull());
 
     assertAll("Should contain the kanji and reading of the name",
         () -> assertTrue(argument.getValue().contains("大")),

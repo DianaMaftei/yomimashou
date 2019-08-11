@@ -6,12 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.github.dianamaftei.yomimashou.dictionary.example.ExampleSentence;
 import com.github.dianamaftei.yomimashou.dictionary.example.ExampleSentenceRepository;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -19,7 +21,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.io.ClassPathResource;
 
 @ExtendWith(MockitoExtension.class)
 class ExampleSentencesCSVtoPOJOTest {
@@ -30,51 +31,54 @@ class ExampleSentencesCSVtoPOJOTest {
   @Mock
   private ExampleSentenceRepository exampleSentenceRepository;
 
-  @Mock
-  private ClassPathResource classPathResource;
-
   @Captor
   private ArgumentCaptor<ExampleSentence> argumentCaptor;
 
   @Test
-  void saveSentencesFromFileToDBShouldSaveAllExampleSentences() throws IOException {
-    exampleSentencesCSVtoPOJO.setResource(classPathResource);
-    when(classPathResource.getInputStream()).thenReturn(new ByteArrayInputStream(
-        ("3400993\tjpn\tこれ、可愛いな。\tThis is cute.\n"
-            + "1204364\tjpn\t明日の午前２時４０分てそれ１回目？それとも２回目？\tIs it the first time at 2:40AM tomorrow? Or is it the second time?")
-            .getBytes()));
+  void saveSentencesToDBShouldSaveAllExampleSentences() {
+    final List<String> sentenceLines = Arrays.asList("3400993\tjpn\tこれ、可愛いな。\tThis is cute.",
+        "187088\tjpn\t家に帰る時間を知らせてくれ。\tLet me know when you'll return home.\t家(いえ)[01] に 帰る[01] 時間 を 知らせる{知らせて} 呉れる{くれ}");
 
-    exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+    exampleSentencesCSVtoPOJO.saveSentencesToDB(sentenceLines);
 
-    verify(exampleSentenceRepository, times(2)).save(any());
+    verify(exampleSentenceRepository, times(2)).save(argumentCaptor.capture());
+
+    assertEquals(2, argumentCaptor.getAllValues().size());
   }
 
   @Test
-  void saveSentencesFromFileToDBShouldParseTheSentencesCorrectly() throws IOException {
-    exampleSentencesCSVtoPOJO.setResource(classPathResource);
-    when(classPathResource.getInputStream())
-        .thenReturn(new ByteArrayInputStream("3400993\tjpn\tこれ、可愛いな。\tThis is cute.".getBytes()));
+  void saveSentencesToDBShouldParseTheSentencesCorrectly() {
+    final List<String> sentenceLines = Arrays.asList("3400993\tjpn\tこれ、可愛いな。\tThis is cute.",
+        "187088\tjpn\t家に帰る時間を知らせてくれ。\tLet me know when you'll return home.\t家(いえ)[01] に 帰る[01] 時間 を 知らせる{知らせて} 呉れる{くれ}");
 
-    exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+    exampleSentencesCSVtoPOJO.saveSentencesToDB(sentenceLines);
 
-    verify(exampleSentenceRepository).save(argumentCaptor.capture());
-    ExampleSentence exampleSentence = argumentCaptor.getValue();
+    verify(exampleSentenceRepository, times(2)).save(argumentCaptor.capture());
+    final List<ExampleSentence> exampleSentences = argumentCaptor.getAllValues().stream()
+        .sorted(Comparator.comparing(ExampleSentence::getSentence))
+        .collect(Collectors.toList());
 
-    assertAll("Should extract the sentence, meaning and breakdown from the text",
-        () -> assertEquals("これ、可愛いな。", exampleSentence.getSentence()),
-        () -> assertEquals("This is cute.", exampleSentence.getMeaning()),
-        () -> assertNull(exampleSentence.getTextBreakdown())
+    assertAll("Should extract the first sentence, meaning and breakdown from the text",
+        () -> assertEquals("これ、可愛いな。", exampleSentences.get(0).getSentence()),
+        () -> assertEquals("This is cute.", exampleSentences.get(0).getMeaning()),
+        () -> assertNull(exampleSentences.get(0).getTextBreakdown())
+    );
+
+    assertAll("Should extract the second sentence, meaning and breakdown from the text",
+        () -> assertEquals("家に帰る時間を知らせてくれ。", exampleSentences.get(1).getSentence()),
+        () -> assertEquals("Let me know when you'll return home.",
+            exampleSentences.get(1).getMeaning()),
+        () -> assertEquals("家(いえ)[01] に 帰る[01] 時間 を 知らせる{知らせて} 呉れる{くれ}",
+            exampleSentences.get(1).getTextBreakdown())
     );
   }
 
   @Test
-  void saveSentencesFromFileToDBShouldNotSaveAnythingToTheDBIfReadingTheFileThrowsAnError()
-      throws IOException {
-    exampleSentencesCSVtoPOJO.setResource(classPathResource);
-    when(classPathResource.getInputStream()).thenThrow(new IOException());
+  void saveSentencesToDBShouldNotSaveAnythingToTheDBIfTheListIsEmpty() {
+    final List<String> sentenceLines = Collections.emptyList();
 
-    exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+    exampleSentencesCSVtoPOJO.saveSentencesToDB(sentenceLines);
 
-    verify(exampleSentenceRepository, times(0)).save(any());
+    verify(exampleSentenceRepository, times(0)).saveAll(any());
   }
 }

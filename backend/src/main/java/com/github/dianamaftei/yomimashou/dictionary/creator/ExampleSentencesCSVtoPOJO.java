@@ -3,61 +3,74 @@ package com.github.dianamaftei.yomimashou.dictionary.creator;
 import com.github.dianamaftei.yomimashou.dictionary.example.ExampleSentence;
 import com.github.dianamaftei.yomimashou.dictionary.example.ExampleSentenceRepository;
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.io.Reader;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ExampleSentencesCSVtoPOJO {
-    private final ExampleSentenceRepository exampleSentenceRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExampleSentencesCSVtoPOJO.class);
-    private ClassPathResource resource;
-    private static final String TAB = "\t";
 
-    @Autowired
-    public ExampleSentencesCSVtoPOJO(ExampleSentenceRepository exampleSentenceRepository) {
-        this.exampleSentenceRepository = exampleSentenceRepository;
-        resource = new ClassPathResource("dictionaries" + File.separator + "sentencesWithTranslationAndBreakdown.csv");
+  private static final Logger LOGGER = LoggerFactory.getLogger(ExampleSentencesCSVtoPOJO.class);
+
+  private final ExampleSentenceRepository exampleSentenceRepository;
+  private static final String TAB = "\t";
+  private String filePath;
+  private Reader reader;
+
+  @Autowired
+  public ExampleSentencesCSVtoPOJO(final ExampleSentenceRepository exampleSentenceRepository,
+      @Value("${path.sentences}") final String filePath) {
+    this.exampleSentenceRepository = exampleSentenceRepository;
+    this.filePath = filePath;
+  }
+
+  public void saveSentencesFromFileToDB() {
+    try (final BufferedReader sentenceReader = new BufferedReader(getReader(filePath))) {
+      saveSentencesToDB(sentenceReader.lines().collect(Collectors.toList()));
+    } catch (final IOException e) {
+      LOGGER.error("Could not read sentences from file: " + filePath + ", and save to db ", e);
+    }
+  }
+
+  void saveSentencesToDB(final List<String> sentences) {
+    sentences.parallelStream()
+        .map(this::parseExampleSentenceFromLine)
+        .forEach(exampleSentenceRepository::save);
+  }
+
+  private ExampleSentence parseExampleSentenceFromLine(final String line) {
+    //Structure:  Sentence id [tab] Language [tab] Sentence [tab] Translation(s) [tab] Breakdown
+    final String[] columns = line.split(TAB);
+
+    final String sentence = columns[2];
+    final String meaning = columns.length > 3 ? columns[3] : null;
+    final String breakdown = columns.length > 4 ? columns[4] : null;
+
+    final ExampleSentence exampleSentence = new ExampleSentence();
+    exampleSentence.setSentence(sentence);
+    exampleSentence.setMeaning(meaning);
+    exampleSentence.setTextBreakdown(breakdown);
+
+    return exampleSentence;
+  }
+
+  private Reader getReader(final String filePath) throws FileNotFoundException {
+    if (reader != null) {
+      return reader;
     }
 
-    public void saveSentencesFromFileToDB() {
-        List<ExampleSentence> exampleSentenceList = new ArrayList<>();
+    return new FileReader(filePath);
+  }
 
-        try (BufferedReader sentenceReader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
-            sentenceReader.lines().forEach(line -> exampleSentenceList.add(getExampleSentenceFromCSVLine(line)));
-
-            exampleSentenceList.parallelStream().forEach(exampleSentenceRepository::save);
-
-        } catch (IOException e) {
-            LOGGER.error("Could not read sentences from resource: " + resource.getFilename() + ", and save to db ", e);
-        }
-    }
-
-    private ExampleSentence getExampleSentenceFromCSVLine(String line) {
-        //Structure:  Sentence id [tab] Language [tab] Sentence [tab] Translation(s) [tab] Breakdown
-        String[] columns = line.split(TAB);
-
-        String sentence = columns[2];
-        String meaning = columns.length > 3 ? columns[3] : null;
-        String breakdown = columns.length > 4 ? columns[4] : null;
-
-        ExampleSentence exampleSentence = new ExampleSentence();
-        exampleSentence.setSentence(sentence);
-        exampleSentence.setMeaning(meaning);
-        exampleSentence.setTextBreakdown(breakdown);
-
-        return exampleSentence;
-    }
-
-    void setResource(ClassPathResource resource) {
-        this.resource = resource;
-    }
+  public void setReader(final Reader reader) {
+    this.reader = reader;
+  }
 }

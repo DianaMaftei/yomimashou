@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -40,7 +41,7 @@ class WordEntriesFromXMLToPOJOTest {
 
   @Test
   void getEntriesShouldReturnAListOfEntryObjects() {
-    List<Entry> entries = wordEntriesFromXMLToPOJO.getEntries(dictionaryFile);
+    final List<Entry> entries = wordEntriesFromXMLToPOJO.getEntries(dictionaryFile);
     assertEquals(dictionaryFile.getEntry(), entries);
   }
 
@@ -51,28 +52,28 @@ class WordEntriesFromXMLToPOJOTest {
 
   @Test
   void saveToFileShouldExtractASetOfDistinctKanjiLiteralsAndReadingsFromEntries() {
-    Entry entry = new Entry();
-    KEle kanjiElement = new KEle();
+    final Entry entry = new Entry();
+    final KEle kanjiElement = new KEle();
     kanjiElement.setKeb("大");
     entry.getKEle().add(kanjiElement);
-    REle readingElement = new REle();
+    final REle readingElement = new REle();
     readingElement.setReb("おお.きい");
     entry.getREle().add(readingElement);
 
-    Entry entry2 = new Entry();
-    KEle kanjiElement2 = new KEle();
+    final Entry entry2 = new Entry();
+    final KEle kanjiElement2 = new KEle();
     kanjiElement2.setKeb("国");
     entry2.getKEle().add(kanjiElement2);
-    REle readingElement2 = new REle();
+    final REle readingElement2 = new REle();
     readingElement2.setReb("おお.きい");
     entry2.getREle().add(readingElement2);
 
-    WordEntriesFromXMLToPOJO spyWordEntriesFromXMLToPOJO = spy(wordEntriesFromXMLToPOJO);
+    final WordEntriesFromXMLToPOJO spyWordEntriesFromXMLToPOJO = spy(wordEntriesFromXMLToPOJO);
     doNothing().when((XMLEntryToPOJO) spyWordEntriesFromXMLToPOJO).writeToFile(any(), any());
-    ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
+    final ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
     spyWordEntriesFromXMLToPOJO.saveToFile(Arrays.asList(entry, entry2));
 
-    verify(spyWordEntriesFromXMLToPOJO).writeToFile(argument.capture(), any(String.class));
+    verify(spyWordEntriesFromXMLToPOJO).writeToFile(argument.capture(), isNull());
 
     assertAll("Should contain the kanji literals and readings from the Dictionary Entries list",
         () -> assertTrue(argument.getValue().contains("大")),
@@ -84,7 +85,7 @@ class WordEntriesFromXMLToPOJOTest {
 
   @Test
   void saveToDBShouldAddAllEntriesToTheDatabase() {
-    List<Entry> entries = new ArrayList<>();
+    final List<Entry> entries = new ArrayList<>();
     entries.add(new Entry());
     entries.add(new Entry());
     wordEntriesFromXMLToPOJO.saveToDb(entries);

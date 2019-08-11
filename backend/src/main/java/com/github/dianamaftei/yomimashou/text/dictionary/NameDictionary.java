@@ -19,7 +19,7 @@ public class NameDictionary {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(NameDictionary.class);
 
-  @Value("${file.path}")
+  @Value("${path.name.entries}")
   private String filePath;
 
   private Reader reader;
@@ -53,7 +53,7 @@ public class NameDictionary {
         result.append(line);
       }
     } catch (IOException e) {
-      LOGGER.error("Could not getByEqualsKanji file " + fileName, e);
+      LOGGER.error("Could not get file " + fileName, e);
     }
 
     return result.toString();
@@ -64,8 +64,7 @@ public class NameDictionary {
       return reader;
     }
 
-    return new FileReader(
-        filePath + File.separator + "dictionaries" + File.separator + "nameEntries.txt");
+    return new FileReader(filePath);
   }
 
   public void setReader(Reader reader) {

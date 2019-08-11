@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,14 +39,16 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   private Map<String, String> partsOfSpeech;
 
   @Autowired
-  public WordEntriesFromXMLToPOJO(WordRepository wordRepository) {
+  public WordEntriesFromXMLToPOJO(final WordRepository wordRepository,
+      @Value("${path.dictionary.word}") final String wordDictionaryPath,
+      @Value("${path.word.entries}") final String wordEntriesPath) {
     this.wordRepository = wordRepository;
-    this.dictionarySource = "http://ftp.monash.edu/pub/nihongo/JMdict_e.gz";
-    this.fileName = "wordEntries.txt";
+    this.inputFile = wordDictionaryPath;
+    this.outputFile = wordEntriesPath;
   }
 
   @Override
-  List<Entry> getEntries(Object dictionaryFile) {
+  List<Entry> getEntries(final Object dictionaryFile) {
     return ((JMdict) dictionaryFile).getEntry();
   }
 
@@ -55,9 +58,9 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   }
 
   @Override
-  void saveToFile(List<? extends DictionaryEntry> entries) {
+  void saveToFile(final List<? extends DictionaryEntry> entries) {
     try {
-      Set<String> wordEntries = ((List<Entry>) entries).parallelStream()
+      final Set<String> wordEntries = ((List<Entry>) entries).parallelStream()
           .filter(Objects::nonNull)
           .map(entry -> Arrays.asList(
               entry.getKEle().stream().map(KEle::getKeb).collect(Collectors.toList()),
@@ -66,22 +69,22 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
           .flatMap(List::stream)
           .collect(Collectors.toSet());
 
-      writeToFile(wordEntries, fileName);
-    } catch (Exception e) {
-      LOGGER.error("Could not save to file: " + fileName, e);
+      writeToFile(wordEntries, outputFile);
+    } catch (final Exception e) {
+      LOGGER.error("Could not save to file: " + outputFile, e);
     }
   }
 
   @Override
-  void saveToDb(List<? extends DictionaryEntry> entries) {
+  void saveToDb(final List<? extends DictionaryEntry> entries) {
     ((List<Entry>) entries).parallelStream()
+        .filter(Objects::nonNull)
         .map(this::buildWordEntry)
-        .collect(Collectors.toList())
         .forEach(wordRepository::save);
   }
 
-  Word buildWordEntry(Entry entry) {
-    Word word = new Word();
+  Word buildWordEntry(final Entry entry) {
+    final Word word = new Word();
 
     word.setKanjiElements(
         entry.getKEle().stream().map(KEle::getKeb).collect(Collectors.toSet()));
@@ -93,8 +96,8 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     return word;
   }
 
-  private Integer extractHighestPriority(Entry entry) {
-    Set<Integer> priorities = new HashSet<>();
+  private Integer extractHighestPriority(final Entry entry) {
+    final Set<Integer> priorities = new HashSet<>();
     entry.getKEle().forEach(kEle -> {
       if (!kEle.getKePri().isEmpty()) {
         kEle.getKePri().forEach(priority -> priorities.add(getPriorityNumber(priority)));
@@ -114,8 +117,9 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     return Collections.min(priorities);
   }
 
-  private int getPriorityNumber(String priority) {
-    List<String> highestPriorities = Arrays.asList("news1", "ichi1", "spec1", "spec2", "gai1");
+  private int getPriorityNumber(final String priority) {
+    final List<String> highestPriorities = Arrays
+        .asList("news1", "ichi1", "spec1", "spec2", "gai1");
 
     if (highestPriorities.contains(priority)) {
       return HIGHEST_PRIORITY;
@@ -123,15 +127,15 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     return MODERATE_PRIORITY;
   }
 
-  private List<WordMeaning> buildMeaningsList(Entry entry) {
-    List<WordMeaning> meanings = new ArrayList<>();
+  private List<WordMeaning> buildMeaningsList(final Entry entry) {
+    final List<WordMeaning> meanings = new ArrayList<>();
 
     if (this.partsOfSpeech == null) {
       this.partsOfSpeech = PartsOfSpeech.buildListOfPartsOfSpeech();
     }
 
-    for (Sense sense : entry.getSense()) {
-      WordMeaning meaning = new WordMeaning();
+    for (final Sense sense : entry.getSense()) {
+      final WordMeaning meaning = new WordMeaning();
       meaning.setPartOfSpeech(String.join("|", sense.getPos().stream()
           .map(partsOfSpeech::get)
           .filter(Objects::nonNull)
@@ -149,7 +153,4 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
 
     return meanings;
   }
-
-
-
 }

@@ -18,7 +18,7 @@ public class KanjiService {
 
   private final KanjiRepository kanjiRepository;
 
-  @Value("${kanji.path}")
+  @Value("${path.kanji}")
   private String kanjiPath;
 
   @Autowired

@@ -2,10 +2,7 @@ package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -14,8 +11,10 @@ import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.
 import com.github.dianamaftei.yomimashou.dictionary.kanji.Kanji;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.KanjiRepository;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +22,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class KanjiEntriesFromXMLToPOJOTest {
@@ -39,12 +37,12 @@ class KanjiEntriesFromXMLToPOJOTest {
 
   @BeforeEach
   void setUp() {
-    ReflectionTestUtils.setField(kanjiEntriesFromXMLToPOJO, "filePath", "mockFilePath");
+    kanjiEntriesFromXMLToPOJO.setRtkKanjiMap(Collections.emptyMap());
   }
 
   @Test
   void saveToDbShouldAddAllKanjidicCharactersToTheDatabase() {
-    List<Character> characters = new ArrayList<>();
+    final List<Character> characters = new ArrayList<>();
     characters.add(new Character());
     characters.add(new Character());
     characters.add(new Character());
@@ -55,19 +53,8 @@ class KanjiEntriesFromXMLToPOJOTest {
   }
 
   @Test
-  void getEntriesShouldReturnAListOfCharacterEntries() {
-    List<Character> entries = kanjiEntriesFromXMLToPOJO.getEntries(dictionaryFile);
-    assertEquals(dictionaryFile.getCharacter(), entries);
-  }
-
-  @Test
-  void getClassForJaxbShouldReturnKanjidic2() {
-    assertEquals(Kanjidic2.class, kanjiEntriesFromXMLToPOJO.getClassForJaxb());
-  }
-
-  @Test
-  void saveToFileShouldParseAllKanjiLiteralsFromKanjiEntries() {
-    List<Character> characters = new ArrayList<>();
+  void saveToDBShouldParseAllKanji() {
+    final List<Character> characters = new ArrayList<>();
     final Character character1 = new Character();
     character1.getLiteralAndCodepointAndRadical().add("大");
     characters.add(character1);
@@ -75,49 +62,29 @@ class KanjiEntriesFromXMLToPOJOTest {
     character2.getLiteralAndCodepointAndRadical().add("国");
     characters.add(character2);
 
-    KanjiEntriesFromXMLToPOJO spyKanjiEntriesFromXMLToPOJO = spy(kanjiEntriesFromXMLToPOJO);
-    doNothing().when((XMLEntryToPOJO) spyKanjiEntriesFromXMLToPOJO).writeToFile(any(), any());
-    ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
-    spyKanjiEntriesFromXMLToPOJO.saveToFile(characters);
+    final ArgumentCaptor<Kanji> argument = ArgumentCaptor.forClass(Kanji.class);
+    kanjiEntriesFromXMLToPOJO.saveToDb(characters);
 
-    verify(spyKanjiEntriesFromXMLToPOJO).writeToFile(argument.capture(), any(String.class));
+    verify(kanjiRepository, times(2)).save(argument.capture());
+
+    final List<Kanji> allArgumentValues = argument.getAllValues()
+        .stream().sorted(Comparator.comparing(Kanji::getCharacter)).collect(Collectors.toList());
 
     assertAll("Should contain the kanji literals from the Characters list",
-        () -> assertTrue(argument.getValue().contains("大")),
-        () -> assertTrue(argument.getValue().contains("国")),
-        () -> assertEquals(2, argument.getValue().size())
+        () -> assertEquals(2, allArgumentValues.size()),
+        () -> assertEquals("国", allArgumentValues.get(0).getCharacter()),
+        () -> assertEquals("大", allArgumentValues.get(1).getCharacter())
     );
   }
 
   @Test
-  void saveToFileShouldNotSaveDuplicateKanji() {
-    List<Character> characters = new ArrayList<>();
-    final Character character1 = new Character();
-    character1.getLiteralAndCodepointAndRadical().add("大");
-    characters.add(character1);
-    final Character character2 = new Character();
-    character2.getLiteralAndCodepointAndRadical().add("大");
-    characters.add(character2);
-    final Character character3 = new Character();
-    character3.getLiteralAndCodepointAndRadical().add("国");
-    characters.add(character3);
-
-    KanjiEntriesFromXMLToPOJO spyKanjiEntriesFromXMLToPOJO = spy(kanjiEntriesFromXMLToPOJO);
-    doNothing().when((XMLEntryToPOJO) spyKanjiEntriesFromXMLToPOJO).writeToFile(any(), any());
-    ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
-    spyKanjiEntriesFromXMLToPOJO.saveToFile(characters);
-
-    verify(spyKanjiEntriesFromXMLToPOJO).writeToFile(argument.capture(), any(String.class));
-
-    assertAll("Should contain the kanji literals from the Characters list, without duplicates",
-        () -> assertTrue(argument.getValue().contains("大")),
-        () -> assertTrue(argument.getValue().contains("国")),
-        () -> assertEquals(2, argument.getValue().size())
-    );
+  void getEntriesShouldReturnAListOfCharacterEntries() {
+    final List<Character> entries = kanjiEntriesFromXMLToPOJO.getEntries(dictionaryFile);
+    assertEquals(dictionaryFile.getCharacter(), entries);
   }
 
   @Test
-  void writeToFileShouldSaveEntriesToFile() {
-    kanjiEntriesFromXMLToPOJO.writeToFile(null, null);
+  void getClassForJaxbShouldReturnKanjidic2() {
+    assertEquals(Kanjidic2.class, kanjiEntriesFromXMLToPOJO.getClassForJaxb());
   }
 }

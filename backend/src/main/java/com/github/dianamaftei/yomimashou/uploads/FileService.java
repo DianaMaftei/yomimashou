@@ -18,59 +18,55 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileService {
 
-  @Value("${file.path}")
-  private String filePath;
+  @Value("${path.uploads}")
+  private String uploadsPath;
 
-  private static final String DESTINATION_PATH = "uploads";
-
-  public String upload(MultipartFile file, String prefix) throws IOException {
-    File fileToUpload =
-        File.createTempFile(prefix, getFileExtension(file.getOriginalFilename()),
-            new File(filePath + File.separator + DESTINATION_PATH));
+  public String upload(final MultipartFile file, final String prefix) throws IOException {
+    final File fileToUpload = File.createTempFile(prefix,
+        getFileExtension(file.getOriginalFilename()), new File(uploadsPath));
 
     assert fileToUpload.createNewFile();
-    try (FileOutputStream fos = new FileOutputStream(fileToUpload)) {
+    try (final FileOutputStream fos = new FileOutputStream(fileToUpload)) {
       fos.write(file.getBytes());
     }
     return fileToUpload.getName();
   }
 
-  private String getFileExtension(String originalFilename) {
-    String[] split = originalFilename.split("\\.");
+  private String getFileExtension(final String originalFilename) {
+    final String[] split = originalFilename.split("\\.");
     if (split.length == 0) {
       throw new FileException("Invalid image name.");
     }
-    String extension = split[split.length - 1];
+    final String extension = split[split.length - 1];
 
     if (!extension.toLowerCase().endsWith("png") &&
         !extension.toLowerCase().endsWith("jpg") &&
         !extension.toLowerCase().endsWith("jpeg") &&
         !extension.toLowerCase().endsWith("bmp")) {
-      throw new FileException(
-          "Unsupported file format");
+      throw new FileException("Unsupported file format");
     }
 
     return "." + extension;
   }
 
-  public void getFile(String fileName, HttpServletResponse response) {
-    Path file = Paths.get(filePath, DESTINATION_PATH, fileName);
+  public void getFile(final String fileName, final HttpServletResponse response) {
+    final Path file = Paths.get(uploadsPath, fileName);
 
     response.setContentType("image/jpeg");
 
-    try (InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
-      byte[] byteArray = toByteArray(in);
+    try (final InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
+      final byte[] byteArray = toByteArray(in);
       response.getOutputStream().write(byteArray);
-    } catch (Exception exception) {
+    } catch (final Exception exception) {
       throw new FileException("Could not read file", exception);
     }
   }
 
-  public String getFilePath() {
-    return filePath;
+  public String getUploadsPath() {
+    return uploadsPath;
   }
 
-  public void setFilePath(String filePath) {
-    this.filePath = filePath;
+  public void setUploadsPath(final String uploadsPath) {
+    this.uploadsPath = uploadsPath;
   }
 }

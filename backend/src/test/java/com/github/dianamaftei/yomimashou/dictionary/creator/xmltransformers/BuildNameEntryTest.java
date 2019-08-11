@@ -19,49 +19,49 @@ public class BuildNameEntryTest {
 
   @BeforeEach
   void setUp() {
-    nameEntriesFromXMLToPOJO = new NameEntriesFromXMLToPOJO(null);
+    nameEntriesFromXMLToPOJO = new NameEntriesFromXMLToPOJO(null, "", "");
   }
 
   @Test
   void buildNameEntryShouldParseKEleCorrectly() {
-    Entry entry = new Entry();
-    List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
-    KEle kEle = new KEle();
+    final Entry entry = new Entry();
+    final List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
+    final KEle kEle = new KEle();
     kEle.setKeb("安部浩平");
     entSeqOrKEleOrREleOrTrans.add(kEle);
 
-    Name nameEntry = nameEntriesFromXMLToPOJO.buildNameEntry(entry);
+    final Name nameEntry = nameEntriesFromXMLToPOJO.buildNameEntry(entry);
 
     assertEquals(kEle.getKeb(), nameEntry.getKanji());
   }
 
   @Test
   void buildNameEntryShouldParseREleCorrectly() {
-    Entry entry = new Entry();
-    List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
-    REle rEle = new REle();
+    final Entry entry = new Entry();
+    final List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
+    final REle rEle = new REle();
     rEle.setReb("あべこうへい");
     entSeqOrKEleOrREleOrTrans.add(rEle);
 
-    Name nameEntry = nameEntriesFromXMLToPOJO.buildNameEntry(entry);
+    final Name nameEntry = nameEntriesFromXMLToPOJO.buildNameEntry(entry);
 
     assertEquals(rEle.getReb(), nameEntry.getReading());
   }
 
   @Test
   void buildNameEntryShouldParseTranslationsCorrectly() {
-    Entry entry = new Entry();
-    List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
-    Trans trans = new Trans();
-    TransDet transDet = new TransDet();
+    final Entry entry = new Entry();
+    final List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
+    final Trans trans = new Trans();
+    final TransDet transDet = new TransDet();
     transDet.setvalue("Abe Kouhei");
-    TransDet transDet2 = new TransDet();
+    final TransDet transDet2 = new TransDet();
     transDet2.setvalue("translation 2");
     trans.getTransDet().add(transDet);
     trans.getTransDet().add(transDet2);
     entSeqOrKEleOrREleOrTrans.add(trans);
 
-    Name nameEntry = nameEntriesFromXMLToPOJO.buildNameEntry(entry);
+    final Name nameEntry = nameEntriesFromXMLToPOJO.buildNameEntry(entry);
 
     assertEquals(transDet.getvalue().concat("|").concat(transDet2.getvalue()),
         nameEntry.getTranslations());
@@ -69,18 +69,18 @@ public class BuildNameEntryTest {
 
   @Test
   void buildNameEntryShouldParseTypesCorrectly() {
-    Entry entry = new Entry();
-    List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
-    Trans trans = new Trans();
-    NameType nameType = new NameType();
+    final Entry entry = new Entry();
+    final List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
+    final Trans trans = new Trans();
+    final NameType nameType = new NameType();
     nameType.setvalue("female given name or forename");
-    NameType nameType2 = new NameType();
+    final NameType nameType2 = new NameType();
     nameType2.setvalue("full name of a particular person");
     trans.getNameType().add(nameType);
     trans.getNameType().add(nameType2);
     entSeqOrKEleOrREleOrTrans.add(trans);
 
-    Name nameEntry = nameEntriesFromXMLToPOJO.buildNameEntry(entry);
+    final Name nameEntry = nameEntriesFromXMLToPOJO.buildNameEntry(entry);
 
     assertEquals(nameType.getvalue().concat("|").concat(nameType2.getvalue()), nameEntry.getType());
   }

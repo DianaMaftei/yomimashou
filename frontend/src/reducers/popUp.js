@@ -50,7 +50,7 @@ const popUp = (state = defaultState, action) => {
                 },
                 showResult: {
                     ...state.showResult,
-                    result: state.previousSearchResult.result !== state.searchResult.result ? action.payload.data.content : state.previousShowResult.result.concat(action.payload.data.content),
+                    result: state.searchResult.type === "kanji" ? action.payload.data : state.previousSearchResult.result !== state.searchResult.result ? action.payload.data.content : state.previousShowResult.result.concat(action.payload.data.content),
                     type: state.searchResult.type
                 },
                 previousSearchResult: state.searchResult,

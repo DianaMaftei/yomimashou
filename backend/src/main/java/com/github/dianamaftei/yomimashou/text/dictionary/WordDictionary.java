@@ -7,8 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -21,28 +19,25 @@ public class WordDictionary {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WordDictionary.class);
 
-  @Value("${file.path}")
+  @Value("${path.word.entries}")
   private String filePath;
 
   private Reader reader;
-  private Map<String, String> wordsMap;
+  private Set<String> words;
 
-  public boolean isWordInDictionary(String item) {
-    if (wordsMap == null) {
-      buildWordDictionary(filePath);
+  public boolean isWordInDictionary(String word) {
+    if (words == null) {
+      words = buildWordDictionary(filePath);
     }
-    return wordsMap.containsKey(item);
+    return words.contains(word);
   }
 
-  private void buildWordDictionary(String filePath) {
-    wordsMap = new HashMap<>();
-    String file = getFile(filePath);
-    Set<String> words = Arrays.stream(file.split("\\|")).parallel().collect(Collectors.toSet());
-
-    words.forEach(item -> wordsMap.put(item, null));
+  private Set<String> buildWordDictionary(String filePath) {
+    String file = getFileContent(filePath);
+    return Arrays.stream(file.split("\\|")).parallel().collect(Collectors.toSet());
   }
 
-  private String getFile(String fileName) {
+  private String getFileContent(String fileName) {
     StringBuilder result = new StringBuilder();
 
     try (BufferedReader bufferedReader = new BufferedReader(getReader(fileName))) {
@@ -62,8 +57,7 @@ public class WordDictionary {
       return reader;
     }
 
-    return new FileReader(
-        filePath + File.separator + "dictionaries" + File.separator + "wordEntries.txt");
+    return new FileReader(filePath);
   }
 
   public void setReader(Reader reader) {
