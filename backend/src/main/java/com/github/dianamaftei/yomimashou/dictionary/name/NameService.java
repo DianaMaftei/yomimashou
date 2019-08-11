@@ -1,29 +1,21 @@
 package com.github.dianamaftei.yomimashou.dictionary.name;
 
-import static com.github.dianamaftei.yomimashou.dictionary.name.QName.name;
-
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NameService {
 
-  private final JPAQueryFactory jpaQueryFactory;
+  private final NameRepository nameRepository;
 
   @Autowired
-  public NameService(JPAQueryFactory jpaQueryFactory) {
-    this.jpaQueryFactory = jpaQueryFactory;
+  public NameService(final NameRepository nameRepository) {
+    this.nameRepository = nameRepository;
   }
 
-  public List<Name> get(String[] words) {
-    BooleanBuilder booleanBuilder = new BooleanBuilder();
-    for (String word : words) {
-      booleanBuilder.or(name.reading.like(word)).or(name.kanji.like(word));
-    }
-    return (List<Name>) jpaQueryFactory.query().from(name).where(booleanBuilder).distinct()
-        .limit(20).fetch();
+  public Page<Name> getByReadingElemOrKanjiElem(final String[] words, final Pageable pageable) {
+    return nameRepository.findDistinctByKanjiElementsInOrReadingElementsIn(words, words, pageable);
   }
 }
