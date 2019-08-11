@@ -1,8 +1,9 @@
 package com.github.dianamaftei.yomimashou.dictionary.name;
 
-import java.util.Collections;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,15 +16,16 @@ public class NameController {
   private final NameService nameService;
 
   @Autowired
-  public NameController(NameService nameService) {
+  public NameController(final NameService nameService) {
     this.nameService = nameService;
   }
 
   @GetMapping
-  public List<Name> get(@RequestParam("searchItem") String searchItem) {
+  public Page<Name> get(@RequestParam("searchItem") final String searchItem,
+      @PageableDefault(value = 10, page = 0) final Pageable pageable) {
     if (searchItem.length() > 0) {
-      return nameService.get(searchItem.split(","));
+      return nameService.getByReadingElemOrKanjiElem(searchItem.split(","), pageable);
     }
-    return Collections.emptyList();
+    return Page.empty();
   }
 }

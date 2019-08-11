@@ -11,6 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -28,20 +32,28 @@ public class NameControllerTest {
   @InjectMocks
   private NameController nameController;
 
+  private Pageable pageable;
+
   @BeforeEach
   void setup() {
-    mvc = MockMvcBuilders.standaloneSetup(nameController).build();
+    mvc = MockMvcBuilders.standaloneSetup(nameController)
+        .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+        .build();
+
+    pageable = new PageRequest(0, 10);
   }
 
   @Test
   void shouldGetANameEntryBasedOnASearchItem() throws Exception {
-    Name name = new Name();
+    final Name name = new Name();
     name.setKanji("猫");
     name.setId(5L);
-    when(nameService.get(new String[]{"猫"})).thenReturn(Collections.singletonList(name));
+    when(nameService.getByReadingElemOrKanjiElem(new String[]{"猫"}, pageable))
+        .thenReturn(new PageImpl<>(Collections.singletonList(name), pageable, 1));
 
-    MockHttpServletResponse response = mvc
-        .perform(get("/api/dictionary/names?searchItem=猫").accept(MediaType.APPLICATION_JSON))
+    final MockHttpServletResponse response = mvc
+        .perform(get("/api/dictionary/names?searchItem=猫&page=0&size=10")
+            .accept(MediaType.APPLICATION_JSON))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
