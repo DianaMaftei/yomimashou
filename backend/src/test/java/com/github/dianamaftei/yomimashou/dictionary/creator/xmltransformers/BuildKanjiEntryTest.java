@@ -18,6 +18,14 @@ import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Reading;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.ReadingMeaning;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Rmgroup;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiCharacterComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiCodepointComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiDicNumberComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiMiscComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiQueryCodeComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiRadicalComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiReadingMeaningComponent;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.Kanji;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +40,16 @@ class BuildKanjiEntryTest {
 
   @BeforeEach
   void setUp() {
-    kanjiEntriesFromXMLToPOJO = new KanjiEntriesFromXMLToPOJO(null, "", "");
+    final List<KanjiComponent> enrichers = new ArrayList<>();
+    enrichers.add(new KanjiCharacterComponent());
+    enrichers.add(new KanjiCodepointComponent());
+    enrichers.add(new KanjiDicNumberComponent());
+    enrichers.add(new KanjiMiscComponent());
+    enrichers.add(new KanjiQueryCodeComponent());
+    enrichers.add(new KanjiRadicalComponent());
+    enrichers.add(new KanjiReadingMeaningComponent());
+
+    kanjiEntriesFromXMLToPOJO = new KanjiEntriesFromXMLToPOJO(null, "", "", enrichers);
   }
 
   @Test

@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Character;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.kanjidic.Kanjidic2;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiCharacterComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.kanjicomponents.KanjiComponent;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.Kanji;
 import com.github.dianamaftei.yomimashou.dictionary.kanji.KanjiRepository;
 import java.util.ArrayList;
@@ -40,6 +42,9 @@ class KanjiEntriesFromXMLToPOJOTest {
 
   @BeforeEach
   void setUp() {
+    final List<KanjiComponent> enrichers = new ArrayList<>();
+    enrichers.add(new KanjiCharacterComponent());
+    kanjiEntriesFromXMLToPOJO.setKanjiComponentsEnrichers(enrichers);
     kanjiEntriesFromXMLToPOJO.setRtkKanjiMap(Collections.emptyMap());
   }
 
