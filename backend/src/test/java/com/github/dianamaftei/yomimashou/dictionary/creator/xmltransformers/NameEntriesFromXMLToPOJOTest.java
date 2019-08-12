@@ -22,6 +22,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -38,24 +39,41 @@ class NameEntriesFromXMLToPOJOTest {
   @Mock
   private NameRepository nameRepository;
 
+  @Captor
+  private ArgumentCaptor<List<Name>> argumentCaptor;
+
   @Test
-  void saveToDbShouldAddAllNamesToTheDB() {
+  void persistShouldAddAllNamesToTheDB() {
     final List<Entry> entries = new ArrayList<>();
     entries.add(new Entry());
     entries.add(new Entry());
     entries.add(new Entry());
     entries.add(new Entry());
-    nameEntriesFromXMLToPOJO.saveToDb(entries);
-    verify(nameRepository, times(4)).save(any(Name.class));
+
+    final NameEntriesFromXMLToPOJO spyNameEntriesFromXMLToPOJO = spy(nameEntriesFromXMLToPOJO);
+    doNothing().when((XMLEntryToPOJO) spyNameEntriesFromXMLToPOJO).writeToFile(any(), any());
+
+    spyNameEntriesFromXMLToPOJO.persist(entries);
+
+    verify(nameRepository, times(1)).saveAll(argumentCaptor.capture());
+    assertEquals(4, argumentCaptor.getAllValues().get(0).size());
   }
 
   @Test
-  void saveToDbShouldFilterOutNullEntries() {
+  void persistShouldFilterOutNullEntries() {
     final List<Entry> entries = new ArrayList<>();
     entries.add(new Entry());
     entries.add(null);
-    nameEntriesFromXMLToPOJO.saveToDb(entries);
-    verify(nameRepository, times(1)).save(any(Name.class));
+    entries.add(new Entry());
+
+    final NameEntriesFromXMLToPOJO spyNameEntriesFromXMLToPOJO = spy(nameEntriesFromXMLToPOJO);
+    doNothing().when((XMLEntryToPOJO) spyNameEntriesFromXMLToPOJO).writeToFile(any(), any());
+
+    spyNameEntriesFromXMLToPOJO.persist(entries);
+
+    verify(nameRepository, times(1)).saveAll(argumentCaptor.capture());
+    assertEquals(2, argumentCaptor.getAllValues().get(0).size());
+
   }
 
   @Test
@@ -70,7 +88,7 @@ class NameEntriesFromXMLToPOJOTest {
   }
 
   @Test
-  void saveToFileShouldParseAllKanjiAndReadingsOfTheNameEntries() {
+  void persistShouldParseAllKanjiAndReadingsOfTheNameEntriesBeforeCallingWriteToFile() {
     final List<Entry> entries = new ArrayList<>();
     final Entry entry = new Entry();
     final List<Object> entSeqOrKEleOrREleOrTrans = entry.getEntSeqOrKEleOrREleOrTrans();
@@ -86,7 +104,7 @@ class NameEntriesFromXMLToPOJOTest {
     doNothing().when((XMLEntryToPOJO) spyNameEntriesFromXMLToPOJO).writeToFile(any(), any());
 
     final ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
-    spyNameEntriesFromXMLToPOJO.saveToFile(entries);
+    spyNameEntriesFromXMLToPOJO.persist(entries);
 
     verify(spyNameEntriesFromXMLToPOJO).writeToFile(argument.capture(), isNull());
 

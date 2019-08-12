@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.slf4j.Logger;
@@ -66,11 +67,13 @@ public class KanjiEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   }
 
   @Override
-  void saveToDb(final List<? extends DictionaryEntry> characters) {
-    ((List<Character>) characters).parallelStream()
-        .filter(Objects::nonNull)
-        .map(this::buildKanjiEntry)
-        .forEach(kanjiRepository::save);
+  void persist(final List<? extends DictionaryEntry> characters) {
+    kanjiRepository.saveAll(
+        ((List<Character>) characters).parallelStream()
+            .filter(Objects::nonNull)
+            .map(this::buildKanjiEntry)
+            .collect(Collectors.toList())
+    );
   }
 
   @Override

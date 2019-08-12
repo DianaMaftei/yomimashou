@@ -2,7 +2,6 @@ package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -19,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,25 +35,28 @@ class KanjiEntriesFromXMLToPOJOTest {
   @Mock
   private Kanjidic2 dictionaryFile;
 
+  @Captor
+  private ArgumentCaptor<List<Kanji>> argumentCaptor;
+
   @BeforeEach
   void setUp() {
     kanjiEntriesFromXMLToPOJO.setRtkKanjiMap(Collections.emptyMap());
   }
 
   @Test
-  void saveToDbShouldAddAllKanjidicCharactersToTheDatabase() {
+  void persistShouldAddAllKanjidicCharactersToTheDatabase() {
     final List<Character> characters = new ArrayList<>();
     characters.add(new Character());
     characters.add(new Character());
     characters.add(new Character());
 
-    kanjiEntriesFromXMLToPOJO.saveToDb(characters);
+    kanjiEntriesFromXMLToPOJO.persist(characters);
 
-    verify(kanjiRepository, times(3)).save(any(Kanji.class));
+    verify(kanjiRepository, times(1)).saveAll(argumentCaptor.capture());
   }
 
   @Test
-  void saveToDBShouldParseAllKanji() {
+  void persistShouldParseAllKanji() {
     final List<Character> characters = new ArrayList<>();
     final Character character1 = new Character();
     character1.getLiteralAndCodepointAndRadical().add("大");
@@ -62,13 +65,13 @@ class KanjiEntriesFromXMLToPOJOTest {
     character2.getLiteralAndCodepointAndRadical().add("国");
     characters.add(character2);
 
-    final ArgumentCaptor<Kanji> argument = ArgumentCaptor.forClass(Kanji.class);
-    kanjiEntriesFromXMLToPOJO.saveToDb(characters);
+    kanjiEntriesFromXMLToPOJO.persist(characters);
 
-    verify(kanjiRepository, times(2)).save(argument.capture());
+    verify(kanjiRepository, times(1)).saveAll(argumentCaptor.capture());
 
-    final List<Kanji> allArgumentValues = argument.getAllValues()
-        .stream().sorted(Comparator.comparing(Kanji::getCharacter)).collect(Collectors.toList());
+    final List<Kanji> allArgumentValues = argumentCaptor.getAllValues()
+        .stream().flatMap(List::stream).sorted(Comparator.comparing(Kanji::getCharacter))
+        .collect(Collectors.toList());
 
     assertAll("Should contain the kanji literals from the Characters list",
         () -> assertEquals(2, allArgumentValues.size()),

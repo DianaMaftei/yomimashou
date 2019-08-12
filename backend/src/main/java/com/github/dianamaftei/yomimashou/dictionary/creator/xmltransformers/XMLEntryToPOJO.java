@@ -32,14 +32,14 @@ public abstract class XMLEntryToPOJO {
       final Optional<Object> unmarshalledFile = unmarshalFile(inputFile);
       unmarshalledFile.ifPresent(dictionaryFile -> {
         final List<? extends DictionaryEntry> dictionaryEntries = getEntries(dictionaryFile);
-        // TODO build entry first then run persist, which can be save to file or db or both
-        saveToFile(dictionaryEntries);
-        saveToDb(dictionaryEntries);
+        persist(dictionaryEntries);
       });
     } catch (final JAXBException e) {
       LOGGER.error("could not process entries from XML", e);
     }
   }
+
+  abstract void persist(final List<? extends DictionaryEntry> dictionaryEntries);
 
   private Optional<Object> unmarshalFile(final String file) throws JAXBException {
     try (final InputStream is = new FileInputStream(file);
@@ -69,9 +69,4 @@ public abstract class XMLEntryToPOJO {
   abstract List<? extends DictionaryEntry> getEntries(Object dictionaryFile);
 
   abstract Class getClassForJaxb();
-
-  void saveToFile(final List<? extends DictionaryEntry> entries) {
-  }
-
-  abstract void saveToDb(List<? extends DictionaryEntry> entries);
 }

@@ -16,8 +16,8 @@ public class EntriesCreator {
   private final ExampleSentencesCSVtoPOJO exampleSentencesCSVtoPOJO;
 
   @Autowired
-  public EntriesCreator(List<XMLEntryToPOJO> xmlEntryToPOJOList,
-      ExampleSentencesCSVtoPOJO exampleSentencesCSVtoPOJO) {
+  public EntriesCreator(final List<XMLEntryToPOJO> xmlEntryToPOJOList,
+      final ExampleSentencesCSVtoPOJO exampleSentencesCSVtoPOJO) {
     this.xmlEntryToPOJOList = xmlEntryToPOJOList;
     this.exampleSentencesCSVtoPOJO = exampleSentencesCSVtoPOJO;
   }
@@ -29,7 +29,7 @@ public class EntriesCreator {
     try {
       xmlEntryToPOJOList.forEach(XMLEntryToPOJO::processEntries);
       exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
-    } catch (Exception e) {
+    } catch (final Exception e) {
       LOGGER.error("could not create entries", e);
     }
   }

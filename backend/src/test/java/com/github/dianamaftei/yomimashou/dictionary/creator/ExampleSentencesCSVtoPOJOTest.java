@@ -3,16 +3,15 @@ package com.github.dianamaftei.yomimashou.dictionary.creator;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.github.dianamaftei.yomimashou.dictionary.example.ExampleSentence;
 import com.github.dianamaftei.yomimashou.dictionary.example.ExampleSentenceRepository;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +31,7 @@ class ExampleSentencesCSVtoPOJOTest {
   private ExampleSentenceRepository exampleSentenceRepository;
 
   @Captor
-  private ArgumentCaptor<ExampleSentence> argumentCaptor;
+  private ArgumentCaptor<Set<ExampleSentence>> argumentCaptor;
 
   @Test
   void saveSentencesToDBShouldSaveAllExampleSentences() {
@@ -41,9 +40,9 @@ class ExampleSentencesCSVtoPOJOTest {
 
     exampleSentencesCSVtoPOJO.saveSentencesToDB(sentenceLines);
 
-    verify(exampleSentenceRepository, times(2)).save(argumentCaptor.capture());
+    verify(exampleSentenceRepository, times(1)).saveAll(argumentCaptor.capture());
 
-    assertEquals(2, argumentCaptor.getAllValues().size());
+    assertEquals(2, argumentCaptor.getAllValues().get(0).size());
   }
 
   @Test
@@ -53,8 +52,9 @@ class ExampleSentencesCSVtoPOJOTest {
 
     exampleSentencesCSVtoPOJO.saveSentencesToDB(sentenceLines);
 
-    verify(exampleSentenceRepository, times(2)).save(argumentCaptor.capture());
+    verify(exampleSentenceRepository, times(1)).saveAll(argumentCaptor.capture());
     final List<ExampleSentence> exampleSentences = argumentCaptor.getAllValues().stream()
+        .flatMap(Set::stream)
         .sorted(Comparator.comparing(ExampleSentence::getSentence))
         .collect(Collectors.toList());
 
@@ -71,14 +71,5 @@ class ExampleSentencesCSVtoPOJOTest {
         () -> assertEquals("家(いえ)[01] に 帰る[01] 時間 を 知らせる{知らせて} 呉れる{くれ}",
             exampleSentences.get(1).getTextBreakdown())
     );
-  }
-
-  @Test
-  void saveSentencesToDBShouldNotSaveAnythingToTheDBIfTheListIsEmpty() {
-    final List<String> sentenceLines = Collections.emptyList();
-
-    exampleSentencesCSVtoPOJO.saveSentencesToDB(sentenceLines);
-
-    verify(exampleSentenceRepository, times(0)).saveAll(any());
   }
 }

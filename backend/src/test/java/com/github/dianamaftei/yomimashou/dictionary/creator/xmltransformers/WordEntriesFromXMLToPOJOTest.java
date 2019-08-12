@@ -23,6 +23,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,6 +40,9 @@ class WordEntriesFromXMLToPOJOTest {
   @Mock
   private WordRepository wordRepository;
 
+  @Captor
+  private ArgumentCaptor<List<Word>> argumentCaptor;
+
   @Test
   void getEntriesShouldReturnAListOfEntryObjects() {
     final List<Entry> entries = wordEntriesFromXMLToPOJO.getEntries(dictionaryFile);
@@ -51,7 +55,7 @@ class WordEntriesFromXMLToPOJOTest {
   }
 
   @Test
-  void saveToFileShouldExtractASetOfDistinctKanjiLiteralsAndReadingsFromEntries() {
+  void persistShouldExtractASetOfDistinctKanjiLiteralsAndReadingsFromEntriesBeforeCallingWriteToFile() {
     final Entry entry = new Entry();
     final KEle kanjiElement = new KEle();
     kanjiElement.setKeb("大");
@@ -71,7 +75,7 @@ class WordEntriesFromXMLToPOJOTest {
     final WordEntriesFromXMLToPOJO spyWordEntriesFromXMLToPOJO = spy(wordEntriesFromXMLToPOJO);
     doNothing().when((XMLEntryToPOJO) spyWordEntriesFromXMLToPOJO).writeToFile(any(), any());
     final ArgumentCaptor<Set> argument = ArgumentCaptor.forClass(Set.class);
-    spyWordEntriesFromXMLToPOJO.saveToFile(Arrays.asList(entry, entry2));
+    spyWordEntriesFromXMLToPOJO.persist(Arrays.asList(entry, entry2));
 
     verify(spyWordEntriesFromXMLToPOJO).writeToFile(argument.capture(), isNull());
 
@@ -84,12 +88,18 @@ class WordEntriesFromXMLToPOJOTest {
   }
 
   @Test
-  void saveToDBShouldAddAllEntriesToTheDatabase() {
+  void persistShouldAddAllEntriesToTheDatabase() {
     final List<Entry> entries = new ArrayList<>();
     entries.add(new Entry());
     entries.add(new Entry());
-    wordEntriesFromXMLToPOJO.saveToDb(entries);
-    verify(wordRepository, times(2)).save(any(Word.class));
+
+    final WordEntriesFromXMLToPOJO spyWordEntriesFromXMLToPOJO = spy(wordEntriesFromXMLToPOJO);
+    doNothing().when((XMLEntryToPOJO) spyWordEntriesFromXMLToPOJO).writeToFile(any(), any());
+
+    spyWordEntriesFromXMLToPOJO.persist(entries);
+
+    verify(wordRepository, times(1)).saveAll(argumentCaptor.capture());
+    assertEquals(2, argumentCaptor.getAllValues().get(0).size());
   }
 
 }

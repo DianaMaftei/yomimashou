@@ -1,31 +1,36 @@
 package com.github.dianamaftei.yomimashou.dictionary.example;
 
+import static com.github.dianamaftei.yomimashou.dictionary.example.QExampleSentence.exampleSentence;
+
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static com.github.dianamaftei.yomimashou.dictionary.example.QExampleSentence.exampleSentence;
 
 @Service
 public class ExampleSentenceService {
 
-    private final JPAQueryFactory jpaQueryFactory;
+  @Value("${paginatation.limit}")
+  private int paginationLimit;
 
-    @Autowired
-    public ExampleSentenceService(JPAQueryFactory jpaQueryFactory) {
-        this.jpaQueryFactory = jpaQueryFactory;
-    }
+  private final JPAQueryFactory jpaQueryFactory;
 
-    @Transactional
-    public List<ExampleSentence> get(String[] searchItems) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        for (String searchItem : searchItems) {
-            booleanBuilder.or(exampleSentence.sentence.contains(searchItem)).or(exampleSentence.textBreakdown.contains(searchItem));
-        }
-        return (List<ExampleSentence>) jpaQueryFactory.query().from(exampleSentence).where(booleanBuilder).distinct().limit(10).fetch();
+  @Autowired
+  public ExampleSentenceService(final JPAQueryFactory jpaQueryFactory) {
+    this.jpaQueryFactory = jpaQueryFactory;
+  }
+
+  @Transactional
+  public List<ExampleSentence> get(final String[] searchItems) {
+    final BooleanBuilder booleanBuilder = new BooleanBuilder();
+    for (final String searchItem : searchItems) {
+      booleanBuilder.or(exampleSentence.sentence.contains(searchItem))
+          .or(exampleSentence.textBreakdown.contains(searchItem));
     }
+    return (List<ExampleSentence>) jpaQueryFactory.query().from(exampleSentence)
+        .where(booleanBuilder).distinct().limit(paginationLimit).fetch();
+  }
 }

@@ -20,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 
 @ExtendWith(MockitoExtension.class)
 class ExampleSentenceServiceTest {
@@ -35,6 +36,9 @@ class ExampleSentenceServiceTest {
   @Captor
   private ArgumentCaptor<Predicate> predicateArgumentCaptor;
 
+  @Value("${paginatation.limit}")
+  private int paginationLimit;
+
   @BeforeEach
   void setUp() {
     exampleSentenceService = new ExampleSentenceService(jpaQueryFactory);
@@ -42,16 +46,16 @@ class ExampleSentenceServiceTest {
 
   @Test
   void get() {
-    String[] searchItems = {"searchItem"};
+    final String[] searchItems = {"searchItem"};
     when(jpaQueryFactory.query()).thenReturn(jpaQuery);
     when(jpaQuery.from(exampleSentence)).thenReturn(jpaQuery);
     when(jpaQuery.fetch()).thenReturn(Collections.emptyList());
     when(jpaQuery.where(any(Predicate.class))).thenReturn(jpaQuery);
     when(jpaQuery.distinct()).thenReturn(jpaQuery);
-    when(jpaQuery.limit(10)).thenReturn(jpaQuery);
-    List<ExampleSentence> exampleSentences = exampleSentenceService.get(searchItems);
+    when(jpaQuery.limit(paginationLimit)).thenReturn(jpaQuery);
+    final List<ExampleSentence> exampleSentences = exampleSentenceService.get(searchItems);
     verify(jpaQuery).where(predicateArgumentCaptor.capture());
-    Predicate value = predicateArgumentCaptor.getValue();
+    final Predicate value = predicateArgumentCaptor.getValue();
     assertEquals(
         "contains(exampleSentence.sentence,searchItem) || contains(exampleSentence.textBreakdown,searchItem)",
         value.toString());

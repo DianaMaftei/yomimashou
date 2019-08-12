@@ -38,11 +38,20 @@ public class NameEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   }
 
   @Override
-  void saveToDb(final List<? extends DictionaryEntry> entries) {
-    ((List<Entry>) entries).parallelStream()
+  void persist(final List<? extends DictionaryEntry> dictionaryEntries) {
+    final List<Name> names = ((List<Entry>) dictionaryEntries).parallelStream()
         .filter(Objects::nonNull)
         .map(this::buildNameEntry)
-        .forEach(nameRepository::save);
+        .collect(Collectors.toList());
+
+    final Set<String> nameKanjiAndReading = names.parallelStream()
+        .map(nameEntry -> Arrays.asList(nameEntry.getKanji(), nameEntry.getReading()))
+        .flatMap(List::stream)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toSet());
+
+    nameRepository.saveAll(names);
+    writeToFile(nameKanjiAndReading, outputFile);
   }
 
   @Override
@@ -53,23 +62,6 @@ public class NameEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   @Override
   Class getClassForJaxb() {
     return JMnedict.class;
-  }
-
-  @Override
-  void saveToFile(final List<? extends DictionaryEntry> entries) {
-    try {
-      final Set<String> nameEntries = ((List<Entry>) entries).parallelStream()
-          .filter(Objects::nonNull)
-          .map(this::buildNameEntry)
-          .map(nameEntry -> Arrays.asList(nameEntry.getKanji(), nameEntry.getReading()))
-          .flatMap(List::stream)
-          .filter(Objects::nonNull)
-          .collect(Collectors.toSet());
-
-      writeToFile(nameEntries, outputFile);
-    } catch (final Exception e) {
-      LOGGER.error("Could not save to file: " + outputFile, e);
-    }
   }
 
   Name buildNameEntry(final Entry name) {

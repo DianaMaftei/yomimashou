@@ -58,29 +58,22 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   }
 
   @Override
-  void saveToFile(final List<? extends DictionaryEntry> entries) {
-    try {
-      final Set<String> wordEntries = ((List<Entry>) entries).parallelStream()
-          .filter(Objects::nonNull)
-          .map(entry -> Arrays.asList(
-              entry.getKEle().stream().map(KEle::getKeb).collect(Collectors.toList()),
-              entry.getREle().stream().map(REle::getReb).collect(Collectors.toList()))
-          ).flatMap(List::stream)
-          .flatMap(List::stream)
-          .collect(Collectors.toSet());
-
-      writeToFile(wordEntries, outputFile);
-    } catch (final Exception e) {
-      LOGGER.error("Could not save to file: " + outputFile, e);
-    }
-  }
-
-  @Override
-  void saveToDb(final List<? extends DictionaryEntry> entries) {
-    ((List<Entry>) entries).parallelStream()
+  void persist(final List<? extends DictionaryEntry> entries) {
+    final List<Word> words = ((List<Entry>) entries).parallelStream()
         .filter(Objects::nonNull)
         .map(this::buildWordEntry)
-        .forEach(wordRepository::save);
+        .collect(Collectors.toList());
+
+    final Set<String> wordKanjiAndReadings = words.parallelStream().map(entry -> Arrays.asList(
+        entry.getKanjiElements(),
+        entry.getReadingElements())
+    ).flatMap(List::stream)
+        .flatMap(Set::stream)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toSet());
+
+    wordRepository.saveAll(words);
+    writeToFile(wordKanjiAndReadings, outputFile);
   }
 
   Word buildWordEntry(final Entry entry) {

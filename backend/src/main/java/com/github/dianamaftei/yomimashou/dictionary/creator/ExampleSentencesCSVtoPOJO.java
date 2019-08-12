@@ -41,9 +41,11 @@ public class ExampleSentencesCSVtoPOJO {
   }
 
   void saveSentencesToDB(final List<String> sentences) {
-    sentences.parallelStream()
-        .map(this::parseExampleSentenceFromLine)
-        .forEach(exampleSentenceRepository::save);
+    exampleSentenceRepository.saveAll(
+        sentences.parallelStream()
+            .map(this::parseExampleSentenceFromLine)
+            .collect(Collectors.toSet())
+    );
   }
 
   private ExampleSentence parseExampleSentenceFromLine(final String line) {
