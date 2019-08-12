@@ -14,11 +14,16 @@ import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.JMnedict;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.KEle;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.REle;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameKanjiComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameReadingComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameTranslationComponent;
 import com.github.dianamaftei.yomimashou.dictionary.name.Name;
 import com.github.dianamaftei.yomimashou.dictionary.name.NameRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -41,6 +46,15 @@ class NameEntriesFromXMLToPOJOTest {
 
   @Captor
   private ArgumentCaptor<List<Name>> argumentCaptor;
+
+  @BeforeEach
+  void setUp() {
+    final List<NameComponent> nameComponentsEnrichers = new ArrayList<>();
+    nameComponentsEnrichers.add(new NameReadingComponent());
+    nameComponentsEnrichers.add(new NameKanjiComponent());
+    nameComponentsEnrichers.add(new NameTranslationComponent());
+    nameEntriesFromXMLToPOJO.setNameComponentsEnrichers(nameComponentsEnrichers);
+  }
 
   @Test
   void persistShouldAddAllNamesToTheDB() {

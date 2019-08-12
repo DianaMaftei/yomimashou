@@ -8,7 +8,12 @@ import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.REle;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.Trans;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.TransDet;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameKanjiComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameReadingComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameTranslationComponent;
 import com.github.dianamaftei.yomimashou.dictionary.name.Name;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +24,12 @@ public class BuildNameEntryTest {
 
   @BeforeEach
   void setUp() {
-    nameEntriesFromXMLToPOJO = new NameEntriesFromXMLToPOJO(null, "", "");
+    final List<NameComponent> nameComponentsEnrichers = new ArrayList<>();
+    nameComponentsEnrichers.add(new NameKanjiComponent());
+    nameComponentsEnrichers.add(new NameReadingComponent());
+    nameComponentsEnrichers.add(new NameTranslationComponent());
+
+    nameEntriesFromXMLToPOJO = new NameEntriesFromXMLToPOJO(null, "", "", nameComponentsEnrichers);
   }
 
   @Test

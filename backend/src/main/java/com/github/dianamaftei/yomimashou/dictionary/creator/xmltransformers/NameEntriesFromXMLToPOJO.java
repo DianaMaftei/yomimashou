@@ -3,11 +3,8 @@ package com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.DictionaryEntry;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.Entry;
 import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.JMnedict;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.KEle;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.NameType;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.REle;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.Trans;
-import com.github.dianamaftei.yomimashou.dictionary.creator.jaxbgeneratedmodels.jmnedict.TransDet;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameComponent;
+import com.github.dianamaftei.yomimashou.dictionary.creator.xmltransformers.namecomponents.NameComponentType;
 import com.github.dianamaftei.yomimashou.dictionary.name.Name;
 import com.github.dianamaftei.yomimashou.dictionary.name.NameRepository;
 import java.util.Arrays;
@@ -27,14 +24,17 @@ public class NameEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   private static final Logger LOGGER = LoggerFactory.getLogger(NameEntriesFromXMLToPOJO.class);
 
   private final NameRepository nameRepository;
+  private List<NameComponent> nameComponentsEnrichers;
 
   @Autowired
   public NameEntriesFromXMLToPOJO(final NameRepository nameRepository,
       @Value("${path.dictionary.name}") final String nameDictionaryPath,
-      @Value("${path.name.entries}") final String nameEntriesPath) {
+      @Value("${path.name.entries}") final String nameEntriesPath,
+      final List<NameComponent> nameComponentsEnrichers) {
     this.nameRepository = nameRepository;
     this.inputFile = nameDictionaryPath;
     this.outputFile = nameEntriesPath;
+    this.nameComponentsEnrichers = nameComponentsEnrichers;
   }
 
   @Override
@@ -68,30 +68,23 @@ public class NameEntriesFromXMLToPOJO extends XMLEntryToPOJO {
     final Name nameEntry = new Name();
     final List<Object> entSeqOrKEleOrREleOrTrans = name.getEntSeqOrKEleOrREleOrTrans();
     for (final Object component : entSeqOrKEleOrREleOrTrans) {
-      final String componentClass = component.getClass().getSimpleName();
+      final NameComponentType nameComponentType = NameComponentType
+          .valueOf(component.getClass().getSimpleName().toUpperCase());
 
-      switch (componentClass) {
-        case "KEle":
-          final KEle kanjiElement = (KEle) component;
-          nameEntry.setKanji(kanjiElement.getKeb());
-          break;
-        case "REle":
-          final REle readingElement = (REle) component;
-          nameEntry.setReading(readingElement.getReb());
-          break;
-        case "Trans":
-          final Trans translationElement = (Trans) component;
-          final List<String> nameTypeList = translationElement.getNameType()
-              .stream().map(NameType::getvalue).collect(Collectors.toList());
-          final List<String> transList = translationElement.getTransDet()
-              .stream().map(TransDet::getvalue).collect(Collectors.toList());
-
-          nameEntry.setType(String.join("|", nameTypeList));
-          nameEntry.setTranslations(String.join("|", transList));
-          break;
-      }
+      nameComponentsEnrichers.stream()
+          .filter(enricher -> enricher.applies(nameComponentType))
+          .forEach(enricher -> enricher.enrich(nameEntry, component));
     }
 
     return nameEntry;
+  }
+
+  public List<NameComponent> getNameComponentsEnrichers() {
+    return nameComponentsEnrichers;
+  }
+
+  public void setNameComponentsEnrichers(
+      final List<NameComponent> nameComponentsEnrichers) {
+    this.nameComponentsEnrichers = nameComponentsEnrichers;
   }
 }
