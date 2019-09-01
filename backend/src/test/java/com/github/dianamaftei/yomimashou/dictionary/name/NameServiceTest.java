@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.github.dianamaftei.appscommon.model.Name;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;

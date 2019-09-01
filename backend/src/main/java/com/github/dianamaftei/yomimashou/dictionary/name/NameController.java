@@ -1,5 +1,6 @@
 package com.github.dianamaftei.yomimashou.dictionary.name;
 
+import com.github.dianamaftei.appscommon.model.Name;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

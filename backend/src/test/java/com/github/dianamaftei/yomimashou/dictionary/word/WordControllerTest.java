@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import com.github.dianamaftei.appscommon.model.Word;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,12 +48,12 @@ class WordControllerTest {
 
   @Test
   void shouldGetAListOfWordEntriesBasedOnASearchItem() throws Exception {
-    Word word = new Word();
+    final Word word = new Word();
     word.setKanjiElements(new HashSet<>(Arrays.asList("猫")));
-    String searchItem = "猫";
+    final String searchItem = "猫";
     when(wordService.getByReadingElemOrKanjiElem(new String[]{searchItem}, pageable))
         .thenReturn(new PageImpl<>(Collections.singletonList(word), pageable, 1));
-    MockHttpServletResponse response = mvc.perform(
+    final MockHttpServletResponse response = mvc.perform(
         get("/api/dictionary/words?searchItem={attribute_uri}&page=0&size=10", "猫")
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -61,8 +62,8 @@ class WordControllerTest {
 
   @Test
   void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
-    String searchItem = null;
-    MockHttpServletResponse response = mvc.perform(
+    final String searchItem = null;
+    final MockHttpServletResponse response = mvc.perform(
         get("/api/dictionary/words?searchItem={non_existent_variable}&page=0&size=1", searchItem)
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -71,8 +72,8 @@ class WordControllerTest {
 
   @Test
   void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
-    String searchItem = "";
-    MockHttpServletResponse response = mvc.perform(
+    final String searchItem = "";
+    final MockHttpServletResponse response = mvc.perform(
         get("/api/dictionary/words?searchItem={attribute_uri}&page=0&size=1", searchItem)
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

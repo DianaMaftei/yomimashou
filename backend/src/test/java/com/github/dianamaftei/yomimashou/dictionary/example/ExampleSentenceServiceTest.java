@@ -1,6 +1,6 @@
 package com.github.dianamaftei.yomimashou.dictionary.example;
 
-import static com.github.dianamaftei.yomimashou.dictionary.example.QExampleSentence.exampleSentence;
+import static com.github.dianamaftei.appscommon.model.QExampleSentence.exampleSentence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+import com.github.dianamaftei.appscommon.model.ExampleSentence;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

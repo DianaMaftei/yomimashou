@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.github.dianamaftei.appscommon.model.KanjiCategories;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,7 +63,7 @@ class TextServiceTest {
   void getAllShouldReturnAllTexts() {
     when(textRepository.findAll(any(Sort.class))).thenReturn(Collections.singletonList(text));
 
-    List<Text> allTexts = textService.getAll();
+    final List<Text> allTexts = textService.getAll();
 
     assertAll("Should return a list with only the text element",
         () -> assertEquals(1, allTexts.size()),
@@ -74,7 +75,7 @@ class TextServiceTest {
     text.setId(42L);
     when(textRepository.getOne(42L)).thenReturn(text);
 
-    Text textById = textService.getById(42L);
+    final Text textById = textService.getById(42L);
 
     assertEquals(text.getId(), textById.getId());
   }

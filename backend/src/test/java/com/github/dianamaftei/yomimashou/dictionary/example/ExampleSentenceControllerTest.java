@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import com.github.dianamaftei.appscommon.model.ExampleSentence;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,12 +35,12 @@ class ExampleSentenceControllerTest {
 
   @Test
   void shouldGetAListOfExampleSentencesBasedOnASearchItem() throws Exception {
-    ExampleSentence exampleSentence = new ExampleSentence();
+    final ExampleSentence exampleSentence = new ExampleSentence();
     exampleSentence.setSentence("test sentence by search");
-    String searchItem = "test sentence";
+    final String searchItem = "test sentence";
     when(exampleSentenceService.get(new String[]{searchItem}))
         .thenReturn(Collections.singletonList(exampleSentence));
-    MockHttpServletResponse response = mvc.perform(
+    final MockHttpServletResponse response = mvc.perform(
         get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -49,8 +50,8 @@ class ExampleSentenceControllerTest {
 
   @Test
   void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
-    String searchItem = null;
-    MockHttpServletResponse response = mvc.perform(
+    final String searchItem = null;
+    final MockHttpServletResponse response = mvc.perform(
         get("/api/dictionary/examples?searchItem={non_existent_variable}", searchItem)
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -59,8 +60,8 @@ class ExampleSentenceControllerTest {
 
   @Test
   void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
-    String searchItem = "";
-    MockHttpServletResponse response = mvc.perform(
+    final String searchItem = "";
+    final MockHttpServletResponse response = mvc.perform(
         get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

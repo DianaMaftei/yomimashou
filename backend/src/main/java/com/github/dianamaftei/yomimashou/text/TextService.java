@@ -1,5 +1,6 @@
 package com.github.dianamaftei.yomimashou.text;
 
+import com.github.dianamaftei.appscommon.model.KanjiCategories;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -8,35 +9,37 @@ import org.springframework.stereotype.Service;
 @Service
 public class TextService {
 
+  private static final String CREATION_DATE = "creationDate";
+  private static final String ELLIPSIS = "...";
   private final TextRepository textRepository;
   private final KanjiCategories kanjiCategories;
   private static final String[] SENTENCE_ENDING_CHARACTERS = {"。", ".", "…", "‥", "！", "？"};
 
   @Autowired
-  public TextService(TextRepository textRepository, KanjiCategories kanjiCategories) {
+  public TextService(final TextRepository textRepository, final KanjiCategories kanjiCategories) {
     this.textRepository = textRepository;
     this.kanjiCategories = kanjiCategories;
   }
 
-  public Text add(Text text) {
+  public Text add(final Text text) {
     text.setExcerpt(getExcerpt(text));
     text.setKanjiCountByLevel(kanjiCategories.getKanjiCountByCategory(text.getContent()));
     return textRepository.save(text);
   }
 
   public List<Text> getAll() {
-    return this.textRepository.findAll(new Sort(Sort.Direction.DESC, "creationDate"));
+    return this.textRepository.findAll(new Sort(Sort.Direction.DESC, CREATION_DATE));
   }
 
-  public Text getById(Long id) {
+  public Text getById(final Long id) {
     return this.textRepository.getOne(id);
   }
 
-  private String getExcerpt(Text text) {
-    String snippet = text.getContent().substring(0, getIndexOfSentenceEnd(text.getContent()));
+  private String getExcerpt(final Text text) {
+    final String snippet = text.getContent().substring(0, getIndexOfSentenceEnd(text.getContent()));
     boolean snippetEndsWithEndingCharacter = false;
 
-    for (String sentenceEndingCharacter : SENTENCE_ENDING_CHARACTERS) {
+    for (final String sentenceEndingCharacter : SENTENCE_ENDING_CHARACTERS) {
       if (snippet.endsWith(sentenceEndingCharacter)) {
         snippetEndsWithEndingCharacter = true;
         break;
@@ -44,24 +47,25 @@ public class TextService {
     }
 
     if (!snippetEndsWithEndingCharacter) {
-      return snippet + "...";
+      return snippet + ELLIPSIS;
     }
 
     return snippet;
   }
 
-  private int getIndexOfSentenceEnd(String text) {
-    int startOfEndingCharacterSearch = 250;
-    int endOfEndingCharacterSearch = 350;
+  private int getIndexOfSentenceEnd(final String text) {
+    final int startOfEndingCharacterSearch = 250;
+    final int endOfEndingCharacterSearch = 350;
     int indexOfEndingCharacter = 100;
 
     if (text.length() < endOfEndingCharacterSearch) {
       return text.length();
     }
 
-    String substring = text.substring(startOfEndingCharacterSearch, endOfEndingCharacterSearch + 1);
+    final String substring = text
+        .substring(startOfEndingCharacterSearch, endOfEndingCharacterSearch + 1);
 
-    for (String character : SENTENCE_ENDING_CHARACTERS) {
+    for (final String character : SENTENCE_ENDING_CHARACTERS) {
       if (substring.contains(character) && substring.indexOf(character) < indexOfEndingCharacter) {
         indexOfEndingCharacter = substring.indexOf(character);
       }

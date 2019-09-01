@@ -1,7 +1,8 @@
 package com.github.dianamaftei.yomimashou.dictionary.example;
 
-import static com.github.dianamaftei.yomimashou.dictionary.example.QExampleSentence.exampleSentence;
+import static com.github.dianamaftei.appscommon.model.QExampleSentence.exampleSentence;
 
+import com.github.dianamaftei.appscommon.model.ExampleSentence;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;

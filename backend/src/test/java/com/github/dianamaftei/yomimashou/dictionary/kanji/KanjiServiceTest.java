@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+import com.github.dianamaftei.appscommon.model.Kanji;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,19 +29,14 @@ class KanjiServiceTest {
 
   @Test
   void get() {
-    String searchItem = "searchItem";
-    Kanji kanjiEntry = new Kanji();
+    final String searchItem = "searchItem";
+    final Kanji kanjiEntry = new Kanji();
     kanjiEntry.setCharacter("kanji");
     when(kanjiRepository.findByCharacter(searchItem)).thenReturn(kanjiEntry);
 
-    Kanji result = kanjiService.get(searchItem);
+    final Kanji result = kanjiService.get(searchItem);
 
     verify(kanjiRepository, times(1)).findByCharacter(searchItem);
     assertEquals("kanji", result.getCharacter());
-  }
-
-  @Test
-  void getKanjiSVG() {
-    // TODO test this method
   }
 }

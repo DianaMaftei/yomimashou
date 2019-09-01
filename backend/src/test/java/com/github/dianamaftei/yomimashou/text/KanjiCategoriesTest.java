@@ -2,6 +2,7 @@ package com.github.dianamaftei.yomimashou.text;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.github.dianamaftei.appscommon.model.KanjiCategories;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,26 +18,26 @@ class KanjiCategoriesTest {
 
   @Test
   void getKanjiCountByCategoryShouldReturnAnEmptyMapIfStringIsNull() {
-    Map<String, Integer> kanjiCountByCategory = kanjiCategories.getKanjiCountByCategory(null);
+    final Map<String, Integer> kanjiCountByCategory = kanjiCategories.getKanjiCountByCategory(null);
     assertEquals(0, kanjiCountByCategory.keySet().size());
   }
 
   @Test
   void getKanjiCountByCategoryShouldReturnAMapWithAllValuesZeroIfStringIsEmpty() {
-    Map<String, Integer> kanjiCountByCategory = kanjiCategories.getKanjiCountByCategory("");
+    final Map<String, Integer> kanjiCountByCategory = kanjiCategories.getKanjiCountByCategory("");
     kanjiCountByCategory.forEach((key, value) -> assertEquals(0, value.intValue()));
   }
 
   @Test
   void getKanjiCountByCategoryShouldReturnAMapWithAllValuesZeroIfStringDoesNotContainKanji() {
-    Map<String, Integer> kanjiCountByCategory = kanjiCategories
+    final Map<String, Integer> kanjiCountByCategory = kanjiCategories
         .getKanjiCountByCategory("こんなゆめをみた。");
     kanjiCountByCategory.forEach((key, value) -> assertEquals(0, value.intValue()));
   }
 
   @Test
   void getKanjiCountByCategoryShouldReturnAMapWithCorrectJLPTValuesIfStringContainsKanji() {
-    Map<String, Integer> kanjiCountByCategory = kanjiCategories.getKanjiCountByCategory(
+    final Map<String, Integer> kanjiCountByCategory = kanjiCategories.getKanjiCountByCategory(
         "むかしむかし、神さまは十二種類の動物をそれぞれの年の大将にして、" + "この世に誕生したばかりの人間たちの教育係にしようと考えました。");
     assertEquals(1, kanjiCountByCategory.get("N1").intValue());
     assertEquals(1, kanjiCountByCategory.get("N2").intValue());
@@ -47,7 +48,7 @@ class KanjiCategoriesTest {
 
   @Test
   void getKanjiCountByCategoryShouldReturnAMapWithCorrectJouyouValuesIfStringContainsKanji() {
-    Map<String, Integer> kanjiCountByCategory = kanjiCategories.getKanjiCountByCategory(
+    final Map<String, Integer> kanjiCountByCategory = kanjiCategories.getKanjiCountByCategory(
         "むかしむかし、神さまは十二種類の動物をそれぞれの年の大将にして、" + "この世に誕生したばかりの人間たちの教育係にしようと考えました。");
     assertEquals(6, kanjiCountByCategory.get("jouyou-1").intValue());
     assertEquals(3, kanjiCountByCategory.get("jouyou-2").intValue());
@@ -60,7 +61,7 @@ class KanjiCategoriesTest {
 
   @Test
   void getKanjiCountByCategoryShouldReturnAMapWithCorrectUnknownValuesIfStringContainsUnkownKanji() {
-    Map<String, Integer> kanjiCountByCategory = kanjiCategories
+    final Map<String, Integer> kanjiCountByCategory = kanjiCategories
         .getKanjiCountByCategory("　龍は天に昇れるので、神の言葉を人間に伝えてくれるだろう。");
     assertEquals(1, kanjiCountByCategory.get("unknown").intValue());
   }

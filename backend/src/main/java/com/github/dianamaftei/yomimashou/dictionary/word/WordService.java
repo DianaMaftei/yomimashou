@@ -1,5 +1,6 @@
 package com.github.dianamaftei.yomimashou.dictionary.word;
 
+import com.github.dianamaftei.appscommon.model.Word;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,27 +12,27 @@ public class WordService {
   private final WordRepository wordRepository;
 
   @Autowired
-  public WordService(WordRepository wordRepository) {
+  public WordService(final WordRepository wordRepository) {
     this.wordRepository = wordRepository;
   }
 
-  public Page<Word> getByReadingElemOrKanjiElem(String[] searchItems, Pageable pageable) {
+  public Page<Word> getByReadingElemOrKanjiElem(final String[] searchItems, final Pageable pageable) {
     return wordRepository
         .findDistinctByKanjiElementsInOrReadingElementsIn(searchItems, searchItems, pageable);
   }
 
-  public Page<Word> getByStartingKanji(String searchItem, Pageable pageable) {
+  public Page<Word> getByStartingKanji(final String searchItem, final Pageable pageable) {
     return wordRepository.findDistinctByKanjiElementsLikeOrderByPriority(
         searchItem + "%", pageable);
   }
 
 
-  public Page<Word> getByEndingKanji(String searchItem, Pageable pageable) {
+  public Page<Word> getByEndingKanji(final String searchItem, final Pageable pageable) {
     return wordRepository.findDistinctByKanjiElementsLikeOrderByPriority(
         "%" + searchItem, pageable);
   }
 
-  public Page<Word> getByContainingKanji(String searchItem, Pageable pageable) {
+  public Page<Word> getByContainingKanji(final String searchItem, final Pageable pageable) {
     return wordRepository.findDistinctByKanjiElementsLikeOrderByPriority(
         "%" + searchItem + "%", pageable);
   }

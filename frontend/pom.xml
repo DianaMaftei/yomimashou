@@ -7,7 +7,7 @@
 
     <parent>
         <groupId>com.github.dianamaftei</groupId>
-        <artifactId>yomimashou</artifactId>
+        <artifactId>yomimashou-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
