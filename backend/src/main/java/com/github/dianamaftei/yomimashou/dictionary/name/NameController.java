@@ -23,7 +23,7 @@ public class NameController {
 
   @GetMapping
   public Page<Name> get(@RequestParam("searchItem") final String searchItem,
-      @PageableDefault(value = 10, page = 0) final Pageable pageable) {
+      final Pageable pageable) {
     if (searchItem.length() > 0) {
       return nameService.getByReadingElemOrKanjiElem(searchItem.split(","), pageable);
     }

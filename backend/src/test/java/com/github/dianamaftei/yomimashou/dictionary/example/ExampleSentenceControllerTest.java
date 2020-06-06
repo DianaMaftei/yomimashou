@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ExtendWith(MockitoExtension.class)
 class ExampleSentenceControllerTest {
 
+  public static final String API_DICTIONARY_EXAMPLES_URL = "/api/dictionary/examples";
   private MockMvc mvc;
 
   @Mock
@@ -41,7 +42,8 @@ class ExampleSentenceControllerTest {
     when(exampleSentenceService.get(new String[]{searchItem}))
         .thenReturn(Collections.singletonList(exampleSentence));
     final MockHttpServletResponse response = mvc.perform(
-        get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
+        get(API_DICTIONARY_EXAMPLES_URL)
+            .param("searchItem", searchItem)
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertThat(response.getContentAsString().indexOf("sentence\":\"test sentence by search"))
@@ -50,19 +52,20 @@ class ExampleSentenceControllerTest {
 
   @Test
   void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
-    final String searchItem = null;
     final MockHttpServletResponse response = mvc.perform(
-        get("/api/dictionary/examples?searchItem={non_existent_variable}", searchItem)
+        get(API_DICTIONARY_EXAMPLES_URL)
+            .param("searchItem", null)
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertThat(response.getContentAsString()).isEqualTo("[]");
   }
 
   @Test
   void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
-    final String searchItem = "";
     final MockHttpServletResponse response = mvc.perform(
-        get("/api/dictionary/examples?searchItem={attribute_uri}", searchItem)
+        get(API_DICTIONARY_EXAMPLES_URL)
+            .param("searchItem", "")
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertThat(response.getContentAsString()).isEqualTo("[]");

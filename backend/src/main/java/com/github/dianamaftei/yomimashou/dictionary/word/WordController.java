@@ -23,7 +23,7 @@ public class WordController {
 
   @GetMapping
   public Page<Word> getByReadingElemOrKanjiElem(@RequestParam("searchItem") final String searchItem,
-      @PageableDefault(value = 10, page = 0) final Pageable pageable) {
+      final Pageable pageable) {
     if (searchItem.length() > 0) {
       return wordService.getByReadingElemOrKanjiElem(searchItem.split(","), pageable);
     }
@@ -32,7 +32,7 @@ public class WordController {
 
   @GetMapping(value = "/byStartingKanji")
   public Page<Word> getByStartingKanji(@RequestParam("searchItem") final String searchItem,
-      @PageableDefault(value = 10, page = 0) final Pageable pageable) {
+      final Pageable pageable) {
     if (searchItem.length() > 0) {
       return wordService.getByStartingKanji(searchItem, pageable);
     }
@@ -41,7 +41,7 @@ public class WordController {
 
   @GetMapping(value = "/byEndingKanji")
   public Page<Word> getByEndingKanji(@RequestParam("searchItem") final String searchItem,
-      @PageableDefault(value = 10, page = 0) final Pageable pageable) {
+      final Pageable pageable) {
     if (searchItem.length() > 0) {
       return wordService.getByEndingKanji(searchItem, pageable);
     }
@@ -50,7 +50,7 @@ public class WordController {
 
   @GetMapping(value = "/byContainingKanji")
   public Page<Word> getByContainingKanji(@RequestParam("searchItem") final String searchItem,
-      @PageableDefault(value = 10, page = 0) final Pageable pageable) {
+      final Pageable pageable) {
     if (searchItem.length() > 0) {
       return wordService.getByContainingKanji(searchItem, pageable);
     }

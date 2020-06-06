@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ExtendWith(MockitoExtension.class)
 public class NameControllerTest {
 
+  public static final String API_DICTIONARY_NAMES_URL = "/api/dictionary/names";
   private MockMvc mvc;
 
   @Mock
@@ -53,7 +54,8 @@ public class NameControllerTest {
         .thenReturn(new PageImpl<>(Collections.singletonList(name), pageable, 1));
 
     final MockHttpServletResponse response = mvc
-        .perform(get("/api/dictionary/names?searchItem=猫&page=0&size=10")
+        .perform(get(API_DICTIONARY_NAMES_URL)
+            .param("searchItem", "猫")
             .accept(MediaType.APPLICATION_JSON))
         .andReturn().getResponse();
 

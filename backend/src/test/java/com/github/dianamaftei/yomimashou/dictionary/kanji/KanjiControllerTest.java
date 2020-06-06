@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ExtendWith(MockitoExtension.class)
 class KanjiControllerTest {
 
+  public static final String API_DICTIONARY_KANJI_URL = "/api/dictionary/kanji";
   private MockMvc mvc;
 
   @Mock
@@ -40,8 +41,11 @@ class KanjiControllerTest {
     kanji.setMeaning("cat");
     when(kanjiService.get("猫")).thenReturn(kanji);
     final MockHttpServletResponse response = mvc
-        .perform(get("/api/dictionary/kanji?searchItem=猫").accept(MediaType.APPLICATION_JSON))
+        .perform(get(API_DICTIONARY_KANJI_URL)
+            .param("searchItem", "猫")
+            .accept(MediaType.APPLICATION_JSON))
         .andReturn().getResponse();
+
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertThat(response.getContentAsString().indexOf("meaning\":\"cat")).isGreaterThan(0);
   }
@@ -55,7 +59,7 @@ class KanjiControllerTest {
     final byte[] svgBytes = svg.getBytes();
     when(kanjiService.getStrokesSVG(kanji)).thenReturn(svgBytes);
     final MockHttpServletResponse response = mvc.perform(
-        get("/api/dictionary/kanji/svg/" + kanji).characterEncoding("UTF-8")
+        get(API_DICTIONARY_KANJI_URL + "/svg/" + kanji).characterEncoding("UTF-8")
             .accept("image/svg+xml")).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertEquals(svg, response.getContentAsString());

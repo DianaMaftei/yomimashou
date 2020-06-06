@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ExtendWith(MockitoExtension.class)
 class WordControllerTest {
 
+  public static final String API_DICTIONARY_WORDS_URL = "/api/dictionary/words";
   private MockMvc mvc;
 
   @Mock
@@ -54,8 +55,12 @@ class WordControllerTest {
     when(wordService.getByReadingElemOrKanjiElem(new String[]{searchItem}, pageable))
         .thenReturn(new PageImpl<>(Collections.singletonList(word), pageable, 1));
     final MockHttpServletResponse response = mvc.perform(
-        get("/api/dictionary/words?searchItem={attribute_uri}&page=0&size=10", "猫")
+        get(API_DICTIONARY_WORDS_URL)
+            .param("searchItem", searchItem)
+            .param("page", "0")
+            .param("size", "10")
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertThat(response.getContentAsString().indexOf("kanjiElements\":[\"猫\"]")).isGreaterThan(0);
   }
@@ -64,8 +69,12 @@ class WordControllerTest {
   void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
     final String searchItem = null;
     final MockHttpServletResponse response = mvc.perform(
-        get("/api/dictionary/words?searchItem={non_existent_variable}&page=0&size=1", searchItem)
+        get(API_DICTIONARY_WORDS_URL)
+            .param("searchItem", searchItem)
+            .param("page", "0")
+            .param("size", "1")
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertThat(response.getContentAsString().indexOf("\"numberOfElements\":0")).isGreaterThan(0);
   }
@@ -74,7 +83,10 @@ class WordControllerTest {
   void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
     final String searchItem = "";
     final MockHttpServletResponse response = mvc.perform(
-        get("/api/dictionary/words?searchItem={attribute_uri}&page=0&size=1", searchItem)
+        get(API_DICTIONARY_WORDS_URL)
+            .param("searchItem", searchItem)
+            .param("page", "0")
+            .param("size", "1")
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     assertThat(response.getContentAsString().indexOf("\"numberOfElements\":0")).isGreaterThan(0);

@@ -110,7 +110,7 @@ class TextControllerTest {
 
     MockHttpServletResponse response = mvc
         .perform(post("/api/text/parse/words").accept(MediaType.APPLICATION_JSON)
-            .content(new ObjectMapper().writeValueAsString("欲張りなイヌ")))
+            .content("欲張りなイヌ"))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -124,7 +124,7 @@ class TextControllerTest {
 
     MockHttpServletResponse response = mvc
         .perform(post("/api/text/parse/names").accept(MediaType.APPLICATION_JSON)
-            .content(new ObjectMapper().writeValueAsString("欲張りなイヌ")))
+            .content("欲張りなイヌ"))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

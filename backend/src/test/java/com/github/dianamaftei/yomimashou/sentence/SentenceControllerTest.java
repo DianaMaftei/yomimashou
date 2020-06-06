@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ExtendWith(MockitoExtension.class)
 class SentenceControllerTest {
 
+  public static final String API_SENTENCE_URL = "/api/sentence";
   private MockMvc mvc;
 
   @Mock
@@ -41,7 +42,7 @@ class SentenceControllerTest {
     String sentence = "sentence";
     when(sentenceService.analyze(anyString()))
         .thenReturn(Collections.singletonList(new SentenceToken()));
-    mvc.perform(post("/api/sentence").content(sentence).accept(MediaType.APPLICATION_JSON))
+    mvc.perform(post(API_SENTENCE_URL).content(sentence).accept(MediaType.APPLICATION_JSON))
         .andReturn();
     verify(sentenceService, times(1)).analyze(sentence);
   }
@@ -49,7 +50,7 @@ class SentenceControllerTest {
   @Test
   void analyzeShouldReturnBadRequestWhenGivenNoSentence() throws Exception {
     MockHttpServletResponse response = mvc
-        .perform(post("/api/sentence").accept(MediaType.APPLICATION_JSON)).andReturn()
+        .perform(post(API_SENTENCE_URL).accept(MediaType.APPLICATION_JSON)).andReturn()
         .getResponse();
     assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
   }

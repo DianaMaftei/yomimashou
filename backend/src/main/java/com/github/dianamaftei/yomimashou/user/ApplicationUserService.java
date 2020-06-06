@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ApplicationUserService implements UserDetailsService {
 
   private final ApplicationUserRepository applicationUserRepository;
@@ -65,7 +66,6 @@ public class ApplicationUserService implements UserDetailsService {
     return new User(applicationUser.getUsername(), applicationUser.getPassword(), emptyList());
   }
 
-  @Transactional
   public void setTextStatus(String username, Long textId, ProgressStatus progressStatus) {
     applicationUserRepository.findByUsername(username).ifPresent(applicationUser -> {
       Map<Long, ProgressStatus> textsStatuses = applicationUser.getTextsStatuses();

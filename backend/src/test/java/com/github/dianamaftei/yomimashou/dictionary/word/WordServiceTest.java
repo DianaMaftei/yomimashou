@@ -11,12 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class WordServiceTest {
 
   @InjectMocks
@@ -33,6 +34,7 @@ class WordServiceTest {
     when(wordRepository.findDistinctByKanjiElementsInOrReadingElementsIn(searchItems, searchItems,
         Pageable.unpaged()))
         .thenReturn(new PageImpl<>(words));
+
     final Page<Word> wordList = wordService.getByReadingElemOrKanjiElem(searchItems, Pageable.unpaged());
 
     verify(wordRepository, times(1))
