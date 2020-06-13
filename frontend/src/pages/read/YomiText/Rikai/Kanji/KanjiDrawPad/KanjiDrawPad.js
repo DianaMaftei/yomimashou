@@ -1,5 +1,5 @@
 import React from "react";
-import apiUrl from "../../../../../../AppUrl";
+import {apiUrl} from "../../../../../../AppUrl";
 import grid from "../../../../../../resources/grid.png";
 import solidWhite from "../../../../../../resources/solid-white.jpg";
 import { fabric } from "fabric";

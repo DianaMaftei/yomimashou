@@ -1,42 +1,74 @@
 import React from "react";
-import WordItemWithKanjiAndShortDef from "./WordItemWithKanjiAndShortDef";
-import WordItemWithKanjiAndLongDef from "./WordItemWithKanjiAndLongDef";
-import WordItemWithKanaAndShortDef from "./WordItemWithKanaAndShortDef";
-import WordItemWithKanaAndLongDef from "./WordItemWithKanaAndLongDef";
-
+import TTS from "../../../../../`common/TTS/TTS";
+import CardItemOrigin from "../../addcard/CardItemOrigin";
+import AddCard from "../../addcard/AddCard";
 
 class WordItem extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showShortDef: true
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      showShortDef: true,
+    };
+  }
 
-    showExamples() {
-        this.props.showExamples({ kanji: this.props.kanji, kana: this.props.kana });
-    }
+  showExamples() {
+    this.props.showExamples({kanji: this.props.kanji, kana: this.props.kana});
+  }
 
-    showLongDef(ev) {
-        ev.stopPropagation();
+  getCardItem() {
+    let cardItem = {
+      kanji: this.props.kanji ? this.props.kanji.join(", ") : "",
+      kana: this.props.kana.join(", "),
+      explanation: this.props.longDef,
+      cardItemOrigin: CardItemOrigin.WORD
+    };
 
-        this.setState({ showShortDef: false })
-    }
+    return cardItem;
+  }
 
-    render() {
-        if (this.props.kanji) {
-            if (this.state.showShortDef && this.props.shortDef) {
-                return WordItemWithKanjiAndShortDef(this.props.kanji, this.props.kana, this.props.grammar, this.props.shortDef, this.showExamples.bind(this), this.props.wordClassName, this.showLongDef.bind(this));
+  showLongDef(ev) {
+    ev.stopPropagation();
+
+    this.setState({...this.state, showShortDef: false})
+  }
+
+  render() {
+
+    let kanji = this.props.kanji.map((item, index) => {
+      return <span className="w-kanji" key={item + index}>{item}</span>
+    });
+
+    let kana = this.props.kana.map((item, index) => {
+      return <span className="w-kana" key={item + index}>{item}</span>
+    });
+
+    let definition = this.state.showShortDef && this.props.shortDef
+        ? this.props.shortDef : this.props.longDef;
+
+    return (
+        <div id="word-item" className={"w-word " + this.props.wordClassName}>
+          <div key={this.props.kanji}>
+            <span>{kanji}</span>
+            <span className="example-btn"
+                  onClick={this.showExamples.bind(this)}>Ex</span>
+          </div>
+          <span key={this.props.kana + this.props.grammar}>{kana}</span>
+          <span key={this.props.grammar}
+                className="w-grammar">{this.props.grammar}</span>
+          <p className="w-def">
+            {definition}
+            {
+              this.state.showShortDef && this.props.shortDef &&
+              <span id="ellipsis"
+                    onClick={this.showLongDef.bind(this)}> ...</span>
             }
-            return WordItemWithKanjiAndLongDef(this.props.kanji, this.props.kana, this.props.grammar, this.props.longDef, this.showExamples.bind(this), this.props.wordClassName);
-        } else if (this.state.showShortDef && this.props.shortDef) {
-            return WordItemWithKanaAndShortDef(this.props.kana, this.props.grammar, this.props.shortDef, this.showExamples.bind(this), this.props.wordClassName, this.showLongDef.bind(this));
-        } else {
-            return WordItemWithKanaAndLongDef(this.props.kana, this.props.grammar, this.props.longDef, this.showExamples.bind(this), this.props.wordClassName);
-        }
-    }
+          </p>
+          <AddCard cardItem={this.getCardItem()}/>
+          <TTS text={this.props.kana.join()}/>
+        </div>
+    )
+  }
 }
-
 
 export default WordItem;

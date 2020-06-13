@@ -12,8 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dianamaftei.study.BLValidationException;
+
 import java.util.Arrays;
 import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,11 +38,15 @@ import org.springframework.web.util.NestedServletException;
 @ExtendWith(SpringExtension.class)
 public class DeckControllerTest {
 
-  public static final String DECK_NAME = "deck name";
-  public static final String API_URL = "/api/deck";
-  public static final String DECK_ID_URL = API_URL + "/{deckId}";
-  public static final String ADD_CARD_EXISTING_DECK_URL = DECK_ID_URL + "/addCard";
-  public static final String ADD_CARD_NEW_DECK_URL = API_URL + "/addCard";
+  private static final String API_URL = "/api/deck";
+  private static final String DECK_ID_URL = API_URL + "/{deckId}";
+  private static final String ADD_CARD_EXISTING_DECK_URL = DECK_ID_URL + "/addCard";
+  private static final String ADD_CARD_NEW_DECK_URL = API_URL + "/addCard";
+
+  private static final String DECK_NAME = "deck name";
+  private static final String KANJI = "日";
+  private static final String KANA = "ひ、 -び、 -か ニチ、 ジツ";
+  private static final String EXPLANATION = "day, sun, Japan, counter for days";
 
   @Autowired
   private MockMvc mockMvc;
@@ -211,6 +217,8 @@ public class DeckControllerTest {
         .andReturn();
 
     assertTrue(StringUtils.isBlank(mvcGetResultAfterDelete.getResponse().getContentAsString()));
+
+    //TODO check that the cards are also deleted
   }
 
   @Test
@@ -220,10 +228,7 @@ public class DeckControllerTest {
     assertEquals(2, createdDeck.getCards().size());
 
     // create a new card
-    Card card = new Card();
-    String cardFront = "日";
-    card.setFront(cardFront);
-    card.setBack("day, sun, Japan, counter for days");
+    Card card = buildCard(KANJI, KANA, EXPLANATION, CardItemOrigin.KANJI);
 
     // add card to deck
     MvcResult mvcResult = mockMvc.perform(post(ADD_CARD_EXISTING_DECK_URL, createdDeck.getId())
@@ -240,7 +245,7 @@ public class DeckControllerTest {
     assertEquals(3, fetchedDeck.getCards().size());
     Optional<Card> addedCard = fetchedDeck.getCards()
         .stream()
-        .filter(deckCard -> cardFront.equals(deckCard.getFront()))
+        .filter(deckCard -> KANJI.equals(deckCard.getKanji()))
         .findFirst();
 
     assertThat(addedCard).isNotEmpty();
@@ -249,10 +254,7 @@ public class DeckControllerTest {
   @Test
   void addCardToNewDeckShouldCreateDeckAndSuccessfullyAddCardToIt() throws Exception {
     // create a new card to add to deck
-    Card card = new Card();
-    String front = "日";
-    card.setFront(front);
-    card.setBack("day, sun, Japan, counter for days");
+    Card card = buildCard(KANJI, KANA, EXPLANATION, CardItemOrigin.KANJI);
 
     // add card to deck
     MvcResult mvcResult = mockMvc.perform(post(ADD_CARD_NEW_DECK_URL)
@@ -270,7 +272,7 @@ public class DeckControllerTest {
     assertEquals(1, fetchedDeck.getCards().size());
     Optional<Card> addedCard = fetchedDeck.getCards()
         .stream()
-        .filter(deckCard -> front.equals(deckCard.getFront()))
+        .filter(deckCard -> KANJI.equals(deckCard.getKanji()))
         .findFirst();
 
     assertThat(addedCard).isNotEmpty();
@@ -289,10 +291,7 @@ public class DeckControllerTest {
   void addCardToExistingDeckShouldThrowExceptionIfDeckDoesNotExist() throws Exception {
     NestedServletException exception = Assertions.assertThrows(NestedServletException.class, () -> {
       // create a new card
-      Card card = new Card();
-      String cardFront = "日";
-      card.setFront(cardFront);
-      card.setBack("day, sun, Japan, counter for days");
+      Card card = buildCard(KANJI, KANA, EXPLANATION, CardItemOrigin.KANJI);
 
       // add card to deck, giving incorrect id
       mockMvc.perform(post(ADD_CARD_EXISTING_DECK_URL, "bogusId")
@@ -309,10 +308,7 @@ public class DeckControllerTest {
   void addCardToNewDeckShouldThrowExceptionIfNewDeckNameIsNotUnique() throws Exception {
     NestedServletException exception = Assertions.assertThrows(NestedServletException.class, () -> {
       // create a new card
-      Card card = new Card();
-      String cardFront = "日";
-      card.setFront(cardFront);
-      card.setBack("day, sun, Japan, counter for days");
+      Card card = buildCard(KANJI, KANA, EXPLANATION, CardItemOrigin.KANJI);
 
       // add card to new deck
       mockMvc.perform(post(ADD_CARD_NEW_DECK_URL)
@@ -342,7 +338,7 @@ public class DeckControllerTest {
     assertEquals(2, createdDeck.getCards().size());
 
     // remove a card
-    mockMvc.perform(post(DECK_ID_URL + "/card/{cardId}",
+    mockMvc.perform(post(DECK_ID_URL + "/card/delete/{cardId}",
         createdDeck.getId(), createdDeck.getCards().get(0).getId())
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
@@ -357,11 +353,6 @@ public class DeckControllerTest {
     Deck editedDeck = (Deck) asObject(getResultContent, Deck.class);
 
     assertEquals(1, editedDeck.getCards().size());
-  }
-
-  @Test
-  void getDueCardsToStudy() {
-
   }
 
   private Deck insertADeckInDb(final String deckName) throws Exception {
@@ -379,14 +370,19 @@ public class DeckControllerTest {
   private Deck buildDeckWithCards(final String deckName) {
     Deck deck = new Deck();
     deck.setName(deckName);
-    Card card1 = new Card();
-    card1.setFront(deckName + "_" + "猫");
-    card1.setBack("cat");
-    Card card2 = new Card();
-    card2.setFront(deckName + "_" + "大");
-    card2.setBack("big");
+    Card card1 = buildCard(deckName + "_" + "猫", "ねこ ビョウ", "cat", CardItemOrigin.KANJI);
+    Card card2 = buildCard(deckName + "_" + "犬", "いぬ、 いぬ- ケン", "dog", CardItemOrigin.KANJI);
     deck.setCards(Arrays.asList(card1, card2));
     return deck;
+  }
+
+  private Card buildCard(String kanji, String kana, String explanation, CardItemOrigin cardItemOrigin) {
+    Card card = new Card();
+    card.setKanji(kanji);
+    card.setKana(kana);
+    card.setExplanation(explanation);
+    card.setCardItemOrigin(cardItemOrigin);
+    return card;
   }
 
   private static String asJsonString(final Object obj) {

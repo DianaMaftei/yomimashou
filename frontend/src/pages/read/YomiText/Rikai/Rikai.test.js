@@ -2,6 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 import deepFreeze from "deepfreeze";
 import { getResult, Rikai } from "./Rikai";
+import SearchType from "./SearchType";
 
 describe("Rikai", () => {
     let props;
@@ -63,7 +64,7 @@ describe("Rikai", () => {
 
     it("should convert showResult", () => {
         const searchResult = deepFreeze({
-            type: "words", result: {
+            type: SearchType.WORD, result: {
                 data: [
                     {
                         word: "神さま",
@@ -77,7 +78,7 @@ describe("Rikai", () => {
             }
         });
         const showResult = deepFreeze({
-            type: "words",
+            type: SearchType.WORD,
             result: [
                 {
                     id: 34345,
@@ -153,7 +154,7 @@ describe("Rikai", () => {
         });
 
         const result = {
-            type: "words",
+            type: SearchType.WORD,
             result: [
                 {
                     grammar: null,

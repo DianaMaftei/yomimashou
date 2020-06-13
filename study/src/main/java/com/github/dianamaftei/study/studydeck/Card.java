@@ -12,8 +12,10 @@ public class Card {
 
   private String deckId;
 
-  private String front;
-  private String back;
+  private String kanji;
+  private String kana;
+  private String explanation;
+  private CardItemOrigin cardItemOrigin;
 
   private boolean active;
   private int repetitions;
@@ -43,20 +45,36 @@ public class Card {
     this.deckId = deckId;
   }
 
-  public String getFront() {
-    return front;
+  public String getKanji() {
+    return kanji;
   }
 
-  public void setFront(final String front) {
-    this.front = front;
+  public void setKanji(final String kanji) {
+    this.kanji = kanji;
   }
 
-  public String getBack() {
-    return back;
+  public String getKana() {
+    return kana;
   }
 
-  public void setBack(final String back) {
-    this.back = back;
+  public void setKana(String kana) {
+    this.kana = kana;
+  }
+
+  public String getExplanation() {
+    return explanation;
+  }
+
+  public void setExplanation(final String explanation) {
+    this.explanation = explanation;
+  }
+
+  public CardItemOrigin getCardItemOrigin() {
+    return cardItemOrigin;
+  }
+
+  public void setCardItemOrigin(CardItemOrigin cardItemOrigin) {
+    this.cardItemOrigin = cardItemOrigin;
   }
 
   public boolean isActive() {
@@ -99,14 +117,4 @@ public class Card {
     this.nextPractice = nextPractice;
   }
 
-  @Override
-  public String toString() {
-    return "Card{" +
-        "active=" + active +
-        ", repetitions=" + repetitions +
-        ", easinessFactor=" + easinessFactor +
-        ", interval=" + interval +
-        ", nextPractice=" + nextPractice +
-        '}';
-  }
 }

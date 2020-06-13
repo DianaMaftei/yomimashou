@@ -27,6 +27,8 @@
 	Please do not change or remove any of the copyrights or links to web pages
 	when modifying any of the files. - Jon
 */
+import SearchType from "./SearchType";
+
 let RikaiDict = (function () {
 
     let config = {
@@ -231,13 +233,13 @@ let RikaiDict = (function () {
                 if (!isKanji(text.charAt(0))) {
                     return e = null;
                 }
-                e = { result: [text.charAt(0)], type: "kanji", matchLen: 1 };
+                e = { result: [text.charAt(0)], type: SearchType.KANJI, matchLen: 1 };
                 return e;
             case config.words:
-                e = { result: findValidWordsInString(text, wordList), type: "words" };
+                e = { result: findValidWordsInString(text, wordList), type: SearchType.WORD };
                 break;
             case config.names:
-                e = { result: findValidNamesInString(text, nameList), type: "names" };
+                e = { result: findValidNamesInString(text, nameList), type: SearchType.NAME };
                 break;
             default:
                 break;
@@ -246,9 +248,7 @@ let RikaiDict = (function () {
     }
 
     return {
-        search: function (text, dictOption, wordList, nameList) {
-            return search(text, dictOption, wordList, nameList);
-        }
+        search
     }
 })();
 

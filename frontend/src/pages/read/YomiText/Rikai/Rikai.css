@@ -22,7 +22,7 @@
 
 #rikai-window {
     position: absolute;
-    z-index: 99992;
+    z-index: 100;
     background: #fbfafa;
     top: 5px;
     left: 5px;
@@ -79,11 +79,11 @@
     padding: 5px;
 }
 
-#rikai-window .example-btn {
-    float: right;
-    cursor: pointer;
-    color: #1686e6;
-    padding: 5px 5px 0 15px;
+#rikai-window .example-btn,.add-list-btn {
+    float: right !important;
+    cursor: pointer !important;
+    color: #1686e6 !important;
+    padding: 5px 5px 0 15px !important;
 }
 
 /* used for kanji information */

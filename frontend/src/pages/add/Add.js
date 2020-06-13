@@ -3,7 +3,7 @@ import "./add.css";
 
 import { Divider } from "@material-ui/core/umd/material-ui.development";
 import axios from "axios/index";
-import apiUrl from "../../AppUrl";
+import {apiUrl} from "../../AppUrl";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom'
 import ActionButtons from "./ActionButtons";

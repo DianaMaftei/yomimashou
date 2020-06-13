@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import YomiText from './YomiText/YomiText';
 import "./read.css";
 import axios from "axios/index";
-import apiUrl from "../../AppUrl";
+import {apiUrl} from "../../AppUrl";
 import { isAuthenticated, withHeaders } from "../../auth/auth";
 
 const mapStateToProps = (state) => ({

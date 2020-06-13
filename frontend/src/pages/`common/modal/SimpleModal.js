@@ -19,7 +19,7 @@ export default class SimpleModal extends React.Component {
 
         return (
             <div id="simple-modal">
-                <a href="#openModal" onClick={this.handleOpen}>{label}</a>
+                <a href="#openModal" onClick={this.handleOpen} className="btn font-weight-bold">{label}</a>
 
                 <div id="openModal" className="modalDialog">
                     <div id="modal-container"><a href="#close" title="Close" className="close" onClick={this.handleClose}>X</a>

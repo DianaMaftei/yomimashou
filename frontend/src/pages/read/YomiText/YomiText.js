@@ -8,11 +8,12 @@ import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from './Rikai
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
 import Kuroshiro from "kuroshiro";
 import LinearProgress from '@material-ui/core/LinearProgress';
-import apiUrl from "../../../AppUrl";
+import {apiUrl} from "../../../AppUrl";
 import DownloadIcon from 'mdi-react/DownloadIcon';
 import { isAuthenticated, withHeaders } from "../../../auth/auth";
 import { filterTextFuriganaByKanjiCategory } from "./furigana/FuriganaFilterByKanjiCategory";
 import FuriganaOptions from "./furigana/FuriganaOptions";
+import SearchType from "./Rikai/SearchType";
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
@@ -161,13 +162,13 @@ export class YomiText extends React.Component {
         let number = this.props.previousSearchResult.result !== this.props.searchResult.result ?0: this.props.number+1;
 
         if (!isVisible()) {
-            if (searchResult.type === "words") {
+            if (searchResult.type === SearchType.WORD) {
                 fetchData(searchResult.result.data.map(item => item.word), searchResult.type, number, this.props.limit);
-            } else if (searchResult.type === "kanji") {
+            } else if (searchResult.type === SearchType.KANJI) {
                 fetchData(searchResult.result, searchResult.type);
-            } else if (searchResult.type === "names") {
+            } else if (searchResult.type === SearchType.NAME) {
                 fetchData(searchResult.result.data, searchResult.type);
-            } else if (searchResult.type === "sentence") {
+            } else if (searchResult.type === SearchType.SENTENCE) {
                 this.props.fetchWordList(searchResult.result);
                 this.props.fetchTranslation(searchResult.result);
                 this.kuroshiro.convert(searchResult.result, {
@@ -203,7 +204,7 @@ export class YomiText extends React.Component {
                     if (!entries || !entries.result) {
                         return;
                     } else {
-                        if (entries.type === "words" && (!entries.result.data || entries.result.data.length === 0)) {
+                        if (entries.type === SearchType.WORD && (!entries.result.data || entries.result.data.length === 0)) {
                             return;
                         }
                     }
@@ -252,7 +253,7 @@ export class YomiText extends React.Component {
         }
 
         updateSearchResult({
-            type: "sentence",
+            type: SearchType.SENTENCE,
             result: (previousSentence.split("").reverse().join("") + "。").trim()
         });
 

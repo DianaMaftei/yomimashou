@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios/index";
-import apiUrl from "../../AppUrl";
+import {apiUrl} from "../../AppUrl";
 import "../../style/signIn.css";
 import Email from 'mdi-react/EmailIcon';
 import Lock from 'mdi-react/LockIcon';

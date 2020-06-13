@@ -1,5 +1,5 @@
 import React from "react";
-import apiUrl from "../../AppUrl";
+import {apiUrl} from "../../AppUrl";
 import axios from "axios/index";
 import Person from 'mdi-react/PersonIcon';
 import Email from 'mdi-react/EmailIcon';

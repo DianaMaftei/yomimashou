@@ -1,6 +1,6 @@
 import React from 'react';
 import CardMedia from "@material-ui/core/CardMedia/CardMedia";
-import apiUrl from "../../../../AppUrl";
+import {apiUrl} from "../../../../AppUrl";
 
 export default (text) => (
     <div className="text-card-top">

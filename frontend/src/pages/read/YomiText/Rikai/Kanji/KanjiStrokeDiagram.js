@@ -1,5 +1,5 @@
 import React from "react";
-import apiUrl from "../../../../../AppUrl";
+import {apiUrl} from "../../../../../AppUrl";
 import Raphael from "raphael";
 import "dmak";
 import SkipPrevious from 'mdi-react/SkipPreviousIcon';

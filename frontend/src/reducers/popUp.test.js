@@ -1,5 +1,6 @@
 import deepFreeze from 'deepfreeze';
 import popUp from "./popUp";
+import SearchType from "../pages/read/YomiText/Rikai/SearchType";
 
 describe('popUp', function () {
 
@@ -26,7 +27,7 @@ describe('popUp', function () {
     it('should update the search result', () => {
 
         let result = deepFreeze({
-            type: "words",
+            type: SearchType.WORD,
             result: []
         });
 
@@ -44,7 +45,7 @@ describe('popUp', function () {
     it('should update the result to be shown', () => {
 
         let result = deepFreeze({
-            type: "words",
+            type: SearchType.WORD,
             result: []
         });
 
@@ -62,11 +63,11 @@ describe('popUp', function () {
 
         let initialFetchState = deepFreeze({
             ...initialState,
-            searchResult: { type: "words", result: {} }
+            searchResult: { type: SearchType.WORD, result: {} }
         });
 
         let result = deepFreeze({
-            type: "words",
+            type: SearchType.WORD,
             result: null
         });
 
@@ -84,7 +85,7 @@ describe('popUp', function () {
 
         let initialFetchState = deepFreeze({
             ...initialState,
-            searchResult: { type: "words", result: null }
+            searchResult: { type: SearchType.WORD, result: null }
         });
 
         let result = deepFreeze({

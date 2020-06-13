@@ -5,6 +5,7 @@ import yomiText from "./pages/read/YomiText";
 import promiseMiddleware from 'redux-promise-middleware';
 import add from "./pages/add/index";
 import home from "./pages/home";
+import decks from "./pages/decks";
 import login from "./pages/login/loginReducers";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -14,7 +15,8 @@ const store = createStore(combineReducers({
     yomiText,
     popUp,
     config,
-    login
+    login,
+    decks
 }), composeEnhancers(
     applyMiddleware(promiseMiddleware())
 ));

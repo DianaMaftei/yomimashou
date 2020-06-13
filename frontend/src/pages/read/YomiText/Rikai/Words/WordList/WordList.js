@@ -10,7 +10,7 @@ class WordList extends React.Component {
 
     componentWillUpdate(nextProps, nextState) {
         if (this.props.resultList !== nextProps.resultList) {
-            this.setState({ limit: true });
+            this.setState({limit: true});
         }
     }
 
@@ -22,11 +22,9 @@ class WordList extends React.Component {
     render() {
         if (!this.props.resultList) {
             return <div/>;
-        }
-        else if (this.props.last) {
+        } else if (this.props.last) {
             return WordListFull(this.props.resultList, this.props.showExamples)
-        }
-        else if (!this.props.last) {
+        } else if (!this.props.last) {
             return WordListLimited(this.props.resultList, this.props.showExamples, this.showMoreResults.bind(this))
         }
     }

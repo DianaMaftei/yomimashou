@@ -40,6 +40,16 @@ public class DeckService {
   }
 
   public void delete(final String id) {
+    Optional<Deck> deckOptional = deckRepository.findById(id);
+
+    if (!deckOptional.isPresent()) {
+      throw new BLValidationException("invalid deck id");
+    }
+    Deck deck = deckOptional.get();
+
+    if (deck.getCards() != null) {
+      deck.getCards().forEach(item -> cardService.delete(item));
+    }
     deckRepository.deleteById(id);
   }
 
@@ -71,13 +81,14 @@ public class DeckService {
     if (!optionalDeck.isPresent()) {
       throw new BLValidationException("deck with given id does not exist");
     }
+    // TODO limit the number of cards in a deck -> 1000 maybe?
+
     return addCardToDeck(optionalDeck.get(), card);
   }
 
   public Deck addCardToNewDeck(final String deckName, final Card card) {
     Deck deck = new Deck();
     deck.setName(deckName);
-    deck.setCards(new ArrayList<>());
     deck = save(deck);
     return addCardToDeck(deck, card);
   }
@@ -85,7 +96,16 @@ public class DeckService {
   private Deck addCardToDeck(Deck deck, final Card card) {
     card.setDeckId(deck.getId());
     cardService.save(card);
+
+    if (deck.getCards() == null) {
+      deck.setCards(new ArrayList<>());
+    }
+
     deck.getCards().add(card);
     return save(deck);
+  }
+
+  public List<Deck> getAllDeckNames() {
+    return deckRepository.getAllDeckNames();
   }
 }

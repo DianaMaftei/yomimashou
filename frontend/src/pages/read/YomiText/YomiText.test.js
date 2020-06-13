@@ -4,6 +4,7 @@ import '../../../__mocks__/xhr-mock.js';
 import { YomiText } from "./YomiText";
 import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "./Rikai/RikaiTextParser";
 import deepFreeze from "deepfreeze";
+import SearchType from "./Rikai/SearchType";
 
 jest.mock('./Rikai/RikaiTextParser', () => ({
     highlightMatch: jest.fn(),
@@ -104,7 +105,7 @@ describe("YomiText", () => {
     it("should try to fetch data when searchResult's type is 'words' and user has clicked inside container", () => {
         props.setPopupInfo = jest.fn();
         props.fetchData = jest.fn();
-        const result = deepFreeze({ type: "words", result: { data: [] } });
+        const result = deepFreeze({ type: SearchType.WORD, result: { data: [] } });
         props.searchResult = result;
 
         const getSelection = () => {

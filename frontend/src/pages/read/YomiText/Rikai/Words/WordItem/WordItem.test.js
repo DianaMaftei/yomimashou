@@ -33,7 +33,7 @@ describe("WordItem", () => {
         props.kana = [{ bar: "foo" }];
         props.shortDef = "short def";
 
-        expect(wrapper().find("#word-with-kanji-and-short-def").length).toBe(1);
+        expect(wrapper().find("#word-item").length).toBe(1);
     });
 
     it("should render WordItemWithKanjiAndLongDef when props contain kanji and showShortDef is false", () => {
