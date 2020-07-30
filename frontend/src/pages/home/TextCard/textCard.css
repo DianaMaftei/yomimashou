@@ -15,6 +15,10 @@
     font-weight: 500;
 }
 
+.card-text-content hr {
+    width: 98%;
+}
+
 .card-text-gradient {
     position: absolute;
     height: 80px;
@@ -28,11 +32,6 @@
 
 .text-card-bottom-container {
     display: block !important;
-}
-
-.text-card-bottom {
-    display: flex;
-    padding: 0 16px;
 }
 
 .text-tags {

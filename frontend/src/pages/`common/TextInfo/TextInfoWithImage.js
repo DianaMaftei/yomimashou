@@ -18,16 +18,12 @@ export default (text) => (
         </div>
         <div className="text-info-img-gradient"/>
         <div className="text-info-body">
-            <div className="text-info-creator">
-                <span>added by </span> <span className="text-info-creator-username">{text.createdBy}</span>
-            </div>
             <div>
                 <div className="text-info-length">
                     <span>{text.excerpt.length}</span>
                     <span>&nbsp;characters</span>
                 </div>
                 <div className="text-info-date">
-                    <MaterialIcon icon="schedule" color="#fefdfd" size="21" />
                     <span>{text.creationDate}</span>
                 </div>
             </div>

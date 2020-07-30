@@ -1,7 +1,7 @@
 #bricks-layout {
     position: relative;
     top: -50px;
-    z-index: 9000;
+    z-index: 2;
 }
 
 #bricks-layout>div>div{

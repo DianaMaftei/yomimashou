@@ -26,6 +26,9 @@ export default ({text, status}) => {
                             {text.title}
                         </Typography>
                         <Divider/>
+                        <div className="text-info-creator">
+                            <span>added by </span> <span className="text-info-creator-username">{text.createdBy}</span>
+                        </div>
                         <Typography component="p" className="text-card-excerpt">
                             {text.excerpt.replace(/<br>/g, "\n")}
                         </Typography>
