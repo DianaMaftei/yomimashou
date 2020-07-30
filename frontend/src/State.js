@@ -4,7 +4,7 @@ import config from "./reducers/config";
 import yomiText from "./pages/read/YomiText";
 import promiseMiddleware from 'redux-promise-middleware';
 import add from "./pages/add/index";
-import home from "./pages/home";
+import home from "./pages/home/reducers";
 import decks from "./pages/decks";
 import login from "./pages/login/loginReducers";
 

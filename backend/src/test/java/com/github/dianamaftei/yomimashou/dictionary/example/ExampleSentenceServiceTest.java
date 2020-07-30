@@ -54,7 +54,7 @@ class ExampleSentenceServiceTest {
     when(jpaQuery.where(any(Predicate.class))).thenReturn(jpaQuery);
     when(jpaQuery.distinct()).thenReturn(jpaQuery);
     when(jpaQuery.limit(paginationLimit)).thenReturn(jpaQuery);
-    final List<ExampleSentence> exampleSentences = exampleSentenceService.get(searchItems);
+    final List<ExampleSentence> exampleSentences = exampleSentenceService.get(searchItems, pageable);
     verify(jpaQuery).where(predicateArgumentCaptor.capture());
     final Predicate value = predicateArgumentCaptor.getValue();
     assertEquals(

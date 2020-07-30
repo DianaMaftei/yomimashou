@@ -39,7 +39,7 @@ class ExampleSentenceControllerTest {
     final ExampleSentence exampleSentence = new ExampleSentence();
     exampleSentence.setSentence("test sentence by search");
     final String searchItem = "test sentence";
-    when(exampleSentenceService.get(new String[]{searchItem}))
+    when(exampleSentenceService.get(new String[]{searchItem}, pageable))
         .thenReturn(Collections.singletonList(exampleSentence));
     final MockHttpServletResponse response = mvc.perform(
         get(API_DICTIONARY_EXAMPLES_URL)

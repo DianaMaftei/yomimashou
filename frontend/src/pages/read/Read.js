@@ -5,6 +5,7 @@ import "./read.css";
 import axios from "axios/index";
 import {apiUrl} from "../../AppUrl";
 import { isAuthenticated, withHeaders } from "../../auth/auth";
+import Header from "../`common/header/Header";
 
 const mapStateToProps = (state) => ({
     text: state.add.text
@@ -33,6 +34,11 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'PARSE_TEXT_NAMES',
             payload: axios.post(apiUrl + '/api/text/parse/names', text)
         })
+    },
+    toggleTextActionsMenu: () => {
+        dispatch({
+            type: 'TOGGLE_TEXT_ACTIONS_MENU'
+        })
     }
 });
 
@@ -55,6 +61,8 @@ export class Read extends React.Component {
         if (!this.props.text.content) return;
         this.props.getWordsForText(this.props.text.title + " " + this.props.text.content.replace(/<br>/g, ""));
         // this.props.getNamesForText(this.props.text.content);
+
+        this.showTextActions = false;
     }
 
     componentWillUnmount() {
@@ -77,6 +85,9 @@ export class Read extends React.Component {
     render() {
         return (
             <div id="read-page">
+                <div id="app-header">
+                    <Header leftIcon="menu" rightIcon="more_vert" centerText={this.props.text.title} onOptionsClick={this.props.toggleTextActionsMenu}/>
+                </div>
                 <YomiText text={this.props.text} id={this.props.match.params.id}/>
             </div>
         )

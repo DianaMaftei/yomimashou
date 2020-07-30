@@ -1,7 +1,5 @@
 import React from "react";
 import TTS from "../../../../../`common/TTS/TTS";
-import CardItemOrigin from "../../addcard/CardItemOrigin";
-import AddCard from "../../addcard/AddCard";
 
 class WordItem extends React.Component {
 
@@ -14,17 +12,6 @@ class WordItem extends React.Component {
 
   showExamples() {
     this.props.showExamples({kanji: this.props.kanji, kana: this.props.kana});
-  }
-
-  getCardItem() {
-    let cardItem = {
-      kanji: this.props.kanji ? this.props.kanji.join(", ") : "",
-      kana: this.props.kana.join(", "),
-      explanation: this.props.longDef,
-      cardItemOrigin: CardItemOrigin.WORD
-    };
-
-    return cardItem;
   }
 
   showLongDef(ev) {
@@ -64,7 +51,6 @@ class WordItem extends React.Component {
                     onClick={this.showLongDef.bind(this)}> ...</span>
             }
           </p>
-          <AddCard cardItem={this.getCardItem()}/>
           <TTS text={this.props.kana.join()}/>
         </div>
     )

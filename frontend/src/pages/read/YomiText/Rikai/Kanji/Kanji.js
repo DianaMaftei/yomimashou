@@ -1,11 +1,6 @@
 import React from "react";
 import KanjiStrokeDiagram from "./KanjiStrokeDiagram";
-import TTS from "../../../../`common/TTS/TTS";
-import KanjiDrawPad from "./KanjiDrawPad/KanjiDrawPad"
-import SimpleModal from "../../../../`common/modal/SimpleModal";
-import RtkInfo from "./RtkInfo";
-import CardItemOrigin from "../addcard/CardItemOrigin";
-import AddCard from "../addcard/AddCard";
+import CardItemOrigin from "../AddToDeck/CardItemOrigin";
 
 export default ({result, showWordExamples}) => {
 
@@ -24,60 +19,50 @@ export default ({result, showWordExamples}) => {
     return kana;
   };
 
-  let item = {
-    kanji: result.character,
-    kana: getKana(result.kunReading, result.onReading),
-    explanation: result.eigo,
-    cardItemOrigin: CardItemOrigin.KANJI
-  };
+  // let item = {
+  //   kanji: result.character,
+  //   kana: getKana(result.kunReading, result.onReading),
+  //   explanation: result.eigo,
+  //   cardItemOrigin: CardItemOrigin.KANJI
+  // };
 
   return (
       <div className="kanji-box">
         <div className="kanji-info">
           <KanjiStrokeDiagram character={result.character}/>
-          <div className="k-main-data">
-            {result.frequency && <span
-                className="k-main-data-line">Frequency: {result.frequency}</span>}
-            {result.grade && <span
-                className="k-main-data-line">Grade: {result.grade}</span>}
+          <div className="k-dictionary-data">
             {result.strokes && <span
-                className="k-main-data-line">Strokes: {result.strokes}</span>}
+                className="k-main-data-line">Strokes: <span>{result.strokes}</span></span>}
+            {result.grade && <span
+                className="k-main-data-line">Grade: <span>{result.grade}</span></span>}
             {result.oldJLPT && <span
-                className="k-main-data-line">Old JLPT: {result.oldJLPT}</span>}
+                className="k-main-data-line">Old JLPT: <span>{result.oldJLPT}</span></span>}
             {result.newJLPT && <span
-                className="k-main-data-line">New JLPT: {result.newJLPT}</span>}
+                className="k-main-data-line">New JLPT: <span>{result.newJLPT}</span></span>}
+            {result.frequency && <span
+                className="k-main-data-line">Frequency: <span>{result.frequency}</span></span>}
           </div>
-          <SimpleModal label={'Practice'}>
-            <KanjiDrawPad character={result.character}/>
-          </SimpleModal>
         </div>
-        <h2 className="k-eigo">{result.eigo}</h2>
-        <h3>Kun: <span className="k-yomi">{result.kunReading || '–'}</span></h3>
-        {result.kunReading && <TTS text={result.kunReading}/>}
-        <h3>On: <span className="k-yomi">{result.onReading || '–'}</span></h3>
-        {result.onReading && <TTS text={result.onReading}/>}
-        <br/>
-        <SimpleModal label={'Rtk Info'}>
-          <RtkInfo keyword={result.keyword} components={result.components}
-                   story1={result.story1}
-                   story2={result.story2}/>
-        </SimpleModal>
+          <div className="k-main-data">
+              <p>Kun: <span className="k-yomi">{result.kunReading || '–'}</span></p>
+              <p>On: <span className="k-yomi">{result.onReading || '–'}</span></p>
+              <p className="k-eigo">{result.eigo}</p>
+          </div>
 
-        <h4>See example words:</h4>
-        <br/>
+        <div className="view-mnemonics">View mnemonics</div>
+        <h6 className="examples-label">Example words:</h6>
         <div className="example-words-search">
-                <span onClick={() => showWordExamples(result.character,
+            <div onClick={() => showWordExamples(result.character,
                     "byStartingKanji")}>{result.character}<span
-                    className="asterisk">*</span></span>
-          <span onClick={() => showWordExamples(result.character,
+                    className="asterisk">*</span></div>
+          <div onClick={() => showWordExamples(result.character,
               "byContainingKanji")}><span
               className="asterisk">*</span>{result.character}<span
-              className="asterisk">*</span></span>
-          <span onClick={() => showWordExamples(result.character,
+              className="asterisk">*</span></div>
+          <div onClick={() => showWordExamples(result.character,
               "byEndingKanji")}><span
-              className="asterisk">*</span>{result.character}</span>
+              className="asterisk">*</span>{result.character}</div>
         </div>
-        <AddCard cardItem={item}/>
       </div>
   )
 };

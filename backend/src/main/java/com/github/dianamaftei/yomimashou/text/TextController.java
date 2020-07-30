@@ -1,8 +1,10 @@
 package com.github.dianamaftei.yomimashou.text;
 
+import com.github.dianamaftei.appscommon.model.Text;
 import com.github.dianamaftei.yomimashou.uploads.FileService;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +50,11 @@ public class TextController {
 
   @GetMapping("/{id}")
   public Text getById(@PathVariable Long id) {
-    return this.textService.getById(id);
+    Optional<Text> text = this.textService.getById(id);
+    if(!text.isPresent()) {
+      throw new RuntimeException("text not found");
+    }
+    return text.get();
   }
 
   @PostMapping(value = "/parse/words")

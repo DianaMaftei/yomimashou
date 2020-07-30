@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import MasonryLayout from "./MasonryLayout/MasonryLayout";
 import 'react-image-crop/dist/ReactCrop.css';
 import { isAuthenticated, withHeaders } from "../../auth/auth";
+import Header from "../`common/header/Header";
 
 const mapStateToProps = (state) => ({
     texts: state.home.texts,
@@ -42,7 +43,10 @@ export class Home extends React.Component {
         }
 
         return (
-            <div className="home-container">
+            <div className="home-page">
+                <div id="app-header">
+                    <Header leftIcon="menu"/>
+                </div>
                 <MasonryLayout texts={this.props.texts} textsStatuses={this.props.textsStatuses}/>
             </div>
         );

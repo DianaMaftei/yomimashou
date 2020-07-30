@@ -1,0 +1,9 @@
+#text-actions {
+    background-color: var(--yomi-dark-blue);
+    color: var(--yomi-white);
+    position: absolute;
+    top: 55px;
+    left: 0;
+    padding: 20px;
+    z-index: 3;
+}

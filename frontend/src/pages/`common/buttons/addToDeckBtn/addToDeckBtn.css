@@ -1,0 +1,9 @@
+.add-to-deck-btn {
+    float: right;
+}
+
+.add-to-deck-btn i:first-child {
+    transform: rotate(164deg);
+    position: relative;
+    right: -10px;
+}

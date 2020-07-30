@@ -1,0 +1,33 @@
+.add-item-fields, .add-item-decks {
+    text-align: center;
+    color: var(--yomi-dark-blue);
+}
+
+.add-item-fields input,.add-item-decks input {
+    color: var(--yomi-dark-blue);
+}
+
+.add-item-fields label, .add-item-decks label {
+    color: var(--yomi-gray-600);
+
+}
+
+.add-item-fields > div {
+    margin-bottom: 10px;
+}
+
+.add-item-fields fieldset, .add-item-decks fieldset {
+    border: 2px solid var(--yomi-dark-blue) !important;
+}
+
+.add-item-fields input, .add-item-decks input {
+    width: 222px;
+}
+
+.add-btn {
+    display: block;
+    width: 124px;
+    margin: 20px auto;
+    background-color: var(--yomi-dark-blue);
+    color: var(--yomi-white);
+}

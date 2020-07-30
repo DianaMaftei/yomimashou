@@ -1,0 +1,29 @@
+#canvas-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin: 50px 20px 20px;
+}
+
+#canvas-buttons button {
+    background: none;
+    padding: 10px;
+    border-radius: 12px;
+    border: 2px solid var(--yomi-dark-blue);
+    width: 60px;
+    height: 60px;
+    color: var(--yomi-dark-blue);
+
+}
+
+#toggle-hint .hint-on{
+    fill: yellow;
+}
+
+#toggle-hint .hint-off{
+    fill: #52550b;
+}
+
+.draw-pad canvas {
+    border: 1px solid var(--yomi-dark-blue);
+    margin: 20px;
+}

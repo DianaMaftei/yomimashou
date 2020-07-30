@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +26,13 @@ public class ExampleSentenceService {
   }
 
   @Transactional
-  public List<ExampleSentence> get(final String[] searchItems) {
+  public List<ExampleSentence> get(final String[] searchItems, Pageable pageable) {
     final BooleanBuilder booleanBuilder = new BooleanBuilder();
     for (final String searchItem : searchItems) {
       booleanBuilder.or(exampleSentence.sentence.contains(searchItem))
           .or(exampleSentence.textBreakdown.contains(searchItem));
     }
     return (List<ExampleSentence>) jpaQueryFactory.query().from(exampleSentence)
-        .where(booleanBuilder).distinct().limit(paginationLimit).fetch();
+        .where(booleanBuilder).distinct().limit(pageable.getPageSize()).fetch();
   }
 }

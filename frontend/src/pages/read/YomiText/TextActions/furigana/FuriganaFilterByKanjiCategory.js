@@ -7,6 +7,8 @@ export const filterTextFuriganaByKanjiCategory = (text, category) => {
     const allRubyTags = text.match(matchRubyTags);
     let interimText = text;
 
+    if(!allRubyTags) return;
+
     allRubyTags.forEach(tag => {
         const matchedKanji = tag.match(matchRubyKanji)[0];
         const kanjiListByCategory = JLPTlevels[category];

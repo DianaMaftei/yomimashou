@@ -20,14 +20,15 @@ export default ({character}) => {
 
     return (
         <div className="k-kanji">
+            <div className="practice-label">Tap to practice</div>
             <div id="kanji-draw"/>
             <div id="sample-btn">
-                <button className="btn" id="p" onClick={() => dmak.eraseLastStrokes(1)}><SkipPrevious size={24}/>
+                <button id="p" onClick={() => dmak.eraseLastStrokes(1)}><SkipPrevious size={16}/>
                 </button>
-                <button className="btn" id="s" onClick={() => dmak.pause()}><PauseCircleOutline size={24}/></button>
-                <button className="btn" id="g" onClick={() => dmak.render()}><PlayCircleOutline size={24}/></button>
-                <button className="btn" id="r" onClick={() => dmak.erase()}><Replay size={24}/></button>
-                <button className="btn" id="n" onClick={() => dmak.renderNextStrokes(1)}><SkipNext size={24}/>
+                <button id="s" onClick={() => dmak.pause()}><PauseCircleOutline size={16}/></button>
+                <button id="g" onClick={() => dmak.render()}><PlayCircleOutline size={16}/></button>
+                <button id="r" onClick={() => dmak.erase()}><Replay size={16}/></button>
+                <button id="n" onClick={() => dmak.renderNextStrokes(1)}><SkipNext size={16}/>
                 </button>
             </div>
         </div>

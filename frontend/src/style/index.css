@@ -5,9 +5,29 @@ html, body, #root, #app-container {
 html, body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: 'Nunito', sans-serif;
     overflow-x: hidden;
     width: 100vw;
+}
+
+/*color scheme*/
+:root {
+    --yomi-dark-blue: #013358;
+    --yomi-dark-red: #8E000A;
+    --yomi-light-blue: #95C9D9;
+    --yomi-light-red: #DA3603;
+    --yomi-light-black: #202020;
+    --yomi-white: #fefdfd;
+
+    --yomi-gray-100: #F7FAFC;
+    --yomi-gray-200: #EDF2F7;
+    --yomi-gray-300: #E2E8F0;
+    --yomi-gray-400: #CBD5E0;
+    --yomi-gray-500: #A0AEC0;
+    --yomi-gray-600: #718096;
+    --yomi-gray-700: #4A5568;
+    --yomi-gray-800: #2D3748;
+    --yomi-gray-900: #1A202C;
 }
 
 .App {
@@ -61,4 +81,31 @@ html, body {
     border-color: #518a89;
     cursor: pointer;
 }
+
+.elevation-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.elevation-base {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1),
+                0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.elevation-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.elevation-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.elevation-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+
+
 

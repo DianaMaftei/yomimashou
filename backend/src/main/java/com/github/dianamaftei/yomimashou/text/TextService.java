@@ -2,6 +2,9 @@ package com.github.dianamaftei.yomimashou.text;
 
 import com.github.dianamaftei.appscommon.model.KanjiCategories;
 import java.util.List;
+import java.util.Optional;
+
+import com.github.dianamaftei.appscommon.model.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,8 +34,8 @@ public class TextService {
     return this.textRepository.findAll(new Sort(Sort.Direction.DESC, CREATION_DATE));
   }
 
-  public Text getById(final Long id) {
-    return this.textRepository.getOne(id);
+  public Optional<Text> getById(final Long id) {
+    return this.textRepository.findById(id);
   }
 
   private String getExcerpt(final Text text) {

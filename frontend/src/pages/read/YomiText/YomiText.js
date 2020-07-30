@@ -2,18 +2,20 @@ import React from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import RikaiPopUp from "./Rikai/Rikai";
-import './Rikai/Rikai.css';
+import './Rikai/rikai.css';
 import './yomi.css';
 import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from './Rikai/RikaiTextParser';
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
 import Kuroshiro from "kuroshiro";
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {apiUrl} from "../../../AppUrl";
-import DownloadIcon from 'mdi-react/DownloadIcon';
+import { apiUrl } from "../../../AppUrl";
 import { isAuthenticated, withHeaders } from "../../../auth/auth";
-import { filterTextFuriganaByKanjiCategory } from "./furigana/FuriganaFilterByKanjiCategory";
-import FuriganaOptions from "./furigana/FuriganaOptions";
+import { filterTextFuriganaByKanjiCategory } from "./TextActions/furigana/FuriganaFilterByKanjiCategory";
 import SearchType from "./Rikai/SearchType";
+import TextInfo from "../../`common/TextInfo";
+import { Button } from "@material-ui/core/umd/material-ui.development";
+import TextActions from "./TextActions/TextActions";
+import Collapse from "@material-ui/core/Collapse";
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
@@ -28,6 +30,7 @@ const mapStateToProps = (state) => ({
     kanjiLevel: state.config.kanjiLevel,
     limit: state.popUp.popupInfo.limit,
     number: state.popUp.popupInfo.number,
+    showTextActions: state.yomiText.showTextActions
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -41,6 +44,13 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
             type: 'FETCH_DATA',
             payload: axios.get(apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString() + `&page=${number}&size=${limit}`)
+        });
+    }, fetchWordExamples: (list, url, page, limit) => {
+        dispatch({
+            type: 'FETCH_WORD_EXAMPLES',
+            payload: axios.get(
+                apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString()
+                + `&page=${page}&size=${limit}`)
         });
     },
     updateSearchResult: result => {
@@ -95,7 +105,7 @@ const mapDispatchToProps = (dispatch) => ({
     }, fetchTranslation: (sentence) => {
         dispatch({
             type: 'FETCH_TRANSLATION',
-            payload: axios.get('https://api.mymemory.translated.net/get?q=' + sentence +  '&langpair=ja|en')
+            payload: axios.get('https://api.mymemory.translated.net/get?q=' + sentence + '&langpair=ja|en')
         })
     }
 });
@@ -141,7 +151,8 @@ export class YomiText extends React.Component {
             (this.props.analyzer !== nextProps.analyzer) ||
             (this.props.currentDictionary !== nextProps.currentDictionary) ||
             (this.props.words !== nextProps.words) ||
-            (this.props.kanjiLevel !== nextProps.kanjiLevel);
+            (this.props.kanjiLevel !== nextProps.kanjiLevel) ||
+            (this.props.showTextActions !== nextProps.showTextActions);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -149,8 +160,8 @@ export class YomiText extends React.Component {
             let textElement = document.getElementById("yomi-text-container");
             textElement.innerHTML = (nextProps.text && (nextProps.text.furigana || nextProps.text.content)) || '';
 
-            let titleElement = document.getElementById("yomi-text-title");
-            titleElement.innerHTML = (nextProps.text && (nextProps.text.furiganaTitle || nextProps.text.title)) || '';
+            // let titleElement = document.getElementById("yomi-text-title");
+            // titleElement.innerHTML = (nextProps.text && (nextProps.text.furiganaTitle || nextProps.text.title)) || '';
         }
     }
 
@@ -159,11 +170,17 @@ export class YomiText extends React.Component {
 
         let self = this;
 
-        let number = this.props.previousSearchResult.result !== this.props.searchResult.result ?0: this.props.number+1;
+        let number = this.props.previousSearchResult.result !== this.props.searchResult.result ? 0 : this.props.number + 1;
 
         if (!isVisible()) {
             if (searchResult.type === SearchType.WORD) {
                 fetchData(searchResult.result.data.map(item => item.word), searchResult.type, number, this.props.limit);
+                // let kanji = word.kanji ? word.kanji : [];
+                // let kana = word.kana ? word.kana : [];
+                // let searchItems = [...kanji, ...kana];
+                //
+
+                this.props.fetchWordExamples(searchResult.result.data[0].word, SearchType.EXAMPLE, 0, 3);
             } else if (searchResult.type === SearchType.KANJI) {
                 fetchData(searchResult.result, searchResult.type);
             } else if (searchResult.type === SearchType.NAME) {
@@ -324,35 +341,31 @@ export class YomiText extends React.Component {
         axios.post(apiUrl + '/api/users/textStatus?progressStatus=READ&textId=' + this.props.id, {}, withHeaders());
     };
 
+
     render() {
         return (
             <div id="yomi-text" className={this.getClassForDictionary()}>
                 {(!this.props.words || this.props.words.length === 0) && <LinearProgress/>}
-                <div id="yomi-text-options">
-                    <FuriganaOptions analyzer={this.props.analyzer} toggleFurigana={this.toggleFurigana} kanjiLevel={this.props.kanjiLevel} setLevel={this.props.setKanjiLevel}/>
-                    {
-                        this.isAuthenticated &&
-                        <button className="btn btn-light" id="mark-read"
-                                onClick={this.markAsRead}>
-                            Mark as Read
-                        </button>
-                    }
-                    <form id="dld-tts" method="POST"
-                          action={'https://talkify.net/api/speech/v1/download?key=' + process.env.REACT_APP_TALKIFY_KEY}>
-                        <input type="hidden" name="text" value={this.props.text.content}/>
-                        <button type="submit" className="btn btn-light" id="dld-tts-btn">
-                            <DownloadIcon size={24}/>
-                        </button>
-                    </form>
+                {/*<Collapse in={this.props.showTextActions}>*/}
+                {/*    <TextActions analyzer={this.props.analyzer} kanjiLevel={this.props.kanjiLevel}*/}
+                {/*                 setKanjiLevel={this.props.setKanjiLevel} textContent={this.props.text.content}*/}
+                {/*                 toggleFurigana={this.toggleFurigana}/>*/}
+                {/*</Collapse>*/}
+                <div id="yomi-text-info">
+                    <TextInfo text={this.props.text}/>
                 </div>
                 <div id="yomi-text-box"
                      onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}
                      onClick={(ev) => this.onMouseClick(ev, this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
                 >
-                    <h3 id="yomi-text-title">{this.props.text.title}</h3>
-                    <br/>
                     <div id="yomi-text-container"/>
                 </div>
+                {
+                    this.isAuthenticated &&
+                    <div id="yomi-text-btn-container">
+                        <Button variant="contained" onClick={this.markAsRead}> Mark as Read </Button>
+                    </div>
+                }
                 <RikaiPopUp/>
             </div>);
     }

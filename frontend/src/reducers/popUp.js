@@ -13,6 +13,7 @@ let defaultState = {
   showResult: {},
   previousSearchResult: {},
   previousShowResult: {},
+  wordExamples: {},
   popupInfo: {
     position: {},
     visible: false,
@@ -47,7 +48,21 @@ const popUp = (state = defaultState, action) => {
         ...state,
         searchResult: action.result
       };
-
+    case 'FETCH_WORD_EXAMPLES_PENDING':
+      return {
+        ...state,
+        wordExamples: {}
+      };
+    case 'FETCH_WORD_EXAMPLES_FULFILLED':
+      return {
+        ...state,
+        wordExamples: action.payload.data
+      };
+    case 'FETCH_WORD_EXAMPLES_REJECTED':
+      return {
+        ...state,
+        error: action.payload
+      };
     case 'FETCH_DATA_PENDING':
       return {
         ...state,
