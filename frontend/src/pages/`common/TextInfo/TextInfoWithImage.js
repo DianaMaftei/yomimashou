@@ -5,23 +5,22 @@ import MaterialIcon from 'material-icons-react';
 import "./TextInfo.css";
 
 export default (text) => (
-    <div className="text-info-container">
+    <div className="text-info-image-container">
         <CardMedia
             component="img"
             image={apiUrl + "/api/file/" + text.imageFileName}
             title={text.imageFileName}
         />
-        <div></div>
         {/*TODO set filled or outlined : bookmark*/}
         <div className="text-bookmark">
             {/*<MaterialIcon icon="bookmark_border" color="#C33702" size="large" />*/}
         </div>
-        <div className="text-info-img-gradient"/>
+        <div className="text-info-line"/>
         <div className="text-info-body">
             <div>
                 <div className="text-info-length">
-                    <span>{text.excerpt.length}</span>
-                    <span>&nbsp;characters</span>
+                    <span>{text.characterCount}</span>
+                    <span>&nbsp;ch.</span>
                 </div>
                 <div className="text-info-date">
                     <span>{text.creationDate}</span>

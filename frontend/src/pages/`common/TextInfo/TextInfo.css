@@ -1,24 +1,30 @@
+.text-info-image-container {
+    position: relative;
+}
 .text-info-container {
+    height: 64px;
+    background-color: var(--yomi-gray-900);
     position: relative;
 }
 
-.text-info-container img {
+.text-info-image-container img {
     border-radius: 15px 15px 0 0;
     height: 192px;
     object-fit: cover;
 }
 
-.text-info-img-gradient {
+.text-info-line {
     position: absolute;
-    height: 25px;
+    height: 20px;
     width: 100%;
     bottom: 0;
-    background-color: var(--yomi-dark-blue);
+    background-color: var(--yomi-gray-900);
 }
 
 .text-info-body {
     position: absolute;
     bottom: 2px;
+    font-size: 12px;
     color: var(--yomi-white);
     width: 100%;
 }
@@ -36,18 +42,13 @@
 .text-info-length {
     display: flex;
     float: left;
-    font-size: 14px;
     padding: 0 10px;
 }
 
 .text-info-date {
     display: flex;
     float: right;
-}
-
-.text-info-date span {
-    font-size: 14px;
-    padding: 0px 10px 0 5px;
+    padding: 0 10px;
 }
 
 .text-info-creator {

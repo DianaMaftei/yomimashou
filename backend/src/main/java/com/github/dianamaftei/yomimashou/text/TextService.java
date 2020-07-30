@@ -27,6 +27,7 @@ public class TextService {
   public Text add(final Text text) {
     text.setExcerpt(getExcerpt(text));
     text.setKanjiCountByLevel(kanjiCategories.getKanjiCountByCategory(text.getContent()));
+    text.setCharacterCount(text.getContent().length());
     return textRepository.save(text);
   }
 

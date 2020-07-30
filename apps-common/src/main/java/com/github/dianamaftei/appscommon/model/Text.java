@@ -37,6 +37,8 @@ public class Text extends Auditable<String> {
   @ElementCollection
   private Map<String, Integer> kanjiCountByLevel;
 
+  private int characterCount;
+
   public Long getId() {
     return id;
   }
@@ -91,5 +93,13 @@ public class Text extends Auditable<String> {
 
   public void setImageFileName(String imageFileName) {
     this.imageFileName = imageFileName;
+  }
+
+  public int getCharacterCount() {
+    return characterCount;
+  }
+
+  public void setCharacterCount(int characterCount) {
+    this.characterCount = characterCount;
   }
 }
