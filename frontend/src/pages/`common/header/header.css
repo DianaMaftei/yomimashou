@@ -1,42 +1,41 @@
 #app-header {
-    background-color: #732472;
-    color: #FFC4B2;
-    font-weight: bold;
-    font-family: Georgia, serif;
-    font-size: 2em;
-    padding: 10px;
+    width: 100%;
+}
+
+#top-bar {
+    color: var(--yomi-white);
+    background-color: var(--yomi-dark-blue);
+    display: flex;
+    padding: 16px;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+    z-index: 3;
+}
+
+#header-rectangle {
+    height: 100px;
+    background: var(--yomi-dark-blue);
+}
+
+#header-oval {
+    margin-top: -80px;
+    height: 170px;
+    background: var(--yomi-dark-blue);
+    border-radius: 700px / 100px;
+    width: 102%;
+    margin-left: -1%;
+}
+
+#header-text {
+    font-family: 'Noto Serif JP', serif;
+    position: absolute;
+    top: 70px;
     text-align: center;
+    width: 100%;
 }
 
-.header .logo {
-    width: 150px;
-}
-.header .logo-color {
-    color: red;
-}
-
-.header .button {
-    margin-left: auto;
-}
-
-.userIcon {
-    height: 30px;
-    padding-right: 10px;
-}
-
-#username {
-    font-size: 15px;
+#app-header, .header, .header header {
     position: relative;
-    top: -2px;
-    text-transform: capitalize;
-}
-
-.user-menu {
-    position: relative;
-    top: 8px;
-    color: white;
-}
-.user-menu div{
-    color: white;
-    font-weight: normal;
+    z-index: initial;
 }

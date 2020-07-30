@@ -1,3 +1,6 @@
+#yomi-text {
+    padding: 0 5% 5% 5%;
+}
 
 #yomi-text-title {
     text-align: center;
@@ -8,10 +11,31 @@
     margin: 20px 0;
 }
 
-#yomi-text {
-    margin: 0 5%;
-    font-size: 24px;
-    line-height: 50px;
+#yomi-text-info {
+    position: relative;
+    top: -50px;
+    z-index: 2;
+}
+
+#yomi-text-box {
+    background-color: white;
+    padding-bottom: 16px;
+    font-size: 20px;
+    line-height: 42px;
+    position: relative;
+    top: -40px;
+}
+
+#yomi-text-btn-container {
+    text-align: center;
+    position: sticky;
+    bottom: 40px;
+    z-index: -1;
+}
+
+#yomi-text-btn-container button {
+    background-color: var(--yomi-light-red);
+    color: var(--yomi-white);
 }
 
 #dld-tts {

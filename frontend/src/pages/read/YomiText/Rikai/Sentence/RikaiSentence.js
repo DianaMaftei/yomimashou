@@ -1,8 +1,6 @@
 import React from 'react';
 import TTS from "../../../../`common/TTS/TTS";
 import STT from "../../../../`common/STT/STT";
-import AddCard from "../addcard/AddCard";
-import CardItemOrigin from "../addcard/CardItemOrigin";
 import Kuroshiro from "kuroshiro";
 
 function escapeHtmlSpecialCharacters(string) {
@@ -56,13 +54,6 @@ function isWord(token) {
 export default (hidePopup, style, sentence) => {
     let sentenceContainsKanji = Kuroshiro.Util.hasKanji(sentence.text);
 
-    let item = {
-        kanji: sentenceContainsKanji ? sentence.text : '',
-        kana: sentenceContainsKanji ? '' : sentence.text,
-        explanation: sentence.translation,
-        cardItemOrigin: CardItemOrigin.SENTENCE_TEXT
-    };
-
     return (
         <div id="rikai-window" style={style}>
             <div className="rikai-top">
@@ -78,9 +69,8 @@ export default (hidePopup, style, sentence) => {
                 <br/>
                 <div>{sentence.translation && escapeHtmlSpecialCharacters(sentence.translation)}</div>
                 <br/>
-                <AddCard cardItem={item}/>
                 <br/>
-                <div>{buildSentenceInfo(sentence.tokens)}</div>
+                {/*<div>{buildSentenceInfo(sentence.tokens)}</div>*/}
                 <hr/>
             </div>
         </div>

@@ -14,6 +14,7 @@
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
     "material-icons-react": "^1.0.0",
     "mdi-react": "^5.4.0",
+    "normalize.css": "^8.0.1",
     "raphael": "^2.2.7",
     "react": "^16.6.0",
     "react-app-rewired": "^1.5.2",

@@ -10,7 +10,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.dianamaftei.appscommon.model.Text;
 import com.github.dianamaftei.yomimashou.uploads.FileService;
 import java.util.Arrays;
 import java.util.Collections;

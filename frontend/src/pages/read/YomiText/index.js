@@ -1,5 +1,6 @@
 let defaultState = {
     textSelectInfo: {},
+    showTextActions: false
 };
 
 const yomiText = (state = defaultState, action) => {
@@ -10,6 +11,11 @@ const yomiText = (state = defaultState, action) => {
                 textSelectInfo: {
                     ...action.textSelectInfo
                 }
+            };
+        case 'TOGGLE_TEXT_ACTIONS_MENU':
+            return {
+                ...state,
+                showTextActions: !state.showTextActions
             };
         default:
             return state

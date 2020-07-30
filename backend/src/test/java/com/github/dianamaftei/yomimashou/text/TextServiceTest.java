@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import com.github.dianamaftei.appscommon.model.KanjiCategories;
 import java.util.Collections;
 import java.util.List;
+
+import com.github.dianamaftei.appscommon.model.Text;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
