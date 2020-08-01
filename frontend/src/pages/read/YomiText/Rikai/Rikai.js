@@ -14,6 +14,8 @@ import RikaiWord from "./Word/RikaiWord";
 import RtkInfo from "./Kanji/RtkInfo";
 import KanjiDrawPad from "./Kanji/KanjiDrawPad/KanjiDrawPad";
 import AddToDeck from "./AddToDeck/AddToDeck";
+import OutsideClickHandler from 'react-outside-click-handler';
+import PopupType from "./PopupType";
 
 const mapStateToProps = (state) => ({
   ...state.popUp,
@@ -41,6 +43,11 @@ const mapDispatchToProps = (dispatch) => ({
   }, updateSearchResult: result => {
     dispatch({
       type: 'UPDATE_SEARCH_RESULT',
+      result
+    });
+  }, updateShowResult: result => {
+    dispatch({
+      type: 'UPDATE_SHOW_RESULT',
       result
     });
   }
@@ -89,16 +96,6 @@ const getPopupStyle = (popupInfo) => {
   styles.display = popupInfo.visibility ? 'block' : 'none';
 
   return styles;
-};
-
-const showWordExamples = (word, typeOfSearch, fetchData,
-    updateSearchResult) => {
-  updateSearchResult({type: "wordsByKanji", result: word});
-  fetchData(word, "words/" + typeOfSearch);
-};
-
-const hidePopup = (popUpSetVisibility) => {
-  popUpSetVisibility({visibility: false});
 };
 
 const sortResultsByRelevanceAndAddConjugation = (searchedElements,
@@ -193,7 +190,7 @@ const getResultFromNameEntry = (searchTerms, results) => {
 };
 
 const getResultFromEntry = (searchResult, fetchedResult) => {
-  if (fetchedResult.result === null) {
+  if (!fetchedResult.result) {
     return;
   }
 
@@ -231,15 +228,11 @@ const getResultFromEntry = (searchResult, fetchedResult) => {
 };
 
 export const getResult = (searchResult, showResult) => {
-  if (!searchResult) {
+  if (!searchResult || !searchResult.result) {
     return;
   }
 
   if (searchResult.type === SearchType.SENTENCE) {
-    if (!showResult.result) {
-      return;
-    }
-
     let sentenceTokens = showResult && showResult.result;
     return {
       type: SearchType.SENTENCE,
@@ -252,22 +245,20 @@ export const getResult = (searchResult, showResult) => {
   }
 
   if (showResult.type === SearchType.EXAMPLE) {
-    if (!showResult.result) {
-      return;
-    }
     return showResult;
   }
 
-  if (searchResult.result) {
-    return getResultFromEntry(searchResult.result, showResult);
-  }
+  return getResultFromEntry(searchResult.result, showResult);
 };
 
 export class Rikai extends React.Component {
+
   shouldComponentUpdate(nextProps) {
     return (this.props.showResult !== nextProps.showResult)
         || (this.props.wordExamples !== nextProps.wordExamples)
-        || (this.props.popupInfo.visibility !== nextProps.popupInfo.visibility);
+        || (this.props.popupInfo.visibility !== nextProps.popupInfo.visibility)
+        || (this.props.popupInfo.disableOutsideClickHandler !== nextProps.popupInfo.disableOutsideClickHandler)
+        || (this.props.popupInfo.type !== nextProps.popupInfo.type);
   }
 
   showMore = () => {
@@ -279,39 +270,81 @@ export class Rikai extends React.Component {
         this.props.searchResult.type, number, this.props.limit);
   };
 
+  hidePopup = (event) => {
+    this.props.setPopupInfo({...this.props.popupInfo, visibility: false, closed: true, type: PopupType.WORD});
+  };
+
+  changePopupType(popupType) {
+    this.props.setPopupInfo({...this.props.popupInfo, type: popupType});
+  }
+
+  fetchKanji(kanji) {
+    this.props.updateSearchResult({
+          matchLen: 1,
+          result: [...kanji],
+          type: SearchType.KANJI
+        });
+    this.props.fetchData(kanji, SearchType.KANJI);
+  }
+
+  showPreviousWord() {
+    this.props.updateSearchResult(this.props.previousSearchResult);
+    this.props.updateShowResult(this.props.previousShowResult);
+  }
+
+  toggleOutsideClickHandler() {
+    this.props.setPopupInfo({...this.props.popupInfo, disableOutsideClickHandler: !this.props.popupInfo.disableOutsideClickHandler});
+  }
+
   render() {
+    if(!this.props.popupInfo.visibility) {
+      return <div/>
+    }
+
     let style = getPopupStyle(this.props.popupInfo);
     let result = getResult(this.props.searchResult, this.props.showResult);
 
     if (!result) {
-      return RikaiLoading(() => hidePopup(this.props.setPopupInfo),
-          style);
+      return RikaiLoading(style);
     }
 
-    switch (result.type) {
-      case (SearchType.SENTENCE):
-        return RikaiSentences(
-            () => hidePopup(this.props.setPopupInfo), style, result);
-      case(SearchType.WORD) :
-        // return RikaiWord(
-        //     () => hidePopup(this.props.setPopupInfo), style,
-        //     result.result[0],this.props.wordExamples, () => this.showMore());
-        return <AddToDeck style={style} hidePopup={() => hidePopup(this.props.setPopupInfo)} item={{}}/>
-      case (SearchType.KANJI) :
-        // return <RtkInfo character={result.result.character} keyword={result.result.keyword} components={result.result.components}
-        //        story1={result.result.story1} story2={result.result.story2}
-        //                 style={style} hidePopup={() => hidePopup(this.props.setPopupInfo)}/>
-            return <KanjiDrawPad character={result.result.character} open={true}
-                                 style={style} hidePopup={() => hidePopup(this.props.setPopupInfo)}/>
-        // return RikaiKanji(
-        //     () => hidePopup(this.props.setPopupInfo), style, result,
-        //     (kanji, typeOfSearch) => showWordExamples(kanji, typeOfSearch,
-        //         this.props.fetchData, this.props.updateSearchResult));
-      case (SearchType.NAME) :
-        return RikaiNames(
-            () => hidePopup(this.props.setPopupInfo), style, result,
-            this.props.last);
+    let popUpComponent;
+
+    switch (this.props.popupInfo.type) {
+      case (PopupType.WORD):
+        popUpComponent = <RikaiWord style={style} result={result.result[0]} wordExamples={this.props.wordExamples}
+                                    changePopup={this.changePopupType.bind(this)} fetchKanji ={this.fetchKanji.bind(this)}/>;
+        break;
+      case (PopupType.KANJI) :
+        popUpComponent = <RikaiKanji style={style} result={result.result} showWordExamples={this.props.updateSearchResult}
+                                     changePopup={this.changePopupType.bind(this)} showPreviousWord={this.showPreviousWord.bind(this)}/>
+        break;
+      case(PopupType.RTK) :
+        popUpComponent = <RtkInfo character={result.result.character} keyword={result.result.keyword}
+                                  components={result.result.components}
+                                  story1={result.result.story1} story2={result.result.story2}
+                                  style={style} changePopup={this.changePopupType.bind(this)}/>
+        break;
+      case(PopupType.DRAW) :
+        popUpComponent = <KanjiDrawPad character={result.result.character} open={true} style={style} changePopup={this.changePopupType.bind(this)}/>
+        break;
+      case(PopupType.ADD) :
+        let item = result.type === SearchType.KANJI ? {
+          kanji: result.result.character,
+          kana: [result.result.kunReading, result.result.onReading],
+          meanings: result.result.eigo,
+          type: SearchType.KANJI
+        } : {...result.result[0], type: result.type};
+        popUpComponent = <AddToDeck style={style} item={item} changePopup={this.changePopupType.bind(this)} toggleOutsideClickHandler={this.toggleOutsideClickHandler.bind(this)}/>
+        break;
     }
+
+    return (
+        <OutsideClickHandler onOutsideClick={this.hidePopup} disabled={this.props.popupInfo.disableOutsideClickHandler}>
+          {popUpComponent}
+        </OutsideClickHandler>
+    )
+
   }
 }
 

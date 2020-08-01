@@ -27,3 +27,8 @@
     border: 1px solid var(--yomi-dark-blue);
     margin: 20px;
 }
+
+.rikai-kanji-pad-top {
+    display: flex;
+    justify-content: space-between;
+}

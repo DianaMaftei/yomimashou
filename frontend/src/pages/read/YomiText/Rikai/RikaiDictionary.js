@@ -248,7 +248,7 @@ let RikaiDict = (function () {
     }
 
     return {
-        search
+        search, isKanji
     }
 })();
 

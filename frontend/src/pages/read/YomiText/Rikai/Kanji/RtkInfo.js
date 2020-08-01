@@ -1,8 +1,9 @@
 import React from "react";
 import BackButton from "../../../../`common/buttons/backBtn/BackButton";
 import colors from "../../../../../style/colorConstants";
+import PopupType from "../PopupType";
 
-const rtkInfo = ({character, keyword, components, story1, story2, style, hidePopup}) => {
+const rtkInfo = ({character, keyword, components, story1, story2, style, changePopup}) => {
     const getHighlightedStory = (story, keyword) => {
         let indexOfKeyword = story.toLowerCase().indexOf(keyword.toLowerCase());
         let keywordCaseInsensitive = story.substr(indexOfKeyword, keyword.length);
@@ -14,11 +15,13 @@ const rtkInfo = ({character, keyword, components, story1, story2, style, hidePop
     }
 
     return (
-        <div id="rikai-window" style={style} onClick={hidePopup} className="elevation-lg">
+        <div id="rikai-window" style={style} className="elevation-lg">
             <div className="rikai-display">
                 <div className="kanji-rtk">
                     <div className="kanji-rtk-top">
-                        <BackButton/>
+                        <span onClick={() => changePopup(PopupType.KANJI)}>
+                            <BackButton/>
+                        </span>
                         <span className="kanji-rtk-title">
                             <span className="kanji-rtk-character">{character}</span>
                             <span className="kanji-rtk-keyword">- {keyword}</span>

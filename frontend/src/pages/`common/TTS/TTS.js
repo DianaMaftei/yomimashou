@@ -1,10 +1,8 @@
 import React from "react";
-import PauseCircleOutline from 'mdi-react/PauseCircleOutlineIcon';
-import PlayCircleOutline from 'mdi-react/PlayCircleOutlineIcon';
-import Replay from 'mdi-react/ReplayIcon';
-import Stop from 'mdi-react/StopIcon';
-import StepForward from 'mdi-react/StepForwardIcon';
+import MaterialIcon from "material-icons-react";
+
 import "./tts.css";
+import colors from "../../../style/colorConstants";
 
 const CHUNK_LENGTH_OF_TEXT = 120;
 
@@ -47,24 +45,6 @@ function play(utterance, isTextLong) {
     });
 }
 
-function pause() {
-    window.speechSynthesis.pause();
-}
-
-function resume() {
-    window.speechSynthesis.resume();
-}
-
-function replay(utterance, text, isTextLong) {
-    window.speechSynthesis.cancel();
-    utterance = createNewUtterance(text);
-    play(utterance, isTextLong);
-}
-
-function cancel() {
-    window.speechSynthesis.cancel();
-}
-
 function createNewUtterance(text) {
     let utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "ja-JP";
@@ -77,15 +57,8 @@ export default ({text}) => {
     let isTextLong = text.length > CHUNK_LENGTH_OF_TEXT;
 
     return (
-        <div id="TTS-btns">
-            <button id="play" className="btn" onClick={() => play(utterance, isTextLong)}><PlayCircleOutline
-                size={16}/></button>
-            <button id="pause" className="btn" onClick={pause}><PauseCircleOutline size={16}/></button>
-            <button id="resume" className="btn" onClick={resume}><StepForward size={16}/></button>
-            <button id="cancel" className="btn" onClick={cancel}><Stop size={16}/></button>
-            <button id="replay" className="btn" onClick={() => replay(utterance, text, isTextLong)}><Replay
-                size={16}/></button>
-
+        <div id="TTS-btn" onClick={() => play(utterance, isTextLong)}>
+            <MaterialIcon icon="volume_up" color={colors.yomiGray500} size="tiny"/>
         </div>
-);
+    );
 }

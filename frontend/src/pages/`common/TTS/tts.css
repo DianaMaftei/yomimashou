@@ -12,3 +12,7 @@
     height: 15px !important;
     vertical-align: initial;
 }
+
+#TTS-btn {
+    cursor: pointer;
+}

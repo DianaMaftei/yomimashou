@@ -1,35 +1,16 @@
 import React from "react";
 import KanjiStrokeDiagram from "./KanjiStrokeDiagram";
 import CardItemOrigin from "../AddToDeck/CardItemOrigin";
+import PopupType from "../PopupType";
 
-export default ({result, showWordExamples}) => {
-
-  const getKana = (kunReading, onReading) => {
-    let kana;
-    if (kunReading && kunReading.length > 0) {
-      if (onReading && onReading.length > 0) {
-        kana = kunReading + ", " + onReading;
-      } else {
-        kana = kunReading;
-      }
-    } else {
-      kana = onReading;
-    }
-
-    return kana;
-  };
-
-  // let item = {
-  //   kanji: result.character,
-  //   kana: getKana(result.kunReading, result.onReading),
-  //   explanation: result.eigo,
-  //   cardItemOrigin: CardItemOrigin.KANJI
-  // };
+export default ({result, showWordExamples, changePopup}) => {
 
   return (
       <div className="kanji-box">
         <div className="kanji-info">
-          <KanjiStrokeDiagram character={result.character}/>
+          <span onClick={() => changePopup(PopupType.DRAW)}>
+              <KanjiStrokeDiagram character={result.character}/>
+          </span>
           <div className="k-dictionary-data">
             {result.strokes && <span
                 className="k-main-data-line">Strokes: <span>{result.strokes}</span></span>}
@@ -49,7 +30,7 @@ export default ({result, showWordExamples}) => {
               <p className="k-eigo">{result.eigo}</p>
           </div>
 
-        <div className="view-mnemonics">View mnemonics</div>
+        <div className="view-mnemonics" onClick={() => changePopup(PopupType.RTK)}>View mnemonics</div>
         <h6 className="examples-label">Example words:</h6>
         <div className="example-words-search">
             <div onClick={() => showWordExamples(result.character,

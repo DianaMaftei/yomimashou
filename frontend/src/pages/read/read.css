@@ -1,5 +1,7 @@
 #yomi-text {
-    padding: 0 5% 5% 5%;
+    max-width: 75ch;
+    margin: 0 auto;
+    padding: 0 5%;
 }
 
 #yomi-text-title {
@@ -21,7 +23,7 @@
     background-color: white;
     padding-bottom: 16px;
     font-size: 20px;
-    line-height: 42px;
+    line-height: 38px;
     position: relative;
     top: -40px;
 }

@@ -1,10 +1,18 @@
+.add-item-top {
+    display: flex;
+    justify-content: space-between;
+}
+
 .add-item-fields, .add-item-decks {
     text-align: center;
     color: var(--yomi-dark-blue);
+    padding-top: 20px;
 }
 
 .add-item-fields input,.add-item-decks input {
     color: var(--yomi-dark-blue);
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .add-item-fields label, .add-item-decks label {
@@ -16,8 +24,18 @@
     margin-bottom: 10px;
 }
 
-.add-item-fields fieldset, .add-item-decks fieldset {
-    border: 2px solid var(--yomi-dark-blue) !important;
+#item-kanji-side fieldset,
+#item-kana-side fieldset,
+#item-meaning-side fieldset,
+.add-item-decks fieldset {
+    border: 2px solid var(--yomi-dark-blue);
+}
+
+#item-kanji-side.error fieldset,
+#item-kana-side.error fieldset,
+#item-meaning-side.error fieldset,
+.add-item-decks.error fieldset {
+    border: 2px solid var(--yomi-light-red);
 }
 
 .add-item-fields input, .add-item-decks input {
@@ -30,4 +48,14 @@
     margin: 20px auto;
     background-color: var(--yomi-dark-blue);
     color: var(--yomi-white);
+}
+
+#deck-select > div::before {
+    background-color: var(--yomi-gray-200);
+    border: none;
+}
+
+#deck-select div[role] {
+    border-bottom: 1px solid var(--yomi-dark-blue);
+    background-color: var(--yomi-gray-200);
 }

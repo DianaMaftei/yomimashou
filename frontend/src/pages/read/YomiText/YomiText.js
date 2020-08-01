@@ -16,6 +16,7 @@ import TextInfo from "../../`common/TextInfo";
 import { Button } from "@material-ui/core/umd/material-ui.development";
 import TextActions from "./TextActions/TextActions";
 import Collapse from "@material-ui/core/Collapse";
+import PopupType from "./Rikai/PopupType";
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
@@ -166,6 +167,14 @@ export class YomiText extends React.Component {
     }
 
     onMouseClick(ev, searchResult, fetchData, setPopupInfo) {
+        if(this.props.popupInfo.closed) {
+            setPopupInfo( {
+                ...this.props.popupInfo,
+                closed: false
+            });
+            return;
+        }
+
         if (!searchResult.type) return;
 
         let self = this;
@@ -293,6 +302,10 @@ export class YomiText extends React.Component {
         switch (ev.keyCode) {
             case 83:	// s - switch dictionaries (kanji, names, words, examples)
                 this.props.switchDictionary();
+                this.props.setPopupInfo({
+                    ...this.props.popupInfo,
+                    type:  this.props.popupInfo.type === PopupType.WORD ? PopupType.KANJI : PopupType.WORD
+                });
                 //TODO remove hightlight? or do a new search with the new dict option
                 break;
             case 81:	// q - hide popup

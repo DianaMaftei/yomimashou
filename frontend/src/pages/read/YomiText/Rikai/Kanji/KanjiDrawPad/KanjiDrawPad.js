@@ -8,6 +8,7 @@ import LightbulbOnIcon from 'mdi-react/LightbulbOnOutlineIcon';
 import EraserIcon from 'mdi-react/EraserIcon';
 import BackButton from "../../../../../`common/buttons/backBtn/BackButton";
 import colors from "../../../../../../style/colorConstants";
+import PopupType from "../../PopupType";
 
 let canvas;
 let showHint = true;
@@ -97,7 +98,9 @@ class KanjiDrawPad extends Component {
             <div id="rikai-window" style={this.props.style} className="elevation-lg">
                 <div className="rikai-display">
                     <div className="rikai-kanji-pad-top">
-                        <BackButton/>
+                        <span onClick={() => this.props.changePopup(PopupType.KANJI)}>
+                            <BackButton/>
+                        </span>
                     </div>
                     <div className="draw-pad">
                         <canvas id="canvas" width="240" height="240"/>

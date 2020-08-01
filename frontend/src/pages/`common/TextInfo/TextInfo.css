@@ -9,7 +9,7 @@
 
 .text-info-image-container img {
     border-radius: 15px 15px 0 0;
-    height: 192px;
+    min-height: 192px;
     object-fit: cover;
 }
 
@@ -23,7 +23,7 @@
 
 .text-info-body {
     position: absolute;
-    bottom: 2px;
+    bottom: 1px;
     font-size: 12px;
     color: var(--yomi-white);
     width: 100%;

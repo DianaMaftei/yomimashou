@@ -1,9 +1,12 @@
 import React from 'react';
-import MaterialIcon from "material-icons-react";
 import colors from "../../../../../style/colorConstants"
 import AddToDeckButton from "../../../../`common/buttons/addToDeckBtn/AddToDeckButton";
+import TTS from "../../../../`common/TTS/TTS";
+import PopupType from "../PopupType";
+import RikaiDict from "../RikaiDictionary";
+import SearchType from "../SearchType";
 
-export default (hidePopup, style, result, wordExamples, showMore) => {
+export default ({style, result, wordExamples, changePopup, fetchKanji}) => {
     const getMeaning = (meanings) => {
         let meaningString = [...new Set(meanings.flat())].join(", ")
         if (meaningString.length > 80) {
@@ -15,7 +18,7 @@ export default (hidePopup, style, result, wordExamples, showMore) => {
         return meaningString;
     }
 
-    const getSentence = (sentence, word) => {
+    const getHighlightedSentence = (sentence, word) => {
         const keyWords = [...word.kanji, ...word.kana];
         let newSentence = sentence;
         keyWords.forEach(word=> {
@@ -26,15 +29,31 @@ export default (hidePopup, style, result, wordExamples, showMore) => {
         return newSentence;
     }
 
+    const handleKanjiClick = (changePopup,fetchKanji, kanji) => {
+        fetchKanji([...kanji], SearchType.KANJI);
+        changePopup(PopupType.KANJI)
+    }
+
     return (
-        <div id="rikai-window" style={style} className="elevation-lg" onClick={hidePopup}>
+        <div id="rikai-window" style={style} className="elevation-lg">
             <div className="rikai-display container">
                 <span className="rikai-word-tts">
-                    <MaterialIcon icon="volume_up" color={colors.yomiGray500} size="tiny"/>
+                    <TTS text={result.kanji[0]}/>
                 </span>
-                <div className="rikai-word-kanji">{result.kanji.join(", ")}</div>
-                <AddToDeckButton size="small"/>
-
+                <div className="rikai-word-kanji">
+                    {
+                        result.kanji.join(", ").split("").map((currentChar, index) => {
+                            if (RikaiDict.isKanji(currentChar)) {
+                                return <span key={currentChar + index} style={{color:colors.yomiLightRed}} onClick={() => handleKanjiClick(changePopup, fetchKanji, currentChar)}>{currentChar}</span>
+                            } else {
+                                return currentChar;
+                            }
+                        })
+                    }
+                </div>
+                <span onClick={() => changePopup(PopupType.ADD)}>
+                    <AddToDeckButton size="small"/>
+                </span>
                 <div className="rikai-word-kana">{result.kana.join(", ")}</div>
 
                 <div className="rikai-word-grammar">{[...new Set(result.grammar)].join(", ")}</div>
@@ -42,13 +61,14 @@ export default (hidePopup, style, result, wordExamples, showMore) => {
                 <div className="rikai-word-meaning">{getMeaning(result.meanings)}</div>
 
                 <div className="rikai-word-examples">
-                    {
-                        wordExamples.map(example => <div key={example}>
-                            <div>
-                                <MaterialIcon icon="volume_up" color={colors.yomiGray500} size="tiny"/>
-                                <span className="example-sentence" dangerouslySetInnerHTML={{__html: getSentence(example.sentence, result)}}></span>
-
-                            </div>
+                    {wordExamples &&
+                        wordExamples.map((example, index) =>
+                            <div key={example + index}>
+                                <div>
+                                    <TTS text={example.sentence}/>
+                                    <span className="example-sentence" dangerouslySetInnerHTML={{__html:
+                                            getHighlightedSentence(example.sentence, result)}}/>
+                                </div>
                                 <div>{example.meaning}</div>
                             </div>
                         )

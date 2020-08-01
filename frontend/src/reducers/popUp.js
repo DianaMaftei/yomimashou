@@ -1,4 +1,5 @@
 import SearchType from "../pages/read/YomiText/Rikai/SearchType";
+import PopupType from "../pages/read/YomiText/Rikai/PopupType";
 
 const defaultPagination = {
   first: false,
@@ -16,7 +17,10 @@ let defaultState = {
   wordExamples: {},
   popupInfo: {
     position: {},
+    type: PopupType.WORD,
     visible: false,
+    closed: false,
+    disableOutsideClickHandler: false,
     ...defaultPagination
   }
 };
@@ -46,7 +50,13 @@ const popUp = (state = defaultState, action) => {
     case 'UPDATE_SEARCH_RESULT':
       return {
         ...state,
+        previousSearchResult: state.searchResult,
         searchResult: action.result
+      };
+    case 'UPDATE_SHOW_RESULT':
+      return {
+        ...state,
+        showResult: action.result
       };
     case 'FETCH_WORD_EXAMPLES_PENDING':
       return {
@@ -93,8 +103,7 @@ const popUp = (state = defaultState, action) => {
           ...state.showResult,
           result: getResult(state.searchResult.type, action, state),
           type: state.searchResult.type
-        },
-        previousSearchResult: state.searchResult,
+        }
       };
 
     case 'FETCH_DATA_REJECTED':
