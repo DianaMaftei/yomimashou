@@ -150,9 +150,9 @@ const lvlJouyouS = "乙 了 又 与 及 丈 刃 凡 勺 互 弔 井 升 丹 乏 
     + "隣 隷 霊 麗 齢 擁 露";
 
 export const JLPTlevels = {
-    N1: lvlN5 + lvlN4 + lvlN3  + lvlN2 + lvlN1,
-    N2: lvlN5 + lvlN4 + lvlN3  + lvlN2,
-    N3: lvlN5 + lvlN4 + lvlN3,
-    N4: lvlN5 + lvlN4,
+    N1: lvlN1,
+    N2: lvlN2,
+    N3: lvlN3,
+    N4: lvlN4,
     N5: lvlN5
 };

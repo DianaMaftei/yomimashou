@@ -2,6 +2,7 @@ import React from 'react';
 import TTS from "../../../../`common/TTS/TTS";
 import STT from "../../../../`common/STT/STT";
 import Kuroshiro from "kuroshiro";
+import "./rikaiSentence.css";
 
 function escapeHtmlSpecialCharacters(string) {
     let elem = document.createElement('textarea');
@@ -51,27 +52,23 @@ function isWord(token) {
     );
 }
 
-export default (hidePopup, style, sentence) => {
+export default ({style, sentence}) => {
     let sentenceContainsKanji = Kuroshiro.Util.hasKanji(sentence.text);
 
     return (
         <div id="rikai-window" style={style}>
-            <div className="rikai-top">
-                <span className="rikai-title" id="title-examples">Sentence</span>
-                <span className="closeBtn" onClick={hidePopup}>&#x2716;</span>
-            </div>
             <div className="rikai-display">
-                {!sentence.furigana && <div id="sentence">{sentence.text}</div>}
-                {sentence.furigana && <div id="sentence" dangerouslySetInnerHTML={{__html: htmlDecode(sentence.furigana)}}/>}
-                <TTS text={sentence.text}/>
-                <br/>
-                <STT />
+                <div>
+                    <span id="sentence-tts-btn"><TTS text={sentence.text}/></span>
+                    {!sentence.furigana && <div id="sentence">{sentence.text}</div>}
+                    {sentence.furigana && <div id="sentence" dangerouslySetInnerHTML={{__html: htmlDecode(sentence.furigana)}}/>}
+                </div>
                 <br/>
                 <div>{sentence.translation && escapeHtmlSpecialCharacters(sentence.translation)}</div>
                 <br/>
+                <STT text={sentence.text}/>
                 <br/>
                 {/*<div>{buildSentenceInfo(sentence.tokens)}</div>*/}
-                <hr/>
             </div>
         </div>
     );

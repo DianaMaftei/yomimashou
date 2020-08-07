@@ -15,8 +15,8 @@ import SearchType from "./Rikai/SearchType";
 import TextInfo from "../../`common/TextInfo";
 import { Button } from "@material-ui/core/umd/material-ui.development";
 import TextActions from "./TextActions/TextActions";
-import Collapse from "@material-ui/core/Collapse";
 import PopupType from "./Rikai/PopupType";
+import Slide from "@material-ui/core/Slide";
 
 const mapStateToProps = (state) => ({
     words: state.add.words,
@@ -28,7 +28,7 @@ const mapStateToProps = (state) => ({
     showResult: state.popUp.showResult,
     currentDictionary: state.config.popUp.currentDictionary,
     popupInfo: state.popUp.popupInfo,
-    kanjiLevel: state.config.kanjiLevel,
+    kanjiLevels: state.config.kanjiLevels,
     limit: state.popUp.popupInfo.limit,
     number: state.popUp.popupInfo.number,
     showTextActions: state.yomiText.showTextActions
@@ -93,10 +93,10 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_ANALYZER',
             analyzer
         });
-    }, setKanjiLevel: (event, value) => {
+    }, setKanjiLevels: (kanjiLevels) => {
         dispatch({
             type: 'SET_KANJI_LEVEL',
-            kanjiLevel: value
+            kanjiLevels: kanjiLevels
         });
     }, fetchWordList: (sentence) => {
         dispatch({
@@ -184,17 +184,13 @@ export class YomiText extends React.Component {
         if (!isVisible()) {
             if (searchResult.type === SearchType.WORD) {
                 fetchData(searchResult.result.data.map(item => item.word), searchResult.type, number, this.props.limit);
-                // let kanji = word.kanji ? word.kanji : [];
-                // let kana = word.kana ? word.kana : [];
-                // let searchItems = [...kanji, ...kana];
-                //
-
                 this.props.fetchWordExamples(searchResult.result.data[0].word, SearchType.EXAMPLE, 0, 3);
             } else if (searchResult.type === SearchType.KANJI) {
                 fetchData(searchResult.result, searchResult.type);
             } else if (searchResult.type === SearchType.NAME) {
                 fetchData(searchResult.result.data, searchResult.type);
             } else if (searchResult.type === SearchType.SENTENCE) {
+                this.props.setPopupInfo({...this.props.popupInfo, type: PopupType.SENTENCE});
                 this.props.fetchWordList(searchResult.result);
                 this.props.fetchTranslation(searchResult.result);
                 this.kuroshiro.convert(searchResult.result, {
@@ -321,33 +317,31 @@ export class YomiText extends React.Component {
         ev.preventDefault();
     };
 
-    toggleFurigana = () => {
-        if (this.props.kanjiLevel === "None") {
-            this.props.setFuriganaText(null);
-            this.props.setFuriganaTitle(null);
+    handleFurigana = (event) => {
 
-        } else {
-            let setFuriganaText = this.props.setFuriganaText;
-            let setFuriganaTitle = this.props.setFuriganaTitle;
+        let kanjiLevels = this.props.kanjiLevels;
+        kanjiLevels[event.target.value] = event.target.checked;
+        this.props.setKanjiLevels(kanjiLevels);
 
-            let text = this.props.text.content;
-            let title = this.props.text.title;
+        let setFuriganaText = this.props.setFuriganaText;
+        let setFuriganaTitle = this.props.setFuriganaTitle;
 
-            let self = this;
-            this.kuroshiro.convert(text, {
-                to: "hiragana",
-                mode: "furigana"
-            }).then(function (result) {
-                setFuriganaText(filterTextFuriganaByKanjiCategory(result, self.props.kanjiLevel));
-            });
+        let text = this.props.text.content;
+        let title = this.props.text.title;
 
-            this.kuroshiro.convert(title, {
-                to: "hiragana",
-                mode: "furigana"
-            }).then(function (result) {
-                setFuriganaTitle(filterTextFuriganaByKanjiCategory(result, self.props.kanjiLevel));
-            });
-        }
+        this.kuroshiro.convert(text, {
+            to: "hiragana",
+            mode: "furigana"
+        }).then(function (result) {
+            setFuriganaText(filterTextFuriganaByKanjiCategory(result, kanjiLevels));
+        });
+
+        this.kuroshiro.convert(title, {
+            to: "hiragana",
+            mode: "furigana"
+        }).then(function (result) {
+            setFuriganaTitle(filterTextFuriganaByKanjiCategory(result, kanjiLevels));
+        });
     };
 
     markAsRead = () => {
@@ -359,11 +353,10 @@ export class YomiText extends React.Component {
         return (
             <div id="yomi-text" className={this.getClassForDictionary()}>
                 {(!this.props.words || this.props.words.length === 0) && <LinearProgress/>}
-                {/*<Collapse in={this.props.showTextActions}>*/}
-                {/*    <TextActions analyzer={this.props.analyzer} kanjiLevel={this.props.kanjiLevel}*/}
-                {/*                 setKanjiLevel={this.props.setKanjiLevel} textContent={this.props.text.content}*/}
-                {/*                 toggleFurigana={this.toggleFurigana}/>*/}
-                {/*</Collapse>*/}
+                <Slide direction="down" in={this.props.showTextActions} mountOnEnter unmountOnExit>
+                    <TextActions textContent={this.props.text.content} handleFurigana={this.handleFurigana}
+                                 textTitle={this.props.text.title}/>
+                </Slide>
                 <div id="yomi-text-info">
                     <TextInfo text={this.props.text}/>
                 </div>

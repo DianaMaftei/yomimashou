@@ -1,14 +1,11 @@
 import React from "react";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import axios from "axios";
 import RikaiLoading from './RikaiLoading';
-import RikaiWords from './Words/RikaiWords';
 import RikaiKanji from './Kanji/RikaiKanji';
-import RikaiNames from './Name/RikaiNames';
-import RikaiExamples from './Examples/RikaiExamples';
-import RikaiSentences from './Sentence/RikaiSentence';
+import RikaiSentence from './Sentence/RikaiSentence';
 import './rikai.css';
-import {apiUrl} from "../../../../AppUrl";
+import { apiUrl } from "../../../../AppUrl";
 import SearchType from "./SearchType";
 import RikaiWord from "./Word/RikaiWord";
 import RtkInfo from "./Kanji/RtkInfo";
@@ -297,7 +294,7 @@ export class Rikai extends React.Component {
   }
 
   render() {
-    if(!this.props.popupInfo.visibility) {
+      if(!this.props.popupInfo.visibility) {
       return <div/>
     }
 
@@ -336,6 +333,9 @@ export class Rikai extends React.Component {
           type: SearchType.KANJI
         } : {...result.result[0], type: result.type};
         popUpComponent = <AddToDeck style={style} item={item} changePopup={this.changePopupType.bind(this)} toggleOutsideClickHandler={this.toggleOutsideClickHandler.bind(this)}/>
+        break;
+      case(PopupType.SENTENCE) :
+        popUpComponent = <RikaiSentence style={style} sentence={result}/>
         break;
     }
 

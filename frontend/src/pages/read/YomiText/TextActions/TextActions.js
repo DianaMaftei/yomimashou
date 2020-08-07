@@ -1,20 +1,41 @@
 import React from 'react';
 import FuriganaOptions from "./furigana/FuriganaOptions";
-import DownloadIcon from "mdi-react/DownloadIcon";
 import "./textActions.css";
+import Button from "@material-ui/core/Button";
+import axios from "axios";
 
-const TextActions = ({analyzer, kanjiLevel, setKanjiLevel, textContent, toggleFurigana}) => {
+const dldMp3 =(textContent, textTitle) => {
+    axios.post('https://talkify.net/api/speech/v1/?key=' + process.env.REACT_APP_TALKIFY_KEY, {
+        Text : textContent,
+        Format: "mp3",
+        rate: -2,
+        pitch: 2
+    }, {
+        responseType: 'blob'
+    }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', textTitle + '.mp3');
+        document.body.appendChild(link);
+        link.click();
+    }).catch(err => {
+        console.log(err);
+    });
+}
+
+const TextActions = ({handleFurigana, textContent, textTitle}) => {
     return (
         <div id="text-actions">
-            <FuriganaOptions analyzer={analyzer} toggleFurigana={toggleFurigana}
-                             kanjiLevel={kanjiLevel} setLevel={setKanjiLevel}/>
-            <form id="dld-tts" method="POST"
-                  action={'https://talkify.net/api/speech/v1/download?key=' + process.env.REACT_APP_TALKIFY_KEY}>
-                <input type="hidden" name="text" value={textContent}/>
-                <button type="submit" className="btn btn-light" id="dld-tts-btn">
-                    <DownloadIcon size={24}/>
-                </button>
-            </form>
+            <div className="text-actions-buttons">
+                <Button variant="outlined" component="span" onClick={() => {}}>
+                    Add to Favorites
+                </Button>
+                <Button variant="outlined" onClick={() => dldMp3(textContent, textTitle)} type="button" id="dld-tts-btn" >
+                    Download MP3
+                </Button>
+            </div>
+            <FuriganaOptions handleFurigana={handleFurigana}/>
         </div>
     );
 };
