@@ -11,6 +11,7 @@ public class TextService {
 
   private static final String CREATION_DATE = "creationDate";
   private static final String ELLIPSIS = "...";
+  public static final int MAX_LENGTH_OF_EXCERPT = 350;
   private final TextRepository textRepository;
   private final KanjiCategories kanjiCategories;
   private static final String[] SENTENCE_ENDING_CHARACTERS = {"。", ".", "…", "‥", "！", "？"};
@@ -24,6 +25,7 @@ public class TextService {
   public Text add(final Text text) {
     text.setExcerpt(getExcerpt(text));
     text.setKanjiCountByLevel(kanjiCategories.getKanjiCountByCategory(text.getContent()));
+    text.setCharacterCount(text.getContent().length());
     return textRepository.save(text);
   }
 
@@ -36,6 +38,10 @@ public class TextService {
   }
 
   private String getExcerpt(final Text text) {
+    if(text.getContent().length() <= MAX_LENGTH_OF_EXCERPT) {
+      return text.getContent();
+    }
+
     final String snippet = text.getContent().substring(0, getIndexOfSentenceEnd(text.getContent()));
     boolean snippetEndsWithEndingCharacter = false;
 
@@ -55,7 +61,7 @@ public class TextService {
 
   private int getIndexOfSentenceEnd(final String text) {
     final int startOfEndingCharacterSearch = 250;
-    final int endOfEndingCharacterSearch = 350;
+    final int endOfEndingCharacterSearch = MAX_LENGTH_OF_EXCERPT;
     int indexOfEndingCharacter = 100;
 
     if (text.length() < endOfEndingCharacterSearch) {

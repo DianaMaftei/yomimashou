@@ -3,6 +3,7 @@ package com.github.dianamaftei.yomimashou.audit;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.Optional;
 
@@ -16,6 +17,10 @@ public class UserAuditorAware implements AuditorAware<String> {
             return Optional.empty();
         }
 
-        return Optional.of(authentication.getPrincipal().toString());
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof User) {
+            return Optional.of(((User) principal).getUsername());
+        }
+        return Optional.of(principal.toString());
     }
 }

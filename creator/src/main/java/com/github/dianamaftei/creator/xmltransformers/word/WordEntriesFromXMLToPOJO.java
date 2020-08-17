@@ -32,7 +32,6 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   private static final int LOW_PRIORITY = 3;
 
   private final WordRepository wordRepository;
-  private Map<String, String> partsOfSpeech;
 
   @Autowired
   public WordEntriesFromXMLToPOJO(final WordRepository wordRepository,
@@ -119,14 +118,9 @@ public class WordEntriesFromXMLToPOJO extends XMLEntryToPOJO {
   private List<WordMeaning> buildMeaningsList(final Entry entry) {
     final List<WordMeaning> meanings = new ArrayList<>();
 
-    if (this.partsOfSpeech == null) {
-      this.partsOfSpeech = PartsOfSpeech.buildListOfPartsOfSpeech();
-    }
-
     for (final Sense sense : entry.getSense()) {
       final WordMeaning meaning = new WordMeaning();
       meaning.setPartOfSpeech(String.join("|", sense.getPos().stream()
-          .map(partsOfSpeech::get)
           .filter(Objects::nonNull)
           .collect(Collectors.toList())));
       meaning.setFieldOfApplication(String.join("|", sense.getField()));
