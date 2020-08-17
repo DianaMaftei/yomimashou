@@ -40,6 +40,7 @@ public class FileService {
     final String extension = split[split.length - 1];
 
     if (!extension.toLowerCase().endsWith("png") &&
+        !extension.toLowerCase().endsWith("gif") &&
         !extension.toLowerCase().endsWith("jpg") &&
         !extension.toLowerCase().endsWith("jpeg") &&
         !extension.toLowerCase().endsWith("bmp")) {

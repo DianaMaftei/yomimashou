@@ -1,6 +1,8 @@
 package com.github.dianamaftei.creator;
 
 import com.github.dianamaftei.creator.examplesentence.ExampleSentencesCSVtoPOJO;
+import com.github.dianamaftei.creator.scraper.NhkNewsEasyScraper;
+import com.github.dianamaftei.creator.scraper.Scraper;
 import com.github.dianamaftei.creator.xmltransformers.XMLEntryToPOJO;
 import java.util.List;
 import org.slf4j.Logger;
@@ -15,12 +17,14 @@ public class EntriesCreator {
 
   private final List<XMLEntryToPOJO> xmlEntryToPOJOList;
   private final ExampleSentencesCSVtoPOJO exampleSentencesCSVtoPOJO;
+  private final List<Scraper> scraperList;
 
   @Autowired
   public EntriesCreator(final List<XMLEntryToPOJO> xmlEntryToPOJOList,
-      final ExampleSentencesCSVtoPOJO exampleSentencesCSVtoPOJO) {
+                        final ExampleSentencesCSVtoPOJO exampleSentencesCSVtoPOJO, List<Scraper> scraperList) {
     this.xmlEntryToPOJOList = xmlEntryToPOJOList;
     this.exampleSentencesCSVtoPOJO = exampleSentencesCSVtoPOJO;
+    this.scraperList = scraperList;
   }
 
   public void run() {
@@ -30,8 +34,12 @@ public class EntriesCreator {
     try {
       xmlEntryToPOJOList.forEach(XMLEntryToPOJO::processEntries);
       exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+      scraperList.forEach(Scraper::createContent);
+
     } catch (final Exception e) {
       LOGGER.error("could not create entries", e);
+    } finally {
+      LOGGER.info("Finished");
     }
   }
 }

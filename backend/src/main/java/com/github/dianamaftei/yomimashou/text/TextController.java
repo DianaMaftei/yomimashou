@@ -2,19 +2,14 @@ package com.github.dianamaftei.yomimashou.text;
 
 import com.github.dianamaftei.appscommon.model.Text;
 import com.github.dianamaftei.yomimashou.uploads.FileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/text")
@@ -34,10 +29,13 @@ public class TextController {
   }
 
   @PostMapping()
-  public Text add(@RequestPart("text") Text text, @RequestPart("file") MultipartFile file)
+  public Text add(@RequestPart("text") Text text, @RequestPart(value = "file", required = false) MultipartFile file)
       throws IOException {
-    String imageName = fileService.upload(file, MEDIA_UPLOAD_PREFIX);
-    text.setImageFileName(imageName);
+    if (file != null) {
+      String imageName = fileService.upload(file, MEDIA_UPLOAD_PREFIX);
+      text.setImageFileName(imageName);
+    }
+
     return this.textService.add(text);
   }
 
