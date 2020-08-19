@@ -9,7 +9,10 @@ export default ({text, status}) => (
             {/*<MaterialIcon icon="favorite_border" color="#DA3603" size="24"/>*/}
             {/*<span>{text.favoriteCounter}</span>*/}
         </span>
-        {status && <TextStatus status={status}/>}
+
+        {/*TODO only show if text read*/}
+        {/*{status && <TextStatus status={status}/>}*/}
+
         {text.tags.length > 0 &&
         <span className="text-tags">
                 <span className="tag-icon">

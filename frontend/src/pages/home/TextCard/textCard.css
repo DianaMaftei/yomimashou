@@ -17,6 +17,7 @@
 
 .card-text-content hr {
     width: 98%;
+    display: flex;
 }
 
 .card-text-gradient {

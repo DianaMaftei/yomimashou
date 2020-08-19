@@ -7,7 +7,7 @@ import Home from "./pages/home/Home";
 import Add from "./pages/add/Add";
 import Read from "./pages/read/Read";
 import Decks from "./pages/decks/Decks";
-import Deck from "./pages/decks/Deck";
+import Deck from "./pages/decks/EditDeck";
 
 export default () => (
     <Switch>

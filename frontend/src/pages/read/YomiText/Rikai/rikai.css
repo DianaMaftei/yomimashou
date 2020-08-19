@@ -171,6 +171,7 @@
 
 .rikai-display {
     padding: 10px !important;
+    max-width: 360px;
 }
 
 .rikai-word-kanji {
@@ -207,6 +208,10 @@
     padding-top: 20px;
     font-size: 14px;
     padding-left: 20px;
+}
+
+.rikai-word-examples > div{
+    padding-bottom: 10px;
 }
 
 .rikai-word-examples i {
