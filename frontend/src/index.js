@@ -8,6 +8,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import state from "./State";
 import axios from "axios";
 import Routes from "./Routes";
+import Drawer, { closeDrawer } from "./pages/`common/drawer/Drawer";
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8';
 
@@ -15,8 +16,12 @@ const render = () => {
     ReactDOM.render(
         <Provider store={state.store}>
             <BrowserRouter>
-                <div id="app-container">
-                    <Routes/>
+                <div id="router-container">
+                    <Drawer/>
+                    <div id="app-container" onClick={closeDrawer}>
+                        <div id="container-overlay"/>
+                        <Routes/>
+                    </div>
                 </div>
             </BrowserRouter>
         </Provider>,
