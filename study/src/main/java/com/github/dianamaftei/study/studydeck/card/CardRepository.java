@@ -1,4 +1,4 @@
-package com.github.dianamaftei.study.studydeck;
+package com.github.dianamaftei.study.studydeck.card;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 

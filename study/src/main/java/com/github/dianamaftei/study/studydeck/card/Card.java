@@ -1,8 +1,13 @@
-package com.github.dianamaftei.study.studydeck;
+package com.github.dianamaftei.study.studydeck.card;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
 
 @Document
 public class Card {
@@ -19,12 +24,12 @@ public class Card {
 
   private boolean active;
   private int repetitions;
-  private float easinessFactor;
   private float interval;
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime nextPractice;
 
   public Card() {
-    this.easinessFactor = 2.5f;
     this.nextPractice = LocalDateTime.now();
     this.interval = 1;
   }
@@ -91,14 +96,6 @@ public class Card {
 
   public void setRepetitions(final int repetitions) {
     this.repetitions = repetitions;
-  }
-
-  public float getEasinessFactor() {
-    return easinessFactor;
-  }
-
-  public void setEasinessFactor(final float easinessFactor) {
-    this.easinessFactor = easinessFactor;
   }
 
   public float getInterval() {

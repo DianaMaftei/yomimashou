@@ -1,10 +1,13 @@
-package com.github.dianamaftei.study.studydeck;
+package com.github.dianamaftei.study.studydeck.deck;
 
 
 import com.github.dianamaftei.study.BLValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.github.dianamaftei.study.studydeck.card.Card;
+import com.github.dianamaftei.study.studydeck.card.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,15 +16,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeckService {
 
-  @Autowired
-  private CardService cardService;
+  private final CardService cardService;
+  private final DeckRepository deckRepository;
 
-  @Autowired
-  private DeckRepository deckRepository;
+  public DeckService(CardService cardService, DeckRepository deckRepository) {
+    this.cardService = cardService;
+    this.deckRepository = deckRepository;
+  }
 
   public Deck save(final Deck deck) {
     if (deck.getCards() != null) {
-      deck.getCards().forEach(item -> cardService.save(item));
+      deck.getCards().forEach(cardService::save);
     }
     return deckRepository.save(deck);
   }

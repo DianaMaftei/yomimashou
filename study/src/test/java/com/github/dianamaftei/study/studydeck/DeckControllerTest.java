@@ -16,6 +16,9 @@ import com.github.dianamaftei.study.BLValidationException;
 import java.util.Arrays;
 import java.util.Optional;
 
+import com.github.dianamaftei.study.studydeck.card.Card;
+import com.github.dianamaftei.study.studydeck.card.CardItemOrigin;
+import com.github.dianamaftei.study.studydeck.deck.Deck;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,15 +132,16 @@ public class DeckControllerTest {
     assertEquals(DECK_NAME, deck.getName());
   }
 
-  @Test
-  void createDeckThrowsExceptionIfNameIsNotUnique() throws Exception {
-    NestedServletException exception = Assertions.assertThrows(NestedServletException.class, () -> {
-      insertADeckInDb(DECK_NAME);
-      insertADeckInDb(DECK_NAME);
-    });
-
-    assertEquals(DuplicateKeyException.class, exception.getCause().getClass());
-  }
+  // TODO name should be unique per user, not per app => refactor
+//  @Test
+//  void createDeckThrowsExceptionIfNameIsNotUnique() throws Exception {
+//    NestedServletException exception = Assertions.assertThrows(NestedServletException.class, () -> {
+//      insertADeckInDb(DECK_NAME);
+//      insertADeckInDb(DECK_NAME);
+//    });
+//
+//    assertEquals(DuplicateKeyException.class, exception.getCause().getClass());
+//  }
 
   @Test
   void createDeckThrowsExceptionIfNameIsMissing() throws Exception {
@@ -145,7 +149,7 @@ public class DeckControllerTest {
       insertADeckInDb(null);
     });
 
-    assertEquals(DuplicateKeyException.class, exception.getCause().getClass());
+    assertEquals(BLValidationException.class, exception.getCause().getClass());
   }
 
   @Test
@@ -278,14 +282,14 @@ public class DeckControllerTest {
     assertThat(addedCard).isNotEmpty();
   }
 
-  @Test
-  void addCardToExistingDeckShouldThrowExceptionIfDeckDoesNotBelongToUser() throws Exception {
-    //new list or existing list?
-    // create a deck
-    Deck createdDeck = insertADeckInDb(DECK_NAME);
-
-    throw new RuntimeException("to implement");
-  }
+  // TODO implement decks per user
+//  @Test
+//  void addCardToExistingDeckShouldThrowExceptionIfDeckDoesNotBelongToUser() throws Exception {
+//    //new list or existing list?
+//    // create a deck
+//    Deck createdDeck = insertADeckInDb(DECK_NAME);
+//
+//  }
 
   @Test
   void addCardToExistingDeckShouldThrowExceptionIfDeckDoesNotExist() throws Exception {
@@ -304,31 +308,32 @@ public class DeckControllerTest {
     assertEquals(BLValidationException.class, exception.getCause().getClass());
   }
 
-  @Test
-  void addCardToNewDeckShouldThrowExceptionIfNewDeckNameIsNotUnique() throws Exception {
-    NestedServletException exception = Assertions.assertThrows(NestedServletException.class, () -> {
-      // create a new card
-      Card card = buildCard(KANJI, KANA, EXPLANATION, CardItemOrigin.KANJI);
-
-      // add card to new deck
-      mockMvc.perform(post(ADD_CARD_NEW_DECK_URL)
-          .param("deckName", DECK_NAME)
-          .content(asJsonString(card))
-          .contentType(MediaType.APPLICATION_JSON_VALUE)
-          .accept(MediaType.APPLICATION_JSON))
-          .andExpect(status().isOk());
-
-      // add card to new deck, giving same deck name
-      mockMvc.perform(post(ADD_CARD_NEW_DECK_URL)
-          .param("deckName", DECK_NAME)
-          .content(asJsonString(card))
-          .contentType(MediaType.APPLICATION_JSON_VALUE)
-          .accept(MediaType.APPLICATION_JSON))
-          .andExpect(status().isBadRequest());
-    });
-
-    assertEquals(BLValidationException.class, exception.getCause().getClass());
-  }
+  // TODO deck name should be unique per user, not per application => refactor
+//  @Test
+//  void addCardToNewDeckShouldThrowExceptionIfNewDeckNameIsNotUnique() throws Exception {
+//    NestedServletException exception = Assertions.assertThrows(NestedServletException.class, () -> {
+//      // create a new card
+//      Card card = buildCard(KANJI, KANA, EXPLANATION, CardItemOrigin.KANJI);
+//
+//      // add card to new deck
+//      mockMvc.perform(post(ADD_CARD_NEW_DECK_URL)
+//          .param("deckName", DECK_NAME)
+//          .content(asJsonString(card))
+//          .contentType(MediaType.APPLICATION_JSON_VALUE)
+//          .accept(MediaType.APPLICATION_JSON))
+//          .andExpect(status().isOk());
+//
+//      // add card to new deck, giving same deck name
+//      mockMvc.perform(post(ADD_CARD_NEW_DECK_URL)
+//          .param("deckName", DECK_NAME)
+//          .content(asJsonString(card))
+//          .contentType(MediaType.APPLICATION_JSON_VALUE)
+//          .accept(MediaType.APPLICATION_JSON))
+//          .andExpect(status().isBadRequest());
+//    });
+//
+//    assertEquals(BLValidationException.class, exception.getCause().getClass());
+//  }
 
   @Test
   void removeCardFromDeckRemovesTheCardWithTheGivenId() throws Exception {

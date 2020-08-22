@@ -1,9 +1,11 @@
-package com.github.dianamaftei.study.studydeck;
+package com.github.dianamaftei.study.studydeck.deck;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.List;
 import javax.validation.constraints.Size;
+
+import com.github.dianamaftei.study.studydeck.card.Card;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;

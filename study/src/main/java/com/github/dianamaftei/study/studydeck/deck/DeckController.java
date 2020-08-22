@@ -1,6 +1,7 @@
-package com.github.dianamaftei.study.studydeck;
+package com.github.dianamaftei.study.studydeck.deck;
 
 import com.github.dianamaftei.study.BLValidationException;
+import com.github.dianamaftei.study.studydeck.card.Card;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,8 +26,11 @@ public class DeckController {
 
   //TODO !!!!!!!!! ensure that only the user whose decks these belong to can access them
 
-  @Autowired
-  private DeckService deckService;
+  private final DeckService deckService;
+
+  public DeckController(DeckService deckService) {
+    this.deckService = deckService;
+  }
 
   @GetMapping()
   public Page<Deck> viewAllDecks(final Pageable pageable) {
@@ -41,6 +45,9 @@ public class DeckController {
 
   @PostMapping()
   public Deck createDeck(@RequestBody Deck deck) {
+    if (StringUtils.isBlank(deck.getName()) || "null".equals(deck.getName())) {
+      throw new BLValidationException("invalid deck name");
+    }
     return deckService.save(deck);
   }
 
@@ -82,8 +89,5 @@ public class DeckController {
   public List<Deck> getAllDeckNames() {
     return deckService.getAllDeckNames();
   }
-
-  // TODO export deck
-  // TODO generate mp3
 
 }
