@@ -1,11 +1,6 @@
 package com.github.dianamaftei.yomimashou.dictionary.name;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import com.github.dianamaftei.appscommon.model.Name;
-import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ExtendWith(MockitoExtension.class)
 public class NameControllerTest {
@@ -56,6 +57,8 @@ public class NameControllerTest {
     final MockHttpServletResponse response = mvc
         .perform(get(API_DICTIONARY_NAMES_URL)
             .param("searchItem", "猫")
+            .param("page", "0")
+            .param("size", "10")
             .accept(MediaType.APPLICATION_JSON))
         .andReturn().getResponse();
 

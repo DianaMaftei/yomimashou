@@ -4,11 +4,12 @@ import com.github.dianamaftei.appscommon.model.Word;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/dictionary/words")
@@ -22,38 +23,34 @@ public class WordController {
   }
 
   @GetMapping
-  public Page<Word> getByReadingElemOrKanjiElem(@RequestParam("searchItem") final String searchItem,
-      final Pageable pageable) {
-    if (searchItem.length() > 0) {
-      return wordService.getByReadingElemOrKanjiElem(searchItem.split(","), pageable);
+  public Page<Word> getByReadingElemOrKanjiElem(@RequestParam("searchItem") final String searchItem, final Pageable pageable) {
+    if (searchItem.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing search item");
     }
-    return Page.empty();
+    return wordService.getByReadingElemOrKanjiElem(searchItem.split(","), pageable);
   }
 
   @GetMapping(value = "/byStartingKanji")
-  public Page<Word> getByStartingKanji(@RequestParam("searchItem") final String searchItem,
-      final Pageable pageable) {
-    if (searchItem.length() > 0) {
-      return wordService.getByStartingKanji(searchItem, pageable);
+  public Page<Word> getByStartingKanji(@RequestParam("searchItem") final String searchItem, final Pageable pageable) {
+    if (searchItem.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing search item");
     }
-    return Page.empty();
+    return wordService.getByStartingKanji(searchItem, pageable);
   }
 
   @GetMapping(value = "/byEndingKanji")
-  public Page<Word> getByEndingKanji(@RequestParam("searchItem") final String searchItem,
-      final Pageable pageable) {
-    if (searchItem.length() > 0) {
-      return wordService.getByEndingKanji(searchItem, pageable);
+  public Page<Word> getByEndingKanji(@RequestParam("searchItem") final String searchItem, final Pageable pageable) {
+    if (searchItem.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing search item");
     }
-    return Page.empty();
+    return wordService.getByEndingKanji(searchItem, pageable);
   }
 
   @GetMapping(value = "/byContainingKanji")
-  public Page<Word> getByContainingKanji(@RequestParam("searchItem") final String searchItem,
-      final Pageable pageable) {
-    if (searchItem.length() > 0) {
-      return wordService.getByContainingKanji(searchItem, pageable);
+  public Page<Word> getByContainingKanji(@RequestParam("searchItem") final String searchItem, final Pageable pageable) {
+    if (searchItem.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing search item");
     }
-    return Page.empty();
+    return wordService.getByContainingKanji(searchItem, pageable);
   }
 }
