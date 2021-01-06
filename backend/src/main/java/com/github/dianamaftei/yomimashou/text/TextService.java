@@ -4,7 +4,6 @@ import com.github.dianamaftei.appscommon.model.KanjiCategories;
 import java.util.List;
 import java.util.Optional;
 
-import com.github.dianamaftei.appscommon.model.Text;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
