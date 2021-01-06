@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import com.github.dianamaftei.appscommon.model.KanjiCategories;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,8 +77,8 @@ class TextServiceTest {
     text.setId(42L);
     when(textRepository.getOne(42L)).thenReturn(text);
 
-    final Text textById = textService.getById(42L);
+    final Optional<Text> textById = textService.getById(42L);
 
-    assertEquals(text.getId(), textById.getId());
+    assertEquals(text.getId(), textById.get().getId());
   }
 }

@@ -2,11 +2,14 @@ package com.github.dianamaftei.yomimashou.text;
 
 import com.github.dianamaftei.yomimashou.uploads.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -46,7 +49,11 @@ public class TextController {
 
   @GetMapping("/{id}")
   public Text getById(@PathVariable Long id) {
-    return this.textService.getById(id);
+    Optional<Text> text = this.textService.getById(id);
+    if(!text.isPresent()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Missing text");
+    }
+    return text.get();
   }
 
   @PostMapping(value = "/parse/words")

@@ -15,6 +15,8 @@ import com.github.dianamaftei.yomimashou.uploads.FileService;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,7 +95,7 @@ class TextControllerTest {
 
   @Test
   void getById() throws Exception {
-    when(textService.getById(42L)).thenReturn(text);
+    when(textService.getById(42L)).thenReturn(Optional.of(text));
 
     MockHttpServletResponse response = mvc
         .perform(get("/api/text/42").accept(MediaType.APPLICATION_JSON))
