@@ -1,13 +1,6 @@
 package com.github.dianamaftei.yomimashou.dictionary.word;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import com.github.dianamaftei.appscommon.model.Word;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +16,14 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ExtendWith(MockitoExtension.class)
 class WordControllerTest {
@@ -66,7 +67,7 @@ class WordControllerTest {
   }
 
   @Test
-  void shouldReturnAnEmptyListWhenSearchItemIsNull() throws Exception {
+  void shouldThrowExceptionWhenSearchItemIsNull() throws Exception {
     final String searchItem = null;
     final MockHttpServletResponse response = mvc.perform(
         get(API_DICTIONARY_WORDS_URL)
@@ -75,20 +76,17 @@ class WordControllerTest {
             .param("size", "1")
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-    assertThat(response.getContentAsString().indexOf("\"numberOfElements\":0")).isGreaterThan(0);
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
   }
 
   @Test
-  void shouldReturnAnEmptyListWhenSearchItemIsAnEmptyString() throws Exception {
-    final String searchItem = "";
+  void shouldThrowExceptionWhenSearchItemIsAnEmptyString() throws Exception {
     final MockHttpServletResponse response = mvc.perform(
         get(API_DICTIONARY_WORDS_URL)
-            .param("searchItem", searchItem)
+            .param("searchItem", "")
             .param("page", "0")
             .param("size", "1")
             .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-    assertThat(response.getContentAsString().indexOf("\"numberOfElements\":0")).isGreaterThan(0);
+    assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
   }
 }

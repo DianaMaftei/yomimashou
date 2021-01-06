@@ -1,22 +1,19 @@
 package com.github.dianamaftei.yomimashou.dictionary.example;
 
-import static com.github.dianamaftei.appscommon.model.QExampleSentence.exampleSentence;
-
 import com.github.dianamaftei.appscommon.model.ExampleSentence;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static com.github.dianamaftei.appscommon.model.QExampleSentence.exampleSentence;
+
 @Service
 public class ExampleSentenceService {
-
-  @Value("${paginatation.limit}")
-  private int paginationLimit;
 
   private final JPAQueryFactory jpaQueryFactory;
 
