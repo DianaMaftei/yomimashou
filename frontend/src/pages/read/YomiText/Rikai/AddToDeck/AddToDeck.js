@@ -51,7 +51,7 @@ class AddToDeck extends Component {
     let deckId = this.state.deckId;
     let deckName = this.state.deckName;
 
-    const url = deckId ? studyApiUrl + '/api/deck/' + deckId + "/addCard" :
+    const url = deckId != 'NEW' ? studyApiUrl + '/api/deck/' + deckId + "/addCard" :
         studyApiUrl + '/api/deck/addCard?deckName=' + deckName;
 
     axios.post(url, {
@@ -127,28 +127,25 @@ class AddToDeck extends Component {
             </div>
 
             <div className="add-item-decks">
-              {this.state.decks && this.state.decks.length > 0 &&
+              <FormControl margin="dense" variant="outlined" id="deck-select">
+                <InputLabel id="demo-simple-select-outlined-label">Choose a deck</InputLabel>
+                <Select
+                    value={this.state.deckId}
+                    onChange={this.handleDeckChange.bind(this)}
+                    style={{width: 200}}
+                    onClick={this.props.toggleOutsideClickHandler}
 
-                    <FormControl margin="dense" variant="outlined" id="deck-select">
-                      <InputLabel id="demo-simple-select-outlined-label">Choose a deck</InputLabel>
-                        <Select
-                            value={this.state.deckId}
-                            onChange={this.handleDeckChange.bind(this)}
-                            style={{width: 200}}
-                            onClick={this.props.toggleOutsideClickHandler}
+                >
+                  <MenuItem key="NEW" value="NEW">New deck...</MenuItem>
+                  {this.state.decks && this.state.decks.map(deck =>
+                      <MenuItem key={deck.id}
+                                value={deck.id}>{deck.name}</MenuItem>)}
 
-                        >
-                          <MenuItem key="NEW" value="NEW">New deck...</MenuItem>
-                          {this.state.decks.map(deck =>
-                              <MenuItem key={deck.id}
-                                        value={deck.id}>{deck.name}</MenuItem>)}
-
-                        </Select>
-                    </FormControl>
-              }
+                </Select>
+              </FormControl>
 
               {
-                this.state.deckId === "NEW" &&
+                (this.state.deckId === "NEW") &&
                     <div id="new-deck-name">
                       <TextField id="deck-name-required"
                                  value={this.state.deckName || ''}

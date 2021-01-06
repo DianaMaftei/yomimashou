@@ -53,11 +53,14 @@ class Decks extends React.Component {
                     {decks.map((deck, index) => (
                         <Deck key={"deck-" + index} deck={deck} onEdit={this.edit.bind(this)} onDelete={this.delete.bind(this)}/>
                     ))}
+
+                    {
+                        !decks || decks.length === 0 && <h4>You don't have any decks created. Go read some texts and add items to practice.</h4>
+                    }
                 </div>
             </div>
         );
     }
 }
 
-export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(Decks));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Decks));

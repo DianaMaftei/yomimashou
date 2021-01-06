@@ -3,6 +3,7 @@ import "./deck.css";
 import MaterialIcon from "material-icons-react";
 import colors from "../../../style/colorConstants";
 import DeckMasteryIndicator from "./deck-mastery-indicator/DeckMasteryIndicator";
+import Link from "react-router-dom/Link";
 
 const getFontSize = (textLength) => {
     const baseSize = 16
@@ -29,7 +30,9 @@ const Deck = ({deck, onEdit, onDelete}) => {
                             <MaterialIcon icon="filter_none" color={colors.yomiWhite} size="tiny"/>
                             <span>57</span>
                         </div>}
-                        <div className="deck-card-body" style={nameStyle}>{deck.name}</div>
+                        <Link to={"/practice/" + deck.id} className="deck-card-body" >
+                            <div style={nameStyle}>{deck.name}</div>
+                        </Link>
                         <div className="deck-card-bottom">
                             <MaterialIcon icon="edit" color={colors.yomiWhite} size="small" onClick={() => onEdit(deck.id)}/>
                             <MaterialIcon icon="delete" color={colors.yomiWhite} size="small" onClick={() => onDelete(deck.id)}/>

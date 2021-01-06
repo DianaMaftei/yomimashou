@@ -296,7 +296,7 @@ export class YomiText extends React.Component {
 
     onKeyDown(ev) {
         switch (ev.keyCode) {
-            case 83:	// s - switch dictionaries (kanji, names, words, examples)
+            case 192:	// ` - switch dictionaries (kanji, names, words, examples)
                 this.props.switchDictionary();
                 this.props.setPopupInfo({
                     ...this.props.popupInfo,
