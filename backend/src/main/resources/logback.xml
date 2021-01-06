@@ -10,7 +10,7 @@
         </layout>
     </appender>
 
-    <logger name="com.github.dianamaftei.yomimashou" level="ALL"/>
+    <logger name="com.yomimashou" level="ALL"/>
 
     <logger name="org.springframework.transaction.interceptor.TransactionInterceptor" level="TRACE"/>
 
