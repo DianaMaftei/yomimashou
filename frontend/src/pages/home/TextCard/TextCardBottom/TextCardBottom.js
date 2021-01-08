@@ -4,11 +4,11 @@ import MaterialIcon from "material-icons-react";
 
 export default ({text, status}) => (
     <div className="text-card-bottom">
-        <span className="favorite-icon">
+        {/*<span className="favorite-icon">*/}
             {/*TODO replace icon with full one if text was favorited*/}
             {/*<MaterialIcon icon="favorite_border" color="#DA3603" size="24"/>*/}
             {/*<span>{text.favoriteCounter}</span>*/}
-        </span>
+        {/*</span>*/}
 
         {/*TODO only show if text read*/}
         {/*{status && <TextStatus status={status}/>}*/}

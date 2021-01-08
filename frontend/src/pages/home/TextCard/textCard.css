@@ -76,7 +76,7 @@
 .tag-list {
     font-size: 12px;
     position: relative;
-    top: -4px;
+    padding-left: 35px;
 }
 
 .favorite-icon {
