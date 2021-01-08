@@ -1,9 +1,7 @@
 package com.yomimashou.study.studydeck;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,9 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yomimashou.study.BLValidationException;
 
 import java.util.Arrays;
-import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
@@ -63,7 +58,7 @@ public class DeckControllerTest {
   @Test
   void viewDecksReturnsAllTheDecks() throws Exception {
     for (int i = 0; i < 5; i++) {
-      insertADeckInDb(DECK_NAME + i);
+      insertADeckWithTwoCardsInDb(DECK_NAME + i);
     }
 
     MvcResult mvcResult = mockMvc.perform(get(API_URL)
@@ -82,7 +77,7 @@ public class DeckControllerTest {
   @Test
   void viewDecksPaginatesCorrectly() throws Exception {
     for (int i = 0; i < 10; i++) {
-      insertADeckInDb(DECK_NAME + i);
+      insertADeckWithTwoCardsInDb(DECK_NAME + i);
     }
 
     MvcResult mvcResult = mockMvc.perform(get(API_URL)
@@ -101,10 +96,7 @@ public class DeckControllerTest {
   @Test
   void viewDecksSortsCorrectlyByNameDesc() throws Exception {
     for (int i = 0; i < 10; i++) {
-      mockMvc.perform(post(API_URL)
-          .content(asJsonString(buildDeckWithCards(DECK_NAME + i)))
-          .contentType(MediaType.APPLICATION_JSON_VALUE)
-          .accept(MediaType.APPLICATION_JSON));
+      insertADeckWithTwoCardsInDb(DECK_NAME + i);
     }
 
     MvcResult mvcResult = mockMvc.perform(get(API_URL)
@@ -118,14 +110,24 @@ public class DeckControllerTest {
 
     String resultContent = mvcResult.getResponse().getContentAsString();
 
-    assertThat(resultContent).isNotNull();
+    assertNotNull(resultContent);
     assertThat(resultContent.indexOf("\"name\":\"deck name9\"")).isGreaterThan(0);
   }
 
   @Test
   void createDeck() throws Exception {
-    Deck deck = insertADeckInDb(DECK_NAME);
-    assertThat(deck).isNotNull();
+    MvcResult mvcPostResult = mockMvc.perform(post(API_URL)
+            .content(asJsonString(Arrays.asList(new Card())))
+            .param("deckName", DECK_NAME)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    String postResultContent = mvcPostResult.getResponse().getContentAsString();
+    Deck deck = (Deck) asObject(postResultContent, Deck.class);
+
+    assertNotNull(deck);
     assertEquals(DECK_NAME, deck.getName());
   }
 
@@ -142,18 +144,22 @@ public class DeckControllerTest {
 
   @Test
   void createDeckThrowsExceptionIfNameIsMissing() throws Exception {
-    NestedServletException exception = Assertions.assertThrows(NestedServletException.class, () -> {
-      insertADeckInDb(null);
+    assertThrows(IllegalArgumentException.class, () -> {
+      mockMvc.perform(post(API_URL)
+              .content(asJsonString(Arrays.asList(new Card())))
+              .param("deckName", null)
+              .contentType(MediaType.APPLICATION_JSON_VALUE)
+              .accept(MediaType.APPLICATION_JSON))
+              .andExpect(status().isOk())
+              .andReturn();
     });
-
-    assertEquals(BLValidationException.class, exception.getCause().getClass());
   }
 
   @Test
   void viewDeck() throws Exception {
     // create a deck
     String suffix = "_BOO";
-    Deck createdDeck = insertADeckInDb(DECK_NAME + suffix);
+    Deck createdDeck = insertADeckWithTwoCardsInDb(DECK_NAME + suffix);
 
     MvcResult mvcGetResult = mockMvc.perform(get(DECK_ID_URL, createdDeck.getId())
         .accept(MediaType.APPLICATION_JSON))
@@ -170,7 +176,7 @@ public class DeckControllerTest {
   void editDeck() throws Exception {
     // create a deck
     String suffix = "_BOO";
-    Deck createdDeck = insertADeckInDb(suffix);
+    Deck createdDeck = insertADeckWithTwoCardsInDb(suffix);
 
     // change the deck name
     String newName = "new deck name";
@@ -194,15 +200,12 @@ public class DeckControllerTest {
   @Test
   void deleteDeckDeletesTheDeckWithTheGivenId() throws Exception {
     // create a deck
-    Deck createdDeck = insertADeckInDb(DECK_NAME);
+    Deck createdDeck = insertADeckWithTwoCardsInDb(DECK_NAME);
 
-    //check that the deck is in the db
-    MvcResult mvcGetResult = mockMvc.perform(get(DECK_ID_URL, createdDeck.getId())
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andReturn();
-
-    assertTrue(StringUtils.isNotBlank(mvcGetResult.getResponse().getContentAsString()));
+    //check that it and the cards exist in the db
+    assertNotNull(mongoTemplate.findById(createdDeck.getId(), Deck.class));
+    assertNotNull(mongoTemplate.findById(createdDeck.getCards().get(0), Card.class));
+    assertNotNull(mongoTemplate.findById(createdDeck.getCards().get(1), Card.class));
 
     // delete the deck
     mockMvc.perform(delete(DECK_ID_URL, createdDeck.getId())
@@ -211,21 +214,17 @@ public class DeckControllerTest {
         .andReturn();
 
     // check that the deck is no longer in the db
-    MvcResult mvcGetResultAfterDelete = mockMvc
-        .perform(get(DECK_ID_URL, createdDeck.getId())
-            .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andReturn();
+    assertNull(mongoTemplate.findById(DECK_ID_URL, Deck.class));
 
-    assertTrue(StringUtils.isBlank(mvcGetResultAfterDelete.getResponse().getContentAsString()));
-
-    //TODO check that the cards are also deleted
+    // check that the cards are also deleted
+    assertNull(mongoTemplate.findById(createdDeck.getCards().get(0), Card.class));
+    assertNull(mongoTemplate.findById(createdDeck.getCards().get(1), Card.class));
   }
 
   @Test
   void addCardToExistingDeckShouldSuccessfullyAddCardToIt() throws Exception {
     // create a deck with two pre existing cards
-    Deck createdDeck = insertADeckInDb(DECK_NAME);
+    Deck createdDeck = insertADeckWithTwoCardsInDb(DECK_NAME);
     assertEquals(2, createdDeck.getCards().size());
 
     // create a new card
@@ -244,12 +243,10 @@ public class DeckControllerTest {
 
     // check that the card has been added
     assertEquals(3, fetchedDeck.getCards().size());
-    Optional<Card> addedCard = fetchedDeck.getCards()
-        .stream()
-        .filter(deckCard -> KANJI.equals(deckCard.getKanji()))
-        .findFirst();
+    Card addedCard = mongoTemplate.findById(fetchedDeck.getCards().get(2), Card.class);
 
-    org.assertj.core.api.Assertions.assertThat(addedCard).isNotEmpty();
+    assertNotNull(addedCard);
+    assertEquals(KANJI, addedCard.getKanji());
   }
 
   @Test
@@ -271,15 +268,11 @@ public class DeckControllerTest {
 
     // check that the card has been added
     assertEquals(1, fetchedDeck.getCards().size());
-    Optional<Card> addedCard = fetchedDeck.getCards()
-        .stream()
-        .filter(deckCard -> KANJI.equals(deckCard.getKanji()))
-        .findFirst();
-
-    org.assertj.core.api.Assertions.assertThat(addedCard).isNotEmpty();
+    Card savedCard = mongoTemplate.findById(fetchedDeck.getCards().get(0), Card.class);
+    assertEquals(KANJI, savedCard.getKanji());
   }
-  // TODO  after users are implemented
 
+  // TODO  after users are implemented
 //  @Test
 //  void addCardToExistingDeckShouldThrowExceptionIfDeckDoesNotBelongToUser() throws Exception {
 //    //new list or existing list?
@@ -336,13 +329,13 @@ public class DeckControllerTest {
   @Test
   void removeCardFromDeckRemovesTheCardWithTheGivenId() throws Exception {
     // create a deck
-    Deck createdDeck = insertADeckInDb(DECK_NAME);
+    Deck createdDeck = insertADeckWithTwoCardsInDb(DECK_NAME);
 
     assertEquals(2, createdDeck.getCards().size());
 
     // remove a card
     mockMvc.perform(post(DECK_ID_URL + "/card/delete/{cardId}",
-        createdDeck.getId(), createdDeck.getCards().get(0).getId())
+        createdDeck.getId(), createdDeck.getCards().get(0))
         .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
 
@@ -358,25 +351,15 @@ public class DeckControllerTest {
     assertEquals(1, editedDeck.getCards().size());
   }
 
-  private Deck insertADeckInDb(final String deckName) throws Exception {
-    MvcResult mvcPostResult = mockMvc.perform(post(API_URL)
-        .content(asJsonString(buildDeckWithCards(deckName)))
-        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andReturn();
-
-    String postResultContent = mvcPostResult.getResponse().getContentAsString();
-    return (Deck) asObject(postResultContent, Deck.class);
-  }
-
-  private Deck buildDeckWithCards(final String deckName) {
+  private Deck insertADeckWithTwoCardsInDb(final String deckName) {
     Deck deck = new Deck();
     deck.setName(deckName);
     Card card1 = buildCard(deckName + "_" + "猫", "ねこ ビョウ", "cat", CardItemOrigin.KANJI);
     Card card2 = buildCard(deckName + "_" + "犬", "いぬ、 いぬ- ケン", "dog", CardItemOrigin.KANJI);
-    deck.setCards(Arrays.asList(card1, card2));
-    return deck;
+    mongoTemplate.save(card1);
+    mongoTemplate.save(card2);
+    deck.setCards(Arrays.asList(card1.getId(), card2.getId()));
+    return mongoTemplate.save(deck);
   }
 
   private Card buildCard(String kanji, String kana, String explanation, CardItemOrigin cardItemOrigin) {

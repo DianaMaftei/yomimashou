@@ -18,8 +18,15 @@ public class Deck {
   @Size(max = 50)
   private String name;
 
-  @DBRef(lazy = true)
-  private List<Card> cards;
+  private List<String> cards;
+
+  public Deck() {
+  }
+
+  public Deck(String deckName, List<String> cards) {
+    this.name = deckName;
+    this.cards = cards;
+  }
 
   public String getId() {
     return id;
@@ -37,11 +44,11 @@ public class Deck {
     this.name = name;
   }
 
-  public List<Card> getCards() {
+  public List<String> getCards() {
     return cards;
   }
 
-  public void setCards(final List<Card> cards) {
+  public void setCards(final List<String> cards) {
     this.cards = cards;
   }
 }

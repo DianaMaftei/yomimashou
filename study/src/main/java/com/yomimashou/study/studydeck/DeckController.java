@@ -35,28 +35,28 @@ public class DeckController {
   }
 
   @GetMapping("/{id}")
-  public Deck viewDeck(@PathVariable String id) {
+  public Deck get(@PathVariable String id) {
     return deckService.findById(id).orElse(null);
   }
 
   @PostMapping()
-  public Deck createDeck(@RequestBody Deck deck) {
-    if (deck == null || StringUtils.isBlank(deck.getName())) {
-      throw new BLValidationException("Invalid deck");
+  public Deck save(@RequestParam String deckName, @RequestBody List<Card> cards) {
+    if (StringUtils.isBlank(deckName)) {
+      throw new BLValidationException("Deck requires a name");
     }
-    return deckService.save(deck);
+    return deckService.save(deckName, cards);
   }
 
   @PutMapping("/{id}")
-  public Deck editDeck(@PathVariable String id, @RequestBody Deck deck) {
+  public Deck update(@PathVariable String id, @RequestBody Deck deck) {
     if (!id.equals(deck.getId())) {
       throw new BLValidationException("invalid id");
     }
-    return deckService.save(deck);
+    return deckService.update(deck);
   }
 
   @DeleteMapping("/{id}")
-  public void deleteDeck(@PathVariable String id) {
+  public void delete(@PathVariable String id) {
     deckService.delete(id);
   }
 

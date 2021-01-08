@@ -1,18 +1,6 @@
 #canvas-buttons {
     display: flex;
     justify-content: space-around;
-    margin: 50px 20px 20px;
-}
-
-#canvas-buttons button {
-    background: none;
-    padding: 10px;
-    border-radius: 12px;
-    border: 2px solid var(--yomi-dark-blue);
-    width: 60px;
-    height: 60px;
-    color: var(--yomi-dark-blue);
-
 }
 
 #toggle-hint .hint-on{

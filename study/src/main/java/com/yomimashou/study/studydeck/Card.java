@@ -15,8 +15,6 @@ public class Card {
   @Id
   private String id;
 
-  private String deckId;
-
   private String kanji;
   private String kana;
   private String explanation;
@@ -24,7 +22,6 @@ public class Card {
 
   private boolean active;
   private int repetitions;
-  private float easinessFactor;
   private float interval;
 
   @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -32,7 +29,6 @@ public class Card {
   private LocalDateTime nextPractice;
 
   public Card() {
-    this.easinessFactor = 2.5f;
     this.nextPractice = LocalDateTime.now();
     this.interval = 1;
   }
@@ -43,14 +39,6 @@ public class Card {
 
   public void setId(final String id) {
     this.id = id;
-  }
-
-  public String getDeckId() {
-    return deckId;
-  }
-
-  public void setDeckId(final String deckId) {
-    this.deckId = deckId;
   }
 
   public String getKanji() {
@@ -99,14 +87,6 @@ public class Card {
 
   public void setRepetitions(final int repetitions) {
     this.repetitions = repetitions;
-  }
-
-  public float getEasinessFactor() {
-    return easinessFactor;
-  }
-
-  public void setEasinessFactor(final float easinessFactor) {
-    this.easinessFactor = easinessFactor;
   }
 
   public float getInterval() {

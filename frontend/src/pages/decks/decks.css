@@ -1,3 +1,7 @@
+#decks-page, #deck-page {
+    height: 100%;
+}
+
 .decks-center {
     padding: 50px 0;
     max-width: 700px;

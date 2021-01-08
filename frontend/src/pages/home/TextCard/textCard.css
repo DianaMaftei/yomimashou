@@ -7,12 +7,13 @@
 }
 
 .text-card-excerpt {
-    margin-top: 10px !important;
+    margin-top: 10px!important;
     white-space: pre-wrap;
 }
 
-.card-text-content h2, .card-text-content p {
-    font-weight: 500;
+.text-card-date {
+    font-size: 16px!important;
+    margin-right: 5px;
 }
 
 .card-text-content hr {
@@ -25,10 +26,31 @@
     height: 80px;
     width: 100%;
     bottom: 20px;
+}
 
-    background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgb(255, 255, 255) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%, rgb(255, 255, 255) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%, rgb(255, 255, 255) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+.difficulty-bar .level-zero {
+    color: #7bee65;
+}
+
+.difficulty-bar .level-one {
+    color: #38c14c;
+}
+
+.difficulty-bar .level-two {
+    color: #e7db10;
+}
+
+.difficulty-bar .level-three {
+    color: #ee891e;
+}
+
+.difficulty-bar .level-four {
+    color: #c80009;
+}
+
+.text-card-bottom {
+    display: flex;
+    justify-content: space-between;
 }
 
 .text-card-bottom-container {
@@ -41,29 +63,24 @@
     line-height: 30px;
 }
 
+.tag-icon {
+    margin-right: 5px;
+}
+
 .tag-icon i {
     transform: rotate(-125deg);
     margin: 0 5px 2px 10px;
     position: absolute;
     bottom: 10px;
 }
-
 .tag-list {
     font-size: 12px;
     position: relative;
-    color: dimgray;
-    margin-left: 40px;
+    top: -4px;
 }
 
 .favorite-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.favorite-icon span {
-    color: dimgray;
-    padding-top: 2px;
+    color: #c80009;
 }
 
 .absolute-pos {
@@ -77,8 +94,4 @@
 
 #kanji-pie-chart > div {
     display: inline;
-}
-
-.text-card-title {
-    font-family: 'Noto Serif JP', serif !important;
 }

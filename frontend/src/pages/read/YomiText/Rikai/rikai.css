@@ -1,16 +1,18 @@
+/* this is to reset almost everything under the popup to a sane value */
+
 #rikai-window {
     position: absolute;
     z-index: 100;
-    background: var(--yomi-gray-200);
+    background: #fbfafa;
     top: 5px;
-    left: 20px;
+    left: 5px;
     width: auto;
     height: auto;
-    min-width: 300px;
+    max-width: 300px;
     display: none;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    margin-right: 20px;
+    border: 2px solid #e6e6e6;
+    border-radius: 5px 5px 5px 5px;
+    margin-bottom: 10px;
 }
 
 /* used for word and name definitions */
@@ -71,41 +73,56 @@
 }
 
 #rikai-window .k-kanji {
+    font-family: serif;
+    font-size: 48px;
+    color: #497c7b;
     display: inline-block;
 }
 
-#rikai-window .k-dictionary-data {
+#rikai-window .k-main-data {
     display: inline-block;
     padding-left: 10px;
     margin-top: 15px;
     min-width: 100px;
-    position: absolute;
-}
-
-#rikai-window .k-main-data p{
-    margin-top: 0;
-    margin-bottom: 8px;
-}
-
-#rikai-window .k-main-data {
-    margin: 10px 0;
-    font-weight: 500;
 }
 
 #rikai-window .k-main-data-line {
     display: block;
-    font-size: 14px;
-    line-height: 28px;
-    font-weight: 600;
+    font-size: 12px;
 }
 
-#rikai-window .k-main-data-line span {
-    color: var(--yomi-dark-red);
+/* kanji: readings */
+
+/* kanji radical, grade, freq, strokes box */
+
+#rikai-window .rikai-top {
+    text-align: center;
+    height: 25px;
+    background-color: #732472;
+    line-height: 23px;
+    /*border-radius: 5px 5px 0 0;*/
+    padding-left: 5px;
 }
 
-#rikai-window .k-eigo {
-    font-weight: 700;
-    letter-spacing: 0.5px;
+#rikai-window .rikai-title {
+    font-size: 15px;
+    color: whitesmoke;
+    margin-right: 27px;
+    padding: 5px;
+}
+
+#rikai-window .closeBtn {
+    position: absolute;
+    right: 6px;
+    cursor: pointer;
+    height: 8px;
+    width: 8px;
+    background-color: whitesmoke;
+    padding: 4px 15px 13px 3px;
+    border-radius: 50%;
+    line-height: 11px;
+    font-weight: bold;
+    top: 2px;
 }
 
 #rikai-window .definition-dark {
@@ -126,29 +143,20 @@
     justify-content: space-around;
 }
 
-#rikai-window .example-words-search div {
-    color: var(--yomi-dark-blue);
-    font-weight: 500;
+#rikai-window .example-words-search span {
+    color: #497c7b;
+    font-weight: bold;
     cursor: pointer;
-    font-size: 16px;
-
-    border: 1px solid var(--yomi-dark-blue);
-    border-radius: 50%;
-    width: 42px;
-    height: 42px;
-
-    text-align: center;
-    vertical-align: middle;
-    line-height: 42px;
+    font-size: 18px;
 }
 
 #rikai-window .example-words-search .asterisk {
     vertical-align: sub;
 }
 
-#sample-btn button {
-    background-color: var(--yomi-gray-200);
-    border: none;
+#sample-btn .btn {
+    height: 25px;
+    width: 25px;
 }
 
 #sample-btn {

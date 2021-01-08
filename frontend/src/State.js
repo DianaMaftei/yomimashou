@@ -7,6 +7,7 @@ import add from "./pages/add/index";
 import home from "./pages/home/reducers";
 import decks from "./pages/decks";
 import login from "./pages/login/loginReducers";
+import study from "./pages/practice";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(combineReducers({
@@ -16,7 +17,8 @@ const store = createStore(combineReducers({
     popUp,
     config,
     login,
-    decks
+    decks,
+    study
 }), composeEnhancers(
     applyMiddleware(promiseMiddleware())
 ));
