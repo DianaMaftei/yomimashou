@@ -47,7 +47,7 @@ class Decks extends React.Component {
         return (
             <div id="decks-page" className="text-center">
                 <div id="app-header">
-                    <Header leftIcon="menu" centerText="My decks"/>
+                    <Header leftIcon="menu" centerText="My decks" fontSize={32}/>
                 </div>
                 <div className="text-center">
                     {decks.map((deck, index) => (

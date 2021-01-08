@@ -134,7 +134,6 @@ class Text extends React.Component {
 
         return (
             <div>
-                <h1 style={{textAlign: 'center'}}>Add a text to read</h1>
                 <TextField required fullWidth id="title-required" label="Title" value={title || ''}
                            onChange={setTitle} margin="normal"/>
 

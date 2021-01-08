@@ -254,7 +254,7 @@ class Practice extends React.Component {
         return (
             <div id="practice-page" className="text-center">
                 <div id="app-header">
-                    <Header leftIcon="menu" centerText={"Practice - " + this.props.deck.name}/>
+                    <Header leftIcon="menu" centerText={"Practice - " + this.props.deck.name} fontSize={32}/>
                 </div>
                 {!this.summary.show && this.props.cardsDue && this.props.cardsDue.length !== 0 &&
                 <div className="content color-3">

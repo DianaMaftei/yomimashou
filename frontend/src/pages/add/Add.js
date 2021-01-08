@@ -10,6 +10,7 @@ import ActionButtons from "./ActionButtons";
 import Tags from "./Tags";
 import Series from "./Series";
 import Text from "./text/Text";
+import Header from "../`common/header/Header";
 
 const mapStateToProps = (state) => ({
     text: state.add.text,
@@ -147,17 +148,22 @@ class Add extends React.Component {
 
         return (
             <div id="add-page">
-                <Text title={this.props.text.title} setTitle={this.props.setTitle.bind(this)}
-                      removePlaceholder={this.removePlaceholder.bind(this)} editorContent={editorContent}
-                      setText={this.props.setText.bind(this)}/>
+                <div id="app-header">
+                    <Header leftIcon="menu" centerText="Add new text" fontSize={32}/>
+                </div>
+                <div className="add-text-container">
+                    <Text title={this.props.text.title} setTitle={this.props.setTitle.bind(this)}
+                          removePlaceholder={this.removePlaceholder.bind(this)} editorContent={editorContent}
+                          setText={this.props.setText.bind(this)}/>
 
-                <div className="add-action-footer">
-                    <Tags tagInput={this.props.tagInput} updateTag={this.updateTag.bind(this)}
-                          addTag={this.addTag.bind(this)} tags={this.props.text.tags}
-                          deleteTag={this.deleteTag.bind(this)}/>
-                    <Series/>
-                    <Divider/>
-                    <ActionButtons disableAddBtn={this.disableAddBtn()} submitText={this.submitText.bind(this)}/>
+                    <div className="add-action-footer">
+                        <Tags tagInput={this.props.tagInput} updateTag={this.updateTag.bind(this)}
+                              addTag={this.addTag.bind(this)} tags={this.props.text.tags}
+                              deleteTag={this.deleteTag.bind(this)}/>
+                        <Series/>
+                        <Divider/>
+                        <ActionButtons disableAddBtn={this.disableAddBtn()} submitText={this.submitText.bind(this)}/>
+                    </div>
                 </div>
             </div>
         );
