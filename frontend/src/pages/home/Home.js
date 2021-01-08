@@ -7,6 +7,8 @@ import MasonryLayout from "./MasonryLayout/MasonryLayout";
 import 'react-image-crop/dist/ReactCrop.css';
 import { isAuthenticated, withHeaders } from "../../auth/auth";
 import Header from "../`common/header/Header";
+import PlusIcon from 'mdi-react/PlusIcon';
+import Link from "react-router-dom/Link";
 
 const mapStateToProps = (state) => ({
     texts: state.home.texts,
@@ -48,6 +50,9 @@ export class Home extends React.Component {
                     <Header leftIcon="menu"/>
                 </div>
                 <MasonryLayout texts={this.props.texts} textsStatuses={this.props.textsStatuses}/>
+                <Link to={"/add"} id="add-btn">
+                    <PlusIcon size={42}/>
+                </Link>
             </div>
         );
     }
