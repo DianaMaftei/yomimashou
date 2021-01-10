@@ -24,9 +24,9 @@ const dldMp3 =(textContent, textTitle) => {
     });
 }
 
-const TextActions = ({handleFurigana, textContent, textTitle}) => {
+const TextActions = ({handleFurigana, textContent, textTitle, kanjiLevels}) => {
     return (
-        <div id="text-actions">
+        <div>
             <div className="text-actions-buttons">
                 <Button variant="outlined" component="span" onClick={() => {}}>
                     Add to Favorites
@@ -35,7 +35,7 @@ const TextActions = ({handleFurigana, textContent, textTitle}) => {
                     Download MP3
                 </Button>
             </div>
-            <FuriganaOptions handleFurigana={handleFurigana}/>
+            <FuriganaOptions handleFurigana={handleFurigana} kanjiLevels={kanjiLevels}/>
         </div>
     );
 };

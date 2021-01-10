@@ -14,7 +14,7 @@ export default ({text, status}) => {
     if (!text) return <div/>;
 
     return (
-        <Card style={{maxWidth: 350, borderRadius: 15}}>
+        <Card style={{maxWidth: 350, borderRadius: 15, width:'90vw'}}>
             <Link to={"/read/" + text.id} className="text-card-link">
                 <CardActionArea>
                     <TextInfo text={text}/>

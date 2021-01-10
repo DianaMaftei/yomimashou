@@ -47,9 +47,9 @@ export class Read extends React.Component {
     componentDidMount() {
         const { id } = this.props.match.params;
         if (id) {
-            if(isAuthenticated()) {
-                axios.post(apiUrl + '/api/users/textStatus?progressStatus=OPEN&textId=' +id, {}, withHeaders());
-            }
+            // if(isAuthenticated()) {
+            //     axios.post(apiUrl + '/api/users/textStatus?progressStatus=OPEN&textId=' +id, {}, withHeaders());
+            // }
 
             this.props.getTextById(id);
         } else {

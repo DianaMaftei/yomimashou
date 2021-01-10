@@ -16,6 +16,10 @@
     margin-right: 5px;
 }
 
+.card-text-content {
+    color: var(--yomi-gray-900);
+}
+
 .card-text-content hr {
     width: 98%;
     display: flex;

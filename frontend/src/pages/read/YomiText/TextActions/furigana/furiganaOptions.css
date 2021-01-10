@@ -4,11 +4,6 @@
     margin-top: 20px;
 }
 
-.rubi-jlpt-levels label span:first-child {
-    padding-right: 12px;
-    padding-left: 2px;
-}
-
 .rubi-jlpt-levels>label span {
     color: var(--yomi-white);
 }

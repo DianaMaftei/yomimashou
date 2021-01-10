@@ -34,9 +34,9 @@ export class Home extends React.Component {
     constructor(props) {
         super(props);
         props.getTexts();
-        if(isAuthenticated()) {
-            props.getTextsStatuses();
-        }
+        // if(isAuthenticated()) {
+        //     props.getTextsStatuses();
+        // }
     }
 
     render() {

@@ -133,13 +133,14 @@ class AddToDeck extends Component {
                     value={this.state.deckId}
                     onChange={this.handleDeckChange.bind(this)}
                     style={{width: 200}}
-                    onClick={this.props.toggleOutsideClickHandler}
-
+                    onOpen={this.props.toggleOutsideClickHandler}
+                    label="Choose a deck"
                 >
-                  <MenuItem key="NEW" value="NEW">New deck...</MenuItem>
+                  <MenuItem style={{textAlign: 'center', display: 'flex'}} key="NEW" value="NEW">New deck...</MenuItem>
                   {this.state.decks && this.state.decks.map(deck =>
-                      <MenuItem key={deck.id}
-                                value={deck.id}>{deck.name}</MenuItem>)}
+                        <MenuItem style={{textAlign: 'center', display: 'flex'}}  key={deck.id}
+                                  value={deck.id}>{deck.name}</MenuItem>
+                  )}
 
                 </Select>
               </FormControl>

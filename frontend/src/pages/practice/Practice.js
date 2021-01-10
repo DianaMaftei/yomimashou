@@ -67,7 +67,7 @@ class Practice extends React.Component {
 
     initSummary() {
         this.summary = {
-            show: this.props.showSummary,
+            show: false,
             know: 0,
             knowWell: 0,
             doNotKnow: 0
@@ -103,7 +103,7 @@ class Practice extends React.Component {
             }
 
             return <div className={"card stack__item " + (index == 0 ? "stack__item--current" : "")}
-                        style={stackItemStyle} key={card.id} data-cardId={card.id}>
+                        style={stackItemStyle} key={card.id} data-cardid={card.id}>
                     <div className="card-inner">
                         <li className="card-front" style={{backgroundColor: bgColors[index]}}>
                             <h1>{card.kanji}</h1>
@@ -136,7 +136,7 @@ class Practice extends React.Component {
                 }, 500);
 
                 foundCurrent = true;
-                this.currentCardId = stackItem.getAttribute("data-cardId");
+                this.currentCardId = stackItem.getAttribute("data-cardid");
                 let that = this;
                 if(i === stackItems.length - 1) {
                     setTimeout(function(){
@@ -243,7 +243,7 @@ class Practice extends React.Component {
     practiceMore() {
         this.props.toggleSummary();
         this.initSummary();
-        this.props.getCardsDue(this.props.match.params);
+        this.props.getCardsDue(this.props.match.params.id);
     }
 
     render() {

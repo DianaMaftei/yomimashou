@@ -1,6 +1,15 @@
+.canvas-container {
+    margin: 20px auto;
+}
+
 #canvas-buttons {
     display: flex;
     justify-content: space-around;
+}
+
+#canvas-buttons button{
+    border-radius: 5px;
+    background-color: white;
 }
 
 #toggle-hint .hint-on{
@@ -13,7 +22,6 @@
 
 .draw-pad canvas {
     border: 1px solid var(--yomi-dark-blue);
-    margin: 20px;
 }
 
 .rikai-kanji-pad-top {
