@@ -4,7 +4,8 @@ let defaultState = {
     text: {},
     textImage: {},
     tagInput: "",
-    analyzer: null
+    analyzer: null,
+    sourceTabValue: 0
 };
 
 const addYomi = (state = defaultState, action) => {
@@ -132,6 +133,11 @@ const addYomi = (state = defaultState, action) => {
             return {
                 ...state,
                 error: action.payload
+            };
+        case 'SET_SOURCE_TAB_VALUE':
+            return {
+                ...state,
+                sourceTabValue: action.sourceTabValue
             };
         default:
             return state

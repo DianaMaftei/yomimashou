@@ -3,7 +3,7 @@
 }
 
 .add-text-container {
-    padding: 50px;
+    padding: min(50px, 7vw);
 }
 
 .ql-toolbar {
@@ -43,4 +43,8 @@
 
 #default-content {
     color: lightgray;
+}
+
+#text-source .text-source-tabs button:focus {
+    outline: none;
 }

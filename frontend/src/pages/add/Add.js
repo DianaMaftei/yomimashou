@@ -31,6 +31,17 @@ const stripRubyAndFormatting = html => {
     return text.replace(/\n/g, '<br>');
 };
 
+const isHTML = (str) => {
+    var a = document.createElement('div');
+    a.innerHTML = str;
+
+    for (var c = a.childNodes, i = c.length; i--; ) {
+        if (c[i].nodeType == 1) return true;
+    }
+
+    return false;
+}
+
 const mapDispatchToProps = (dispatch) => ({
     setTextToEmptyString: () => {
         dispatch({
@@ -43,11 +54,11 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
             type: 'RESET_TEXT'
         });
-    }, setText: (html) => {
+    }, setText: (text) => {
         dispatch({
             type: 'SET_TEXT',
             text: {
-                content: stripRubyAndFormatting(html)
+                content: isHTML(text) ? stripRubyAndFormatting(text) : text
             }
         });
     }, setTitle: (event) => {

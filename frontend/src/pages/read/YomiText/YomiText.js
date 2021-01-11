@@ -352,7 +352,7 @@ export class YomiText extends React.Component {
     render() {
         return (
             <div id="yomi-text" className={this.getClassForDictionary()}>
-                {(!this.props.words || this.props.words.length === 0) && <LinearProgress/>}
+                {(!this.props.words || this.props.words.length === 0) && <LinearProgress id="linear-progress"/>}
                 <Slide direction="down" in={this.props.showTextActions} mountOnEnter unmountOnExit>
                     <div id="text-actions">
                         <TextActions textContent={this.props.text.content} handleFurigana={this.handleFurigana}

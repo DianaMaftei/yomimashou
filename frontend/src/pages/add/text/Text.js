@@ -1,10 +1,10 @@
 import React from "react";
-import Editor from 'react-pell';
-import { Button, TextField } from "@material-ui/core/umd/material-ui.development";
+import {Button, TextField} from "@material-ui/core/umd/material-ui.development";
 import ReactCrop from 'react-image-crop';
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
 import Check from 'mdi-react/CheckIcon';
+import TextSource from "./TextSource";
 
 const mapDispatchToProps = (dispatch) => ({
     setTextImage: (image) => {
@@ -12,7 +12,17 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_TEXT_IMAGE',
             image
         });
+    },
+    setSourceTabValue: (sourceTabValue) => {
+        dispatch({
+            type: 'SET_SOURCE_TAB_VALUE',
+            sourceTabValue: sourceTabValue
+        });
     }
+});
+
+const mapStateToProps = (state) => ({
+    sourceTabValue: state.add.sourceTabValue
 });
 
 class Text extends React.Component {
@@ -172,14 +182,12 @@ class Text extends React.Component {
                         </div>
                 )}
 
-                <h6><a href="https://anatolt.ru/t/del-timestamp-srt.html" target="_blank">Subtitles?</a></h6>
-                <div onClick={removePlaceholder}>
-                    <Editor defaultContent={editorContent} actions={[]} actionBarClass="my-custom-class"
-                            onChange={setText} onPaste={setText}/>
-                </div>
+                <TextSource setTabValue={this.props.setSourceTabValue} tabValue={this.props.sourceTabValue}
+                            onEditorClick={removePlaceholder} defaultContent={editorContent}
+                            onChangeText={setText}/>
             </div>
         );
     }
 }
 
-export default withRouter(connect((state) => ({}), mapDispatchToProps)(Text));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Text));
