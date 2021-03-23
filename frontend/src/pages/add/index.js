@@ -139,6 +139,30 @@ const addYomi = (state = defaultState, action) => {
                 ...state,
                 sourceTabValue: action.sourceTabValue
             };
+
+        case 'SCAN_IMAGES_PENDING':
+            return {
+                ...state,
+                text: {
+                    ...state.text,
+                    content: null
+                }
+            };
+
+        case 'SCAN_IMAGES_FULFILLED':
+            return {
+                ...state,
+                text: {
+                    ...state.text,
+                    content: action.payload.data
+                }
+            };
+
+        case 'SCAN_IMAGES_REJECTED':
+            return {
+                ...state,
+                error: action.payload
+            };
         default:
             return state
     }

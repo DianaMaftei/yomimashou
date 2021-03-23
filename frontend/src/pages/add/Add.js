@@ -1,14 +1,12 @@
 import React from 'react';
 import "./add.css";
 
-import { Divider } from "@material-ui/core/umd/material-ui.development";
 import axios from "axios/index";
 import {apiUrl} from "../../AppUrl";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom'
 import ActionButtons from "./ActionButtons";
 import Tags from "./Tags";
-import Series from "./Series";
 import Text from "./text/Text";
 import Header from "../`common/header/Header";
 
@@ -165,14 +163,12 @@ class Add extends React.Component {
                 <div className="add-text-container">
                     <Text title={this.props.text.title} setTitle={this.props.setTitle.bind(this)}
                           removePlaceholder={this.removePlaceholder.bind(this)} editorContent={editorContent}
-                          setText={this.props.setText.bind(this)}/>
+                          setText={this.props.setText.bind(this)} text={this.props.text.content}/>
 
                     <div className="add-action-footer">
                         <Tags tagInput={this.props.tagInput} updateTag={this.updateTag.bind(this)}
                               addTag={this.addTag.bind(this)} tags={this.props.text.tags}
                               deleteTag={this.deleteTag.bind(this)}/>
-                        <Series/>
-                        <Divider/>
                         <ActionButtons disableAddBtn={this.disableAddBtn()} submitText={this.submitText.bind(this)}/>
                     </div>
                 </div>

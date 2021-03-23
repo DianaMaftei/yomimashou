@@ -5,6 +5,9 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import Check from 'mdi-react/CheckIcon';
 import TextSource from "./TextSource";
+import axios from "axios";
+import {apiUrl, ocrApiUrl} from "../../../AppUrl";
+import LocalSeeIcon from "mdi-react/LocalSeeIcon";
 
 const mapDispatchToProps = (dispatch) => ({
     setTextImage: (image) => {
@@ -18,7 +21,12 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'SET_SOURCE_TAB_VALUE',
             sourceTabValue: sourceTabValue
         });
-    }
+    },
+    scanImages: (formData, headers) => {
+        dispatch({
+            type: 'SCAN_IMAGES',
+            payload: axios.post(ocrApiUrl + '/api/ocr/full', formData, {headers})
+    })}
 });
 
 const mapStateToProps = (state) => ({
@@ -149,9 +157,10 @@ class Text extends React.Component {
 
                 <input accept="image/*" id="outlined-button-file" name="file" type="file" style={{display: 'none'}}
                        onChange={this.onSelectFile}/>
-                <label htmlFor="outlined-button-file">
+                <label htmlFor="outlined-button-file" style={{display: 'flex', justifyContent: 'space-around'}}>
                     <Button variant="outlined" component="span">
-                        Upload image
+                        <LocalSeeIcon size={24}/>
+                        &nbsp;&nbsp; Upload image
                     </Button>
                 </label>
 
@@ -176,7 +185,7 @@ class Text extends React.Component {
                 )}
                 {showCrop && (
                         <div>
-                            <img alt="Crop" style={{maxWidth: "100%"}} src={url}/>
+                            <img alt="Crop" style={{width: "100%"}} src={url}/>
                             <br/>
 
                         </div>
@@ -184,7 +193,7 @@ class Text extends React.Component {
 
                 <TextSource setTabValue={this.props.setSourceTabValue} tabValue={this.props.sourceTabValue}
                             onEditorClick={removePlaceholder} defaultContent={editorContent}
-                            onChangeText={setText}/>
+                            onChangeText={setText} scanImages={this.props.scanImages} text={this.props.text}/>
             </div>
         );
     }

@@ -3,7 +3,6 @@ import { shallow } from "enzyme";
 import Add from "./Add";
 import Text from "./text/Text";
 import Tags from "./Tags";
-import Series from "./Series";
 import ActionButtons from "./ActionButtons";
 
 describe("Add", () => {
@@ -45,10 +44,6 @@ describe("Add", () => {
     it("should contain a Tags component with the text tags value", () => {
         props.text.tags = ["tag1", "tag2"];
         expect(wrapper().find(Tags).props().tags).toBe(props.text.tags);
-    });
-
-    it("should contain a Series component", () => {
-        expect(wrapper().find(Series)).toHaveLength(1);
     });
 
     it("should contain an ActionButtons component", () => {

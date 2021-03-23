@@ -2,14 +2,14 @@ import React from "react";
 import {Button, Chip, TextField} from "@material-ui/core/umd/material-ui.development";
 
 export default ({tagInput, updateTag, addTag, tags, deleteTag}) => (
-    <div>
+    <div id="tags">
         <h6>Tags</h6>
         <TextField
-            id="tags"
             value={tagInput}
             onChange={updateTag}
+            style={{width: '70%'}}
         />
-        <Button variant="outlined" component="span" onClick={addTag}>
+        <Button variant="outlined" component="span" onClick={addTag} id="add-tags-btn">
             Add
         </Button>
         <div className="chips-list">
