@@ -1,6 +1,6 @@
-package com.yomimashou.study.spacedrepetition;
+package com.yomimashou.study.card.spacedrepetition;
 
-import com.yomimashou.study.studydeck.Card;
+import com.yomimashou.study.card.Card;
 
 public abstract class PracticeAlgorithm {
 

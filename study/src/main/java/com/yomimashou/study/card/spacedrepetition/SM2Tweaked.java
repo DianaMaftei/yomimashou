@@ -1,7 +1,7 @@
-package com.yomimashou.study.spacedrepetition;
+package com.yomimashou.study.card.spacedrepetition;
 
 import com.yomimashou.study.BLValidationException;
-import com.yomimashou.study.studydeck.Card;
+import com.yomimashou.study.card.Card;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -23,8 +23,8 @@ public class SM2Tweaked extends PracticeAlgorithm {
   protected static final int ANSWER_KNOW = 2;
   protected static final int ANSWER_KNOW_WELL = 3;
 
-  protected static final float MIN_INTERVAL = 0.33f; // 8h
-  protected static final float MAX_INTERVAL = 6f; // 6 days
+  protected static final float MIN_INTERVAL = 0.33f; // 8h, studying cards too soon creates a feeling of false learning
+  protected static final float MAX_INTERVAL = 6f; // 6 days, studying cards after a too long period leads to forgetfulness
   protected static final int ONE_DAY = 1;
   protected static final int THREE_DAYS = 3;
 

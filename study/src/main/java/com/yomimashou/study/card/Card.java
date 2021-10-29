@@ -1,22 +1,35 @@
-package com.yomimashou.study.studydeck;
+package com.yomimashou.study.card;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.yomimashou.study.deck.Deck;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-@Document
+@Entity
+@Table(name = "card")
 public class Card {
 
   @Id
-  private String id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @ManyToOne
+  @JoinColumn(name = "deck_id")
+  private Deck deck;
 
   private String kanji;
   private String kana;
+
   private String explanation;
   private CardItemOrigin cardItemOrigin;
 
@@ -28,17 +41,17 @@ public class Card {
   @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime nextPractice;
 
-  public Card() {
-    this.nextPractice = LocalDateTime.now();
-    this.interval = 1;
-  }
-
-  public String getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(final String id) {
+  public void setId(Long id) {
     this.id = id;
+  }
+
+  public Card() {
+    this.nextPractice = LocalDateTime.now();
+    this.interval = 1;
   }
 
   public String getKanji() {
@@ -105,4 +118,11 @@ public class Card {
     this.nextPractice = nextPractice;
   }
 
+  public Deck getDeck() {
+    return deck;
+  }
+
+  public void setDeck(Deck deck) {
+    this.deck = deck;
+  }
 }

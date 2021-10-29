@@ -1,12 +1,20 @@
-package com.yomimashou.study.spacedrepetition;
-
-import static com.yomimashou.study.spacedrepetition.SM2Tweaked.*;
-import static org.junit.jupiter.api.Assertions.*;
+package com.yomimashou.study.card.spacedrepetition;
 
 import com.yomimashou.study.BLValidationException;
-import com.yomimashou.study.studydeck.Card;
+import com.yomimashou.study.card.Card;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.ANSWER_DONT_KNOW;
+import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.ANSWER_KNOW;
+import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.ANSWER_KNOW_WELL;
+import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.MAX_INTERVAL;
+import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.MIN_INTERVAL;
+import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.ONE_DAY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SM2TweakedTest {
 
@@ -80,22 +88,21 @@ class SM2TweakedTest {
     sm2Tweaked.calculateNextReview(card, ANSWER_KNOW);
     sm2Tweaked.calculateNextReview(card, ANSWER_KNOW);
     sm2Tweaked.calculateNextReview(card, ANSWER_KNOW);
-    assertTrue(card.getInterval() == ONE_DAY);
+    assertEquals(ONE_DAY, card.getInterval());
 
     sm2Tweaked.calculateNextReview(card, ANSWER_DONT_KNOW);
     sm2Tweaked.calculateNextReview(card, ANSWER_DONT_KNOW);
 
-    assertTrue(card.getInterval() == MIN_INTERVAL);
+    assertEquals(MIN_INTERVAL, card.getInterval());
 
     sm2Tweaked.calculateNextReview(card, ANSWER_DONT_KNOW);
     sm2Tweaked.calculateNextReview(card, ANSWER_DONT_KNOW);
 
-    assertTrue(card.getInterval() == MIN_INTERVAL);
-
+    assertEquals(MIN_INTERVAL, card.getInterval());
   }
 
   @Test
-  void calculateAdjustsTheIntervalToNeverBeAboveMaximumWhenAnsweringIncorrectly() {
+  void calculateAdjustsTheIntervalToNeverGoAboveMaximumWhenAnsweringCorrectly() {
     sm2Tweaked.calculateNextReview(card, ANSWER_KNOW_WELL);
     sm2Tweaked.calculateNextReview(card, ANSWER_KNOW_WELL);
     sm2Tweaked.calculateNextReview(card, ANSWER_KNOW_WELL);
@@ -103,7 +110,7 @@ class SM2TweakedTest {
     assertTrue(card.getInterval() > 31);
 
     sm2Tweaked.calculateNextReview(card, ANSWER_DONT_KNOW);
-    assertTrue(card.getInterval() == MAX_INTERVAL);
+    assertEquals(MAX_INTERVAL, card.getInterval());
   }
 
   private Card buildCard() {
