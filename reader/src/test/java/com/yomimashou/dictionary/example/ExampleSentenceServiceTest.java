@@ -44,7 +44,7 @@ class ExampleSentenceServiceTest {
   @BeforeEach
   void setUp() {
     exampleSentenceService = new ExampleSentenceService(jpaQueryFactory);
-    pageable = new PageRequest(0, 10);
+    pageable = PageRequest.of(0, 10);
   }
 
   @Test

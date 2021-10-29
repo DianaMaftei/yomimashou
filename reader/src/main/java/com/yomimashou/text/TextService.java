@@ -33,7 +33,7 @@ public class TextService {
   }
 
   public List<Text> getAll() {
-    return this.textRepository.findAll(new Sort(Sort.Direction.DESC, CREATION_DATE));
+    return this.textRepository.findAll(Sort.by(Sort.Direction.DESC, CREATION_DATE));
   }
 
   public Optional<Text> getById(final Long id) {
