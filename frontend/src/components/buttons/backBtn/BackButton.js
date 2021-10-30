@@ -1,6 +1,6 @@
 import React from 'react';
 import MaterialIcon from "material-icons-react";
-import colors from "../../../../style/colorConstants";
+import colors from "../../../style/colorConstants";
 import "./backBtn.css";
 
 const BackButton = ({onClick}) => {

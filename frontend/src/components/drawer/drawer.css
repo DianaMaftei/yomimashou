@@ -71,6 +71,12 @@
 .drawer-link {
     color: var(--yomi-gray-500);
     cursor: pointer;
+    text-decoration: none;
+}
+
+.drawer-link:hover {
+    color: var(--yomi-gray-100);
+    text-decoration: none;
 }
 
 /*DRAWER OPEN*/

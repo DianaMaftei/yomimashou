@@ -1,6 +1,6 @@
 import React from 'react';
 import MaterialIcon from 'material-icons-react';
-import colors from "../../../style/colorConstants";
+import colors from "../../style/colorConstants";
 import BackButton from "../buttons/backBtn/BackButton";
 import { showDrawer } from "../drawer/Drawer";
 
