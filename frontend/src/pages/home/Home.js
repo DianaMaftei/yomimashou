@@ -8,7 +8,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { isAuthenticated, withHeaders } from "../../auth/auth";
 import Header from "../../components/header/Header";
 import PlusIcon from 'mdi-react/PlusIcon';
-import Link from "react-router-dom/Link";
+import {Link} from "react-router-dom";
 import spinner from "../read/YomiText/Rikai/spinner.svg";
 
 const mapStateToProps = (state) => ({

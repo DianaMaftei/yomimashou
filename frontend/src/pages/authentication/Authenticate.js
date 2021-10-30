@@ -6,18 +6,10 @@ import EmailIcon from 'mdi-react/EmailIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
 import EyeOffIcon from 'mdi-react/EyeOffIcon';
 import {connect} from "react-redux";
-import {withRouter} from 'react-router-dom'
-import {
-    Button,
-    FormControl,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    OutlinedInput
-} from "@material-ui/core";
+import {Link, withRouter} from 'react-router-dom'
+import {Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput} from "@material-ui/core";
 import FacebookIcon from "mdi-react/FacebookIcon";
 import GoogleIcon from "mdi-react/GoogleIcon";
-import Link from "react-router-dom/Link";
 import colors from "../../style/colorConstants";
 import UserIcon from "mdi-react/UserIcon";
 

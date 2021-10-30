@@ -102,7 +102,7 @@ class Practice extends React.Component {
                 transform: 'translate3d(0px, 0px, ' + parseInt(-1 * 50 * index) + 'px)'
             }
 
-            return <div className={"card stack__item " + (index == 0 ? "stack__item--current" : "")}
+            return <div className={"card stack__item " + (index === 0 ? "stack__item--current" : "")}
                         style={stackItemStyle} key={card.id} data-cardid={card.id}>
                     <div className="card-inner">
                         <li className="card-front" style={{backgroundColor: bgColors[index]}}>

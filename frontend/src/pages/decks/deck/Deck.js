@@ -3,7 +3,7 @@ import "./deck.css";
 import MaterialIcon from "material-icons-react";
 import colors from "../../../style/colorConstants";
 import DeckMasteryIndicator from "./deck-mastery-indicator/DeckMasteryIndicator";
-import Link from "react-router-dom/Link";
+import {Link} from "react-router-dom";
 
 const getFontSize = (textLength) => {
     const baseSize = 16

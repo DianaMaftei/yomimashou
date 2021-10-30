@@ -3,8 +3,7 @@ import "./drawer.css";
 import logo from "./appLogo.svg";
 import colors from "../../style/colorConstants";
 import MaterialIcon from "material-icons-react";
-import Link from "react-router-dom/Link";
-import {withRouter} from "react-router-dom";
+import {withRouter, Link} from "react-router-dom";
 import {isAuthenticated} from "../../auth/auth";
 
 export const showDrawer = (event) => {

@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography/Typography";
 import CardActions from "@material-ui/core/CardActions/CardActions";
 import Divider from "@material-ui/core/Divider/Divider";
 import "./textCard.css";
-import Link from "react-router-dom/Link";
+import {Link} from "react-router-dom";
 
 export default ({text, status}) => {
     if (!text) return <div/>;
