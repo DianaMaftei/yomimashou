@@ -13,6 +13,13 @@
     margin: 20px 0;
 }
 
+#yomi-text-title {
+    position: relative;
+    top: -24px;
+    padding: 0 10px;
+    text-align: center;
+}
+
 #yomi-text-info {
     position: relative;
     top: -50px;
@@ -25,14 +32,11 @@
     font-size: 20px;
     line-height: 38px;
     position: relative;
-    top: -40px;
 }
 
 #yomi-text-btn-container {
     text-align: center;
-    position: sticky;
-    bottom: 40px;
-    z-index: -1;
+    padding: 20px;
 }
 
 #yomi-text-btn-container button {

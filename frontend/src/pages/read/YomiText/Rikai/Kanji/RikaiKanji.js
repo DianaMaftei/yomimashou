@@ -1,7 +1,7 @@
 import React from 'react';
 import Kanji from "./Kanji";
-import BackButton from "../../../../`common/buttons/backBtn/BackButton";
-import AddToDeckButton from "../../../../`common/buttons/addToDeckBtn/AddToDeckButton";
+import BackButton from "../../../../../components/buttons/backBtn/BackButton";
+import AddToDeckButton from "../../../../../components/buttons/addToDeckBtn/AddToDeckButton";
 import PopupType from "../PopupType";
 
 const handleBack = (showPreviousWord, changePopup) => {

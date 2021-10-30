@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {withRouter} from 'react-router-dom'
 import axios from "axios";
 import {studyApiUrl} from "../../AppUrl";
-import Header from "../`common/header/Header";
+import Header from "../../components/header/Header";
 import Deck from "./deck/Deck";
 
 const mapStateToProps = (state) => ({
@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch) => ({
     getDecks: () => {
         dispatch({
             type: 'GET_DECKS',
-            payload: axios.get(studyApiUrl + '/api/deck')
+            payload: axios.get(studyApiUrl + '/api/study/deck')
         });
     }
 });
@@ -31,7 +31,7 @@ class Decks extends React.Component {
     }
 
     delete(deckId) {
-        axios.delete(studyApiUrl + '/api/deck/' + deckId)
+        axios.delete(studyApiUrl + '/api/study/deck/' + deckId)
             .then(() => {
                 this.props.getDecks();
             });
@@ -42,7 +42,7 @@ class Decks extends React.Component {
             return <div/>;
         }
 
-        let decks = this.props.decks.content;
+        let decks = this.props.decks;
 
         return (
             <div id="decks-page" className="text-center">

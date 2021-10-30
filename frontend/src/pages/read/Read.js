@@ -5,7 +5,7 @@ import "./read.css";
 import axios from "axios/index";
 import {apiUrl} from "../../AppUrl";
 import { isAuthenticated, withHeaders } from "../../auth/auth";
-import Header from "../`common/header/Header";
+import Header from "../../components/header/Header";
 
 const mapStateToProps = (state) => ({
     text: state.add.text
@@ -86,7 +86,7 @@ export class Read extends React.Component {
         return (
             <div id="read-page">
                 <div id="app-header">
-                    <Header leftIcon="menu" rightIcon="more_vert" centerText={this.props.text.title} onRightIconClick={this.props.toggleTextActionsMenu}/>
+                    <Header leftIcon="menu" rightIcon="more_vert" onRightIconClick={this.props.toggleTextActionsMenu}/>
                 </div>
                 <YomiText text={this.props.text} id={this.props.match.params.id}/>
             </div>

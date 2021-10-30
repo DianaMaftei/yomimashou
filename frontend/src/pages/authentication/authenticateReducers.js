@@ -1,11 +1,20 @@
 let defaultState = {
     user: {},
-    showError: false
+    showError: false,
+    showPassword: false
 };
 
-const login = (state = defaultState, action) => {
+const authenticate = (state = defaultState, action) => {
     switch (action.type) {
-        case 'SET_EMAIL':
+        case 'SET_USERNAME':
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    username: action.username
+                }
+            };
+       case 'SET_EMAIL':
             return {
                 ...state,
                 user: {
@@ -26,9 +35,14 @@ const login = (state = defaultState, action) => {
                 ...state,
                 showError: action.show
             };
+        case 'SHOW_PASSWORD':
+            return {
+                ...state,
+                showPassword: !state.showPassword
+            };
         default:
             return state;
     }
 };
 
-export default login;
+export default authenticate;

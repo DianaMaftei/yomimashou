@@ -1,6 +1,6 @@
 import React from 'react';
 import "./practice.css";
-import Header from "../`common/header/Header";
+import Header from "../../components/header/Header";
 import {withRouter} from "react-router-dom";
 import colors from "../../style/colorConstants";
 import axios from "axios";
@@ -19,13 +19,13 @@ const mapDispatchToProps = (dispatch) => ({
     getDeck: (id) => {
         dispatch({
             type: 'GET_DECK',
-            payload: axios.get(studyApiUrl + '/api/deck/' + id)
+            payload: axios.get(studyApiUrl + '/api/study/deck/' + id)
         });
     },
     getCardsDue: (deckId) => {
         dispatch({
             type: 'GET_DUE_CARDS',
-            payload: axios.get(studyApiUrl + '/api/card/due/?deckId=' + deckId)
+            payload: axios.get(studyApiUrl + '/api/study/card/due/?deckId=' + deckId)
         });
     },
     toggleSummary: () => {
@@ -36,7 +36,7 @@ const mapDispatchToProps = (dispatch) => ({
     reviewCard: (cardId, easeOfAnswer) => {
         dispatch({
             type: 'REVIEW_CARD',
-            payload: axios.post(studyApiUrl + '/api/card', null, { params: {
+            payload: axios.post(studyApiUrl + '/api/study/card/review', null, { params: {
                     cardId,
                     easeOfAnswer
         }})
@@ -111,7 +111,7 @@ class Practice extends React.Component {
                             <h6>{card.repetitions + " repetitions"}</h6>
                         </li>
                         <li className="card-back" style={{backgroundColor: bgColors[index]}}>
-                            <h2>{card.explanation}</h2>
+                            <h3>{card.explanation}</h3>
                         </li>
                         </div>
                     </div>

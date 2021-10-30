@@ -12,7 +12,7 @@ import { apiUrl } from "../../../AppUrl";
 import { isAuthenticated, withHeaders } from "../../../auth/auth";
 import { filterTextFuriganaByKanjiCategory } from "./TextActions/furigana/FuriganaFilterByKanjiCategory";
 import SearchType from "./Rikai/SearchType";
-import TextInfo from "../../`common/TextInfo";
+import TextInfo from "../../../components/TextInfo";
 import { Button } from "@material-ui/core/umd/material-ui.development";
 import TextActions from "./TextActions/TextActions";
 import PopupType from "./Rikai/PopupType";
@@ -132,8 +132,6 @@ export class YomiText extends React.Component {
         window.speechSynthesis.onvoiceschanged = function (e) {
             window.speechSynthesis.getVoices();
         };
-
-        this.isAuthenticated = isAuthenticated();
     }
 
     componentDidMount() {
@@ -352,7 +350,6 @@ export class YomiText extends React.Component {
     render() {
         return (
             <div id="yomi-text" className={this.getClassForDictionary()}>
-                {(!this.props.words || this.props.words.length === 0) && <LinearProgress id="linear-progress"/>}
                 <Slide direction="down" in={this.props.showTextActions} mountOnEnter unmountOnExit>
                     <div id="text-actions">
                         <TextActions textContent={this.props.text.content} handleFurigana={this.handleFurigana}
@@ -362,6 +359,11 @@ export class YomiText extends React.Component {
                 <div id="yomi-text-info">
                     <TextInfo text={this.props.text}/>
                 </div>
+                {(!this.props.words || this.props.words.length === 0) && <LinearProgress id="linear-progress"/>}
+                <div>
+                    <h3 id="yomi-text-title">{this.props.text.title}</h3>
+                    <hr className="MuiDivider-root"/>
+                </div>
                 <div id="yomi-text-box"
                      onMouseMove={(ev) => this.onMouseMove(ev, this.props.updateSearchResult, this.props.currentDictionary, this.props.updateTextSelectInfo, this.props.words, this.props.names)}
                      onClick={(ev) => this.onMouseClick(ev, this.props.searchResult, this.props.fetchData, this.props.setPopupInfo)}
@@ -369,7 +371,7 @@ export class YomiText extends React.Component {
                     <div id="yomi-text-container"/>
                 </div>
                 {
-                    this.isAuthenticated &&
+                    isAuthenticated() &&
                     <div id="yomi-text-btn-container">
                         <Button variant="contained" onClick={this.markAsRead}> Mark as Read </Button>
                     </div>

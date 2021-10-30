@@ -6,7 +6,7 @@ import { fabric } from "fabric";
 import "./kanjiDrawPad.css";
 import LightbulbOnIcon from 'mdi-react/LightbulbOnOutlineIcon';
 import EraserIcon from 'mdi-react/EraserIcon';
-import BackButton from "../../../../../`common/buttons/backBtn/BackButton";
+import BackButton from "../../../../../../components/buttons/backBtn/BackButton";
 import colors from "../../../../../../style/colorConstants";
 import PopupType from "../../PopupType";
 

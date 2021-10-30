@@ -8,7 +8,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import state from "./State";
 import axios from "axios";
 import Routes from "./Routes";
-import Drawer, { closeDrawer } from "./pages/`common/drawer/Drawer";
+import Drawer, { closeDrawer } from "./components/drawer/Drawer";
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8';
 
@@ -32,5 +32,6 @@ const render = () => {
 registerServiceWorker();
 render();
 
-if (module.hot)
+if (module.hot) {
     module.hot.accept();
+}

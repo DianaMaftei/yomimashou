@@ -1,5 +1,5 @@
 import React from "react";
-import TTS from "../../../../../`common/TTS/TTS";
+import TTS from "../../../../../../components/TTS/TTS";
 
 class WordItem extends React.Component {
 

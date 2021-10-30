@@ -1,6 +1,6 @@
 import React from 'react';
-import TTS from "../../../../`common/TTS/TTS";
-import STT from "../../../../`common/STT/STT";
+import TTS from "../../../../../components/TTS/TTS";
+import STT from "../../../../../components/STT/STT";
 import Kuroshiro from "kuroshiro";
 import "./rikaiSentence.css";
 

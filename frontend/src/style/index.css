@@ -1,4 +1,4 @@
-html, body, #root, #app-container {
+html, body, #root, #router-container, #app-container {
     height: 100%;
 }
 

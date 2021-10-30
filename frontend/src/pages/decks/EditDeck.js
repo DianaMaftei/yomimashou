@@ -9,21 +9,28 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import { withStyles } from "@material-ui/core";
 import TableCell from "@material-ui/core/TableCell";
-import Header from "../`common/header/Header";
+import Header from "../../components/header/Header";
 import "./decks.css";
 import colors from "../../style/colorConstants";
 
 const mapStateToProps = (state) => ({
-    deck: state.decks.deck
+    deck: state.decks.deck,
+    cards: state.decks.cardsInDeck
 });
 
 const mapDispatchToProps = (dispatch) => ({
     getDeck: (deckId) => {
         dispatch({
             type: 'GET_DECK',
-            payload: axios.get(studyApiUrl + '/api/deck/' + deckId)
+            payload: axios.get(studyApiUrl + '/api/study/deck/' + deckId)
         });
-    }
+    },
+    getCardsInDeck: (deckId) => {
+        dispatch({
+            type: 'GET_CARDS_IN_DECK',
+            payload: axios.get(studyApiUrl + '/api/study/card?deckId=' + deckId)
+        });
+    },
 });
 
 class EditDeck extends React.Component {
@@ -38,6 +45,7 @@ class EditDeck extends React.Component {
             isDesktop: false
         };
         props.getDeck(id);
+        props.getCardsInDeck(id);
         this.updatePredicate = this.updatePredicate.bind(this);
     }
 
@@ -55,19 +63,19 @@ class EditDeck extends React.Component {
     }
 
     delete(cardId) {
-        axios.post(studyApiUrl + '/api/deck/' + this.state.deckId + '/card/delete/' + cardId)
+        axios.delete(studyApiUrl + '/api/study/card/' + cardId)
             .then(() => {
-                this.props.getDeck(this.state.deckId);
+                this.props.getCardsInDeck(this.state.deckId);
             });
     }
 
     handleBackClick() {
-        console.log("click");
         this.props.history.push('/decks');
     }
 
     render() {
         const deck = this.props.deck;
+        const cards = this.props.cards;
         const isDesktop = this.state.isDesktop;
 
         if (!deck) {
@@ -112,7 +120,7 @@ class EditDeck extends React.Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {deck && deck.cards && deck.cards.map((card) => (
+                            {cards && cards.map((card) => (
                                 <StyledTableRow key={card.id}>
                                     <StyledTableCell component="th" scope="row" padding="checkbox" align="center">
                                         {card.kanji}

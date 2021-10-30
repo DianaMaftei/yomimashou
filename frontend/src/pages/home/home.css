@@ -1,3 +1,9 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 #bricks-layout {
     position: relative;
     top: -50px;
@@ -9,6 +15,8 @@
 }
 
 #add-btn {
+    margin-top: auto;
+    margin-left: auto;
     height: 50px;
     width: 50px;
     background-color: var(--yomi-blue-900);

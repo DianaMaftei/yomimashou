@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import {studyApiUrl} from "../../../../../AppUrl";
-import BackButton from "../../../../`common/buttons/backBtn/BackButton";
+import BackButton from "../../../../../components/buttons/backBtn/BackButton";
 import "./addToDeck.css";
 import InputLabel from "@material-ui/core/InputLabel";
 import SearchType from "../SearchType";
@@ -26,7 +26,7 @@ class AddToDeck extends Component {
       }
     };
 
-      axios.get(studyApiUrl + '/api/deck/names').then(decks => {
+      axios.get(studyApiUrl + '/api/study/deck/').then(decks => {
           this.setState({...this.state, decks: decks.data})
       })
   }
@@ -51,8 +51,8 @@ class AddToDeck extends Component {
     let deckId = this.state.deckId;
     let deckName = this.state.deckName;
 
-    const url = deckId != 'NEW' ? studyApiUrl + '/api/deck/' + deckId + "/addCard" :
-        studyApiUrl + '/api/deck/addCard?deckName=' + deckName;
+    const url = deckId != 'NEW' ? studyApiUrl + '/api/study/card/add/' + deckId :
+        studyApiUrl + '/api/study/card/add?deckName=' + deckName;
 
     axios.post(url, {
       kana: "" + this.state.item.kana,
@@ -81,6 +81,7 @@ class AddToDeck extends Component {
   }
 
   render() {
+    console.log(this.state.decks);
     let kanaKanjiInvalid = (!this.state.item.kana || this.state.item.kana.length === 0) &&
                            (!this.state.item.kanji || this.state.item.kanji.length === 0);
     let deckInvalid = !this.state.deckId || (this.state.deckId === 'NEW' && !this.state.deckName);

@@ -1,6 +1,7 @@
 let defaultState = {
   decks: null,
-  deck: null
+  deck: null,
+  cardsInDeck: []
 };
 
 const decks = (state = defaultState, action) => {
@@ -41,6 +42,23 @@ const decks = (state = defaultState, action) => {
         error: action.payload
       };
 
+    case 'GET_CARDS_IN_DECK_PENDING':
+      return {
+        ...state,
+        cardsInDeck: []
+      };
+
+    case 'GET_CARDS_IN_DECK_FULFILLED':
+      return {
+        ...state,
+        cardsInDeck: action.payload.data
+      };
+
+    case 'GET_CARDS_IN_DECK_REJECTED':
+      return {
+        ...state,
+        error: action.payload
+      };
     default:
         return state
   }

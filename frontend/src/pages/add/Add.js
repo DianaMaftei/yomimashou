@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom'
 import ActionButtons from "./ActionButtons";
 import Tags from "./Tags";
 import Text from "./text/Text";
-import Header from "../`common/header/Header";
+import Header from "../../components/header/Header";
 
 const mapStateToProps = (state) => ({
     text: state.add.text,

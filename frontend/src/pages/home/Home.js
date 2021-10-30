@@ -6,9 +6,10 @@ import { connect } from "react-redux";
 import MasonryLayout from "./MasonryLayout/MasonryLayout";
 import 'react-image-crop/dist/ReactCrop.css';
 import { isAuthenticated, withHeaders } from "../../auth/auth";
-import Header from "../`common/header/Header";
+import Header from "../../components/header/Header";
 import PlusIcon from 'mdi-react/PlusIcon';
 import Link from "react-router-dom/Link";
+import spinner from "../read/YomiText/Rikai/spinner.svg";
 
 const mapStateToProps = (state) => ({
     texts: state.home.texts,
@@ -40,16 +41,19 @@ export class Home extends React.Component {
     }
 
     render() {
-        if (this.props.texts.length === 0) {
-            return <div/>;
-        }
-
         return (
             <div className="home-page">
                 <div id="app-header">
                     <Header leftIcon="menu"/>
                 </div>
-                <MasonryLayout texts={this.props.texts} textsStatuses={this.props.textsStatuses}/>
+                {this.props.texts.length > 0 &&
+                    <MasonryLayout texts={this.props.texts} textsStatuses={this.props.textsStatuses}/>
+                }
+                {this.props.texts.length === 0 &&
+                    <div>
+                        <img id="spinner" src={spinner} alt=""/>
+                    </div>
+                }
                 <Link to={"/add"} id="add-btn">
                     <PlusIcon size={42}/>
                 </Link>
