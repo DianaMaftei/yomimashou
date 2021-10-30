@@ -1,8 +1,8 @@
 package com.yomimashou.creator;
 
 import com.yomimashou.creator.examplesentence.ExampleSentencesCSVtoPOJO;
-import com.yomimashou.creator.scraper.Scraper;
-import com.yomimashou.creator.xmltransformers.XMLEntryToPOJO;
+import com.yomimashou.creator.text.Scraper;
+import com.yomimashou.creator.dictionary.XMLEntryToPOJO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
