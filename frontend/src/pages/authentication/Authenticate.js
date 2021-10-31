@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios/index";
 import {apiUrl} from "../../AppUrl";
-import "./authenticate.css";
+import "./authenticate.scss";
 import EmailIcon from 'mdi-react/EmailIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
 import EyeOffIcon from 'mdi-react/EyeOffIcon';

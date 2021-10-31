@@ -2,7 +2,7 @@ import React from "react";
 import FormControl from "@material-ui/core/FormControl/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import "./furiganaOptions.css";
+import "./furiganaOptions.scss";
 import furiganaIcon from "./furigana_icon.svg";
 
 export default ({handleFurigana, kanjiLevels}) => {

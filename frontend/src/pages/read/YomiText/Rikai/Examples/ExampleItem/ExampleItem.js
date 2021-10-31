@@ -1,5 +1,5 @@
 import React from "react";
-import TTS from "../../../../../../components/TTS/TTS";
+import TTS from "../../../../../../components/tts/TTS";
 import CardItemOrigin from "../../AddToDeck/CardItemOrigin";
 import Kuroshiro from "kuroshiro";
 

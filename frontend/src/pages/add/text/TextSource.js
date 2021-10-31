@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Tab, Tabs, TextField} from "@material-ui/core";
 import Editor from "react-pell";
-import "./textSource.css";
+import "./textSource.scss";
 import spinner from "../../read/YomiText/Rikai/spinner.svg";
 
 class TextSource extends React.Component {

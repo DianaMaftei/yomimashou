@@ -1,7 +1,7 @@
 import React from "react";
 import MaterialIcon from "material-icons-react";
 
-import "./tts.css";
+import "./tts.scss";
 import colors from "../../style/colorConstants";
 
 const CHUNK_LENGTH_OF_TEXT = 120;

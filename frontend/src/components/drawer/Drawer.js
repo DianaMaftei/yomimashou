@@ -1,5 +1,5 @@
 import React from 'react';
-import "./drawer.css";
+import "./drawer.scss";
 import logo from "./appLogo.svg";
 import colors from "../../style/colorConstants";
 import MaterialIcon from "material-icons-react";

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import 'normalize.css';
-import "./style/index.css";
+import "./style/index.scss";
 import registerServiceWorker from "./registerServiceWorker";
 import state from "./State";
 import axios from "axios";

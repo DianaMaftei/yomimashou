@@ -2,7 +2,6 @@ import React from 'react';
 import CardMedia from "@material-ui/core/CardMedia/CardMedia";
 import {apiUrl} from "../../AppUrl";
 import MaterialIcon from 'material-icons-react';
-import "./TextInfo.css";
 
 export default (text) => (
     <div className="text-info-image-container">

@@ -8,7 +8,7 @@ import {
 import axios from "axios";
 import {studyApiUrl} from "../../../../../AppUrl";
 import BackButton from "../../../../../components/buttons/backBtn/BackButton";
-import "./addToDeck.css";
+import "./addToDeck.scss";
 import InputLabel from "@material-ui/core/InputLabel";
 import SearchType from "../SearchType";
 import PopupType from "../PopupType";

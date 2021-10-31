@@ -1,8 +1,8 @@
 import React from 'react';
-import TTS from "../../../../../components/TTS/TTS";
-import STT from "../../../../../components/STT/STT";
+import TTS from "../../../../../components/tts/TTS";
+import STT from "../../../../../components/stt/STT";
 import Kuroshiro from "kuroshiro";
-import "./rikaiSentence.css";
+import "./rikaiSentence.scss";
 
 function escapeHtmlSpecialCharacters(string) {
     let elem = document.createElement('textarea');

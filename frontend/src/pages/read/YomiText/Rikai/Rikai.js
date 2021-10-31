@@ -4,7 +4,7 @@ import axios from "axios";
 import RikaiLoading from './RikaiLoading';
 import RikaiKanji from './Kanji/RikaiKanji';
 import RikaiSentence from './Sentence/RikaiSentence';
-import './rikai.css';
+import './rikai.scss';
 import { apiUrl } from "../../../../AppUrl";
 import SearchType from "./SearchType";
 import RikaiWord from "./Word/RikaiWord";

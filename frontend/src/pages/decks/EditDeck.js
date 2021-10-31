@@ -10,7 +10,7 @@ import TableBody from "@material-ui/core/TableBody";
 import { withStyles } from "@material-ui/core";
 import TableCell from "@material-ui/core/TableCell";
 import Header from "../../components/header/Header";
-import "./decks.css";
+import "./decks.scss";
 import colors from "../../style/colorConstants";
 
 const mapStateToProps = (state) => ({

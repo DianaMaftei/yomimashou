@@ -1,6 +1,6 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import './header.css';
+import './header.scss';
 import TopBar from "./TopBar";
 
 export default ({leftIcon, rightIcon, centerText, onRightIconClick, onLeftIconClick, fontSize}) => (

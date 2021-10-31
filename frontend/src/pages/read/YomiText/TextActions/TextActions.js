@@ -1,6 +1,6 @@
 import React from 'react';
 import FuriganaOptions from "./furigana/FuriganaOptions";
-import "./textActions.css";
+import "./textActions.scss";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
 

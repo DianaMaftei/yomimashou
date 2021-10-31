@@ -3,7 +3,7 @@ import {apiUrl} from "../../../../../../AppUrl";
 import grid from "../../../../../../resources/grid.png";
 import solidWhite from "../../../../../../resources/solid-white.jpg";
 import { fabric } from "fabric";
-import "./kanjiDrawPad.css";
+import "./kanjiDrawPad.scss";
 import LightbulbOnIcon from 'mdi-react/LightbulbOnOutlineIcon';
 import EraserIcon from 'mdi-react/EraserIcon';
 import BackButton from "../../../../../../components/buttons/backBtn/BackButton";

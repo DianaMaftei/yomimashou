@@ -1,5 +1,5 @@
 import React from 'react';
-import "./summary.css";
+import "./summary.scss";
 import CardContent from "@material-ui/core/CardContent/CardContent";
 import CardActions from "@material-ui/core/CardActions/CardActions";
 import Card from "@material-ui/core/Card/Card";

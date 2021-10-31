@@ -1,5 +1,5 @@
 import React from 'react';
-import "./home.css";
+import "./home.scss";
 import {apiUrl} from "../../AppUrl";
 import axios from "axios";
 import { connect } from "react-redux";

@@ -1,6 +1,7 @@
 import React from 'react';
 import TextInfoWithImage from "./TextInfoWithImage";
 import TextInfoNoImage from "./TextInfoNoImage";
+import "./textInfo.scss";
 
 export default ({text}) => {
     if(!text) return <div/>

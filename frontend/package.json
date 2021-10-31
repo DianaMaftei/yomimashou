@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "connected-react-router": "^4.3.0",
     "dmak": "^0.3.1",
     "fabric": "^2.7.0",
@@ -14,6 +14,7 @@
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
     "material-icons-react": "^1.0.0",
     "mdi-react": "^5.4.0",
+    "node-sass": "^4.14.1",
     "normalize.css": "^8.0.1",
     "raphael": "^2.2.7",
     "react": "^16.6.0",

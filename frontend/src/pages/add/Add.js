@@ -1,5 +1,5 @@
 import React from 'react';
-import "./add.css";
+import "./add.scss";
 
 import axios from "axios/index";
 import {apiUrl} from "../../AppUrl";

@@ -1,18 +1,18 @@
 .text-info-image-container {
     position: relative;
+
+    img {
+        border-radius: 15px 15px 0 0;
+        min-height: 192px;
+        max-height: 200px;
+        background-color: var(--yomi-white);
+        object-fit: contain;
+    }
 }
 .text-info-container {
     height: 30px;
     background-color: var(--yomi-gray-900);
     position: relative;
-}
-
-.text-info-image-container img {
-    border-radius: 15px 15px 0 0;
-    min-height: 192px;
-    max-height: 200px;
-    background-color: var(--yomi-white);
-    object-fit: contain;
 }
 
 .text-info-line {
@@ -29,10 +29,11 @@
     font-size: 12px;
     color: var(--yomi-white);
     width: 100%;
-}
 
-.text-info-body h3 {
-    font-weight: bold;
+    h3 {
+        font-weight: bold;
+    }
+
 }
 
 .text-bookmark {

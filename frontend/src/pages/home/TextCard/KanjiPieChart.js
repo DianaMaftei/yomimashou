@@ -1,5 +1,5 @@
 import React from 'react';
-import "./TextCard.css";
+import "./TextCard.scss";
 import { Cell, Pie, PieChart } from "recharts";
 
 export default ({kanjiCountByLevel, className}) => {

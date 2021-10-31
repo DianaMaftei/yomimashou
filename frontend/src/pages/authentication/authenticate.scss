@@ -1,0 +1,77 @@
+.signIn-container {
+  background: #fff;
+  max-width: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 auto;
+  height: 100%;
+
+  .options-container {
+    text-align: center;
+    padding: 10% 3%;
+
+    #options-btns {
+      display: flex;
+      justify-content: space-evenly;
+
+      div {
+        font-weight: bold;
+        color: var(--yomi-light-red);
+      }
+    }
+  }
+
+  .credentials-container {
+    background-color: var(--yomi-blue-900);
+    text-align: center;
+    color: var(--yomi-gray-100);
+    padding: 5%;
+    border-radius: 3% 3% 0 0;
+    height: 100%;
+
+    .error-msg {
+      text-align: center;
+      color: red;
+    }
+
+    p {
+      padding: 5%;
+    }
+
+    .MuiFormControl-root {
+      background-color: var(--yomi-gray-100);
+      border-radius: 3px;
+      width: 80%;
+      margin: 5%;
+    }
+
+    #sign-up-prompt div {
+      font-size: 12px;
+      text-align: right;
+      color: var(--yomi-gray-100);
+      padding: 10px 0;
+    }
+
+    .MuiButtonBase-root {
+      margin: 10%;
+    }
+
+    .signInBtn {
+      width: 100%;
+      background-color: #732472;
+      color: white;
+      margin-top: 50px;
+
+      &:hover {
+        background-color: #4a1749;
+      }
+
+    }
+  }
+}
+
+.signIn-container .form-control, .signIn-container .input-group-text {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid #d9d9d9;
+}

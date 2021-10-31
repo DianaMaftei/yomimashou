@@ -1,5 +1,5 @@
 import React from 'react';
-import "./practice.css";
+import "./practice.scss";
 import Header from "../../components/header/Header";
 import {withRouter} from "react-router-dom";
 import colors from "../../style/colorConstants";

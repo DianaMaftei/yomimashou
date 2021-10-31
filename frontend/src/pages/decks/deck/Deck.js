@@ -1,5 +1,5 @@
 import React from 'react';
-import "./deck.css";
+import "./deck.scss";
 import MaterialIcon from "material-icons-react";
 import colors from "../../../style/colorConstants";
 import DeckMasteryIndicator from "./deck-mastery-indicator/DeckMasteryIndicator";

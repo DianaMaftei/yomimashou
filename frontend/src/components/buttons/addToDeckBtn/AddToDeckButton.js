@@ -1,7 +1,7 @@
 import React from 'react';
 import MaterialIcon from "material-icons-react";
 import colors from "../../../style/colorConstants";
-import "./addToDeckBtn.css";
+import "./addToDeckBtn.scss";
 
 const AddToDeckButton = ({size}) => {
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import Card from "@material-ui/core/Card/Card";
 import CardActionArea from "@material-ui/core/CardActionArea/CardActionArea";
-import TextInfo from "../../../components/TextInfo";
+import TextInfo from "../../../components/textInfo";
 import TextCardBottom from "./TextCardBottom/TextCardBottom";
 import CardContent from "@material-ui/core//CardContent/CardContent";
 import Typography from "@material-ui/core/Typography/Typography";
 import CardActions from "@material-ui/core/CardActions/CardActions";
 import Divider from "@material-ui/core/Divider/Divider";
-import "./textCard.css";
+import "./textCard.scss";
 import {Link} from "react-router-dom";
 
 export default ({text, status}) => {
