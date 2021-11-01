@@ -19,9 +19,7 @@ const rtkInfo = ({character, keyword, components, story1, story2, style, changeP
             <div className="rikai-display">
                 <div className="kanji-rtk">
                     <div className="kanji-rtk-top">
-                        <span onClick={() => changePopup(PopupType.KANJI)}>
-                            <BackButton/>
-                        </span>
+                        <BackButton onClick={() => changePopup(PopupType.KANJI)}/>
                         <span className="kanji-rtk-title">
                             <span className="kanji-rtk-character">{character}</span>
                             <span className="kanji-rtk-keyword">- {keyword}</span>

@@ -29,15 +29,15 @@ const Summary = ({summary, practiceMore}) => {
                     {/*<DeckMasteryIndicator/>*/}
                     <div className="practice-results">
                         <span>
-                            <span className="icon icon-know"><DoneIcon size={24}/></span>
+                            <span className="icon icon-know"><DoneIcon size="24"/></span>
                             <span>{summary.know}</span>
                         </span>
                         <span>
-                            <span className="icon icon-know-well"><StarIcon size={24}/></span>
+                            <span className="icon icon-know-well"><StarIcon size="24"/></span>
                             <span>{summary.knowWell}</span>
                         </span>
                         <span>
-                            <span className="icon icon-notknow"><CloseIcon size={24}/></span>
+                            <span className="icon icon-notknow"><CloseIcon size="24"/></span>
                             <span>{summary.doNotKnow}</span>
                         </span>
                     </div>

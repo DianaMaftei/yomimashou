@@ -2,7 +2,12 @@ import React from 'react';
 import "./drawer.scss";
 import logo from "./appLogo.svg";
 import colors from "../../style/colorConstants";
-import MaterialIcon from "material-icons-react";
+import ViewDashboardIcon from 'mdi-react/ViewDashboardIcon';
+import AddCircleOutlineIcon from 'mdi-react/AddCircleOutlineIcon';
+import BrainIcon from 'mdi-react/BrainIcon';
+import AssessmentIcon from 'mdi-react/AssessmentIcon';
+import SettingsIcon from 'mdi-react/SettingsIcon';
+
 import {withRouter, Link} from "react-router-dom";
 import {isAuthenticated} from "../../auth/auth";
 
@@ -43,25 +48,25 @@ const Drawer = ({history}) => {
             <div id="drawer-center">
                 <Link to={"/"} className="drawer-link" onClick={closeDrawer}>
                     <div style={{color: getLinkColor(pathname, "/")}}>
-                        <span><MaterialIcon icon="dashboard" size="medium" color="inherit"/></span>
+                        <span><ViewDashboardIcon size="42" color="inherit"/></span>
                         <span>Texts</span>
                     </div>
                 </Link>
                 <Link to={"/add"} className="drawer-link" onClick={closeDrawer}>
                     <div style={{color: getLinkColor(pathname, "/add")}}>
-                        <span><MaterialIcon icon="add_circle_outline" size="medium" color="inherit"/></span>
+                        <span><AddCircleOutlineIcon size="42" color="inherit"/></span>
                         <span>Add Text</span>
                     </div>
                 </Link>
                 <Link to={"/decks"} className="drawer-link" onClick={closeDrawer}>
                     <div style={{color: getLinkColor(pathname, "/decks")}}>
-                        <span><MaterialIcon icon="psychology" size="medium" color="inherit"/></span>
+                        <span><BrainIcon size="42" color="inherit"/></span>
                         <span>Practice</span>
                     </div>
                 </Link>
                 <Link to={"/"} className="drawer-link" onClick={closeDrawer}>
                     <div>
-                        <span><MaterialIcon icon="assessment" size="medium" color={colors.yomiGray500}/></span>
+                        <span><AssessmentIcon size="42" color={colors.yomiGray500}/></span>
                         <span>Dashboard</span>
                     </div>
                 </Link>
@@ -71,7 +76,7 @@ const Drawer = ({history}) => {
                 <div id="drawer-bottom">
                     <Link to={"/"} className="drawer-link" onClick={closeDrawer}>
                         <div id="drawer-settings">
-                            <span><MaterialIcon icon="settings" size="medium" color={colors.yomiGray500}/></span>
+                            <span><SettingsIcon size="42" color={colors.yomiGray500}/></span>
                             <span>Settings</span>
                         </div>
                     </Link>

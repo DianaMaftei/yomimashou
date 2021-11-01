@@ -52,7 +52,7 @@ export default ({style, result, wordExamples, changePopup, fetchKanji}) => {
                     }
                 </div>
                 <span onClick={() => changePopup(PopupType.ADD)}>
-                    <AddToDeckButton size="small"/>
+                    <AddToDeckButton/>
                 </span>
                 <div className="rikai-word-kana">{result.kana.join(", ")}</div>
 

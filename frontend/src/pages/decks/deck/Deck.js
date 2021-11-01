@@ -1,6 +1,8 @@
 import React from 'react';
 import "./deck.scss";
-import MaterialIcon from "material-icons-react";
+import FilterIcon from 'mdi-react/FilterIcon';
+import EditIcon from 'mdi-react/EditIcon';
+import DeleteIcon from 'mdi-react/DeleteIcon';
 import colors from "../../../style/colorConstants";
 import DeckMasteryIndicator from "./deck-mastery-indicator/DeckMasteryIndicator";
 import {Link} from "react-router-dom";
@@ -27,15 +29,15 @@ const Deck = ({deck, onEdit, onDelete}) => {
                 <ul >
                     <li className="deck-card card-1">
                         { deck && deck.totalCards && <div className="deck-card-top">
-                            <MaterialIcon icon="filter_none" color={colors.yomiWhite} size="tiny"/>
+                            <FilterIcon color={colors.yomiWhite} size="30"/>
                             <span>57</span>
                         </div>}
                         <Link to={"/practice/" + deck.id} className="deck-card-body" >
                             <div style={nameStyle}>{deck.name}</div>
                         </Link>
                         <div className="deck-card-bottom">
-                            <MaterialIcon icon="edit" color={colors.yomiWhite} size="small" onClick={() => onEdit(deck.id)}/>
-                            <MaterialIcon icon="delete" color={colors.yomiWhite} size="small" onClick={() => onDelete(deck.id)}/>
+                            <EditIcon color={colors.yomiWhite} size="30" onClick={() => onEdit(deck.id)}/>
+                            <DeleteIcon color={colors.yomiWhite} size="30" onClick={() => onDelete(deck.id)}/>
                         </div>
                     </li>
                     <li className="deck-card card-2"/>

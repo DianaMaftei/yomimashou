@@ -1,14 +1,14 @@
 import React from 'react';
-import MaterialIcon from "material-icons-react";
+import StyleIcon from 'mdi-react/StyleIcon';
+import AddIcon from 'mdi-react/AddIcon';
 import colors from "../../../style/colorConstants";
 import "./addToDeckBtn.scss";
 
-const AddToDeckButton = ({size}) => {
-
+const AddToDeckButton = ({onClick}) => {
     return (
-        <span className="add-to-deck-btn" >
-            <MaterialIcon icon="style" color={colors.yomiDarkBlue} size={size} />
-            <MaterialIcon icon="add" color={colors.yomiDarkBlue} size={size} />
+        <span className="add-to-deck-btn" onClick={onClick}>
+            <StyleIcon color={colors.yomiDarkBlue} size="30" />
+            <AddIcon color={colors.yomiDarkBlue} size="30" />
         </span>
     );
 };

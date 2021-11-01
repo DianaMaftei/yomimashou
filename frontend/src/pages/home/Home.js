@@ -55,7 +55,7 @@ export class Home extends React.Component {
                     </div>
                 }
                 <Link to={"/add"} id="add-btn">
-                    <PlusIcon size={42}/>
+                    <PlusIcon size="42"/>
                 </Link>
             </div>
         );

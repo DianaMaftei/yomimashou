@@ -97,11 +97,11 @@ class Authenticate extends React.Component {
                         <p>Sign {this.isLogin ? 'in' : 'up'} with</p>
                         <div id="options-btns">
                             <Button variant="outlined" component="div">
-                                <span><FacebookIcon fontSize="small" color={colors.yomiDarkBlue}/></span>
+                                <span><FacebookIcon size="24" color={colors.yomiDarkBlue}/></span>
                                 <span>Facebook</span>
                             </Button>
                             <Button variant="outlined" component="div">
-                                <span><GoogleIcon fontSize="small" color={colors.yomiDarkBlue}/></span>
+                                <span><GoogleIcon size="24" color={colors.yomiDarkBlue}/></span>
                                 <span>Google</span>
                             </Button>
                         </div>
@@ -140,7 +140,7 @@ class Authenticate extends React.Component {
                                     onChange={this.props.setEmail}
                                     startAdornment={
                                         <InputAdornment position="start">
-                                            <EmailIcon fontSize="small"/>
+                                            <EmailIcon size="24"/>
                                         </InputAdornment>
                                     }
                                 />
@@ -161,7 +161,7 @@ class Authenticate extends React.Component {
                                                 onMouseDown={this.handleMouseDownPassword}
                                                 edge="end"
                                             >
-                                                {this.props.showPassword ? <EyeOffIcon fontSize="small"/> : <EyeIcon fontSize="small"/>}
+                                                {this.props.showPassword ? <EyeOffIcon size="24"/> : <EyeIcon size="24"/>}
                                             </IconButton>
                                         </InputAdornment>
                                     }

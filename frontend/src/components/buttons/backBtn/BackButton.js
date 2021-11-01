@@ -1,13 +1,13 @@
 import React from 'react';
-import MaterialIcon from "material-icons-react";
+import ArrowLeftIcon from 'mdi-react/ArrowLeftIcon';
 import colors from "../../../style/colorConstants";
 import "./backBtn.scss";
 
 const BackButton = ({onClick}) => {
 
     return (
-        <span className="back-btn" >
-            <MaterialIcon icon="keyboard_backspace" color={colors.yomiWhite} size="small" onClick={onClick}/>
+        <span className="back-btn" onClick={onClick}>
+            <ArrowLeftIcon color={colors.yomiWhite} size="24"/>
         </span>
     );
 };

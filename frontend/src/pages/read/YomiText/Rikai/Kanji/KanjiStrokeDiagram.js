@@ -23,11 +23,11 @@ export default ({character, doOnClick}) => {
             <div className="practice-label">Tap to practice</div>
             <div id="kanji-draw" onClick={() => doOnClick()}/>
             <div id="sample-btn">
-                <button id="p" onClick={() => dmak.eraseLastStrokes(1)}><SkipPrevious size={20}/></button>
-                <button id="s" onClick={() => dmak.pause()}><Pause size={20}/></button>
-                <button id="g" onClick={() => dmak.render()}><Play size={20}/></button>
-                <button id="r" onClick={() => dmak.erase()}><Replay size={20}/></button>
-                <button id="n" onClick={() => dmak.renderNextStrokes(1)}><SkipNext size={20}/></button>
+                <button id="p" onClick={() => dmak.eraseLastStrokes(1)}><SkipPrevious size="20"/></button>
+                <button id="s" onClick={() => dmak.pause()}><Pause size="20"/></button>
+                <button id="g" onClick={() => dmak.render()}><Play size="20"/></button>
+                <button id="r" onClick={() => dmak.erase()}><Replay size="20"/></button>
+                <button id="n" onClick={() => dmak.renderNextStrokes(1)}><SkipNext size="20"/></button>
             </div>
         </div>
     );

@@ -98,18 +98,16 @@ class KanjiDrawPad extends Component {
             <div id="rikai-window" style={this.props.style} className="elevation-lg">
                 <div className="rikai-display">
                     <div className="rikai-kanji-pad-top">
-                        <span onClick={() => this.props.changePopup(PopupType.KANJI)}>
-                            <BackButton/>
-                        </span>
+                        <BackButton onClick={() => this.props.changePopup(PopupType.KANJI)}/>
                     </div>
                     <div className="draw-pad">
                         <canvas id="canvas" width="240" height="240"/>
                         <div id="canvas-buttons">
                             <button id='clear-canvas' onClick={() => clearCanvas(this.props.character)}>
-                                <EraserIcon size={36}/>
+                                <EraserIcon size="36"/>
                             </button>
                             <button id='toggle-hint' onClick={() => toggleHint(this.props.character)}>
-                                <LightbulbOnIcon size={36}/>
+                                <LightbulbOnIcon size="36"/>
                             </button>
                         </div>
 

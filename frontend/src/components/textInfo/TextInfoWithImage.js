@@ -1,7 +1,7 @@
 import React from 'react';
 import CardMedia from "@material-ui/core/CardMedia/CardMedia";
 import {apiUrl} from "../../AppUrl";
-import MaterialIcon from 'material-icons-react';
+import BookmarkBorderIcon from 'mdi-react/BookmarkBorderIcon';
 
 export default (text) => (
     <div className="text-info-image-container">
@@ -12,7 +12,7 @@ export default (text) => (
         />
         {/*TODO set filled or outlined : bookmark*/}
         <div className="text-bookmark">
-            {/*<MaterialIcon icon="bookmark_border" color="#C33702" size="large" />*/}
+            {/*<BookmarkBorderIcon color="#C33702" size="50" />*/}
         </div>
         <div className="text-info-line"/>
         <div className="text-info-body">

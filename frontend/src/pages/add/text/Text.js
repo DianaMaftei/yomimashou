@@ -159,7 +159,7 @@ class Text extends React.Component {
                        onChange={this.onSelectFile}/>
                 <label htmlFor="outlined-button-file" style={{display: 'flex', justifyContent: 'space-around'}}>
                     <Button variant="outlined" component="span">
-                        <LocalSeeIcon size={24}/>
+                        <LocalSeeIcon size="24"/>
                         &nbsp;&nbsp; Upload image
                     </Button>
                 </label>
@@ -175,7 +175,7 @@ class Text extends React.Component {
                         />
                         <div>
                             <button onClick={this.toggleCrop.bind(this)} className="btn btn-success">
-                                <Check fontSize="small"/>
+                                <Check size="20"/>
                             </button>
                         </div>
                         <br/>

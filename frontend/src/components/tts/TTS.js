@@ -1,5 +1,5 @@
 import React from "react";
-import MaterialIcon from "material-icons-react";
+import VolumeHighIcon from 'mdi-react/VolumeHighIcon';
 
 import "./tts.scss";
 import colors from "../../style/colorConstants";
@@ -58,7 +58,7 @@ export default ({text}) => {
 
     return (
         <div id="TTS-btn" onClick={() => play(utterance, isTextLong)}>
-            <MaterialIcon icon="volume_up" color={colors.yomiGray500} size="tiny"/>
+            <VolumeHighIcon color={colors.yomiGray500} size="20"/>
         </div>
     );
 }

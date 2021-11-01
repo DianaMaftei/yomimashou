@@ -1,10 +1,11 @@
 import React from 'react';
+import BookmarkBorderIcon from 'mdi-react/BookmarkBorderIcon';
 
 export default (text) => (
     <div className="text-info-container">
         {/*TODO set filled or outlined : bookmark*/}
         <div className="text-bookmark">
-            {/*<MaterialIcon icon="bookmark_border" color="#C33702" size="large" />*/}
+            {/*<BookmarkBorderIcon color="#C33702" size="50" />*/}
         </div>
         <div className="text-info-line"/>
         <div className="text-info-body">
