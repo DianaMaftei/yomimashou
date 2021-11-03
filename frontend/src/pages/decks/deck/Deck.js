@@ -6,6 +6,7 @@ import DeleteIcon from 'mdi-react/DeleteIcon';
 import colors from "../../../style/colorConstants";
 import DeckMasteryIndicator from "./deck-mastery-indicator/DeckMasteryIndicator";
 import {Link} from "react-router-dom";
+import * as PropTypes from "prop-types";
 
 const getFontSize = (textLength) => {
     const baseSize = 16
@@ -17,8 +18,14 @@ const getFontSize = (textLength) => {
 }
 
 const Deck = ({deck, onEdit, onDelete}) => {
+    {/*deckINfo
+            // how many total
+            // how many are new/unseen
+            // how many are active (reviewed)
+            // how many are due
 
-    var nameStyle= {
+            */}
+    const nameStyle= {
         fontSize : getFontSize(deck.name.length)
     }
 
@@ -47,5 +54,12 @@ const Deck = ({deck, onEdit, onDelete}) => {
         </div>
     );
 };
+
+Deck.propTypes = {
+    deck: PropTypes.object.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
+};
+
 
 export default Deck;

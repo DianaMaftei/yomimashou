@@ -1,9 +1,8 @@
 import React from 'react';
-import TextStatus from "./TextStatus";
 import LabelOutlineIcon from 'mdi-react/LabelOutlineIcon';
-import FavoriteBorderIcon from 'mdi-react/FavoriteBorderIcon';
+import * as PropTypes from "prop-types";
 
-export default ({text, status}) => (
+const TextCardBottom = ({text, status}) => (
     <div className="text-card-bottom">
         {/*<span className="favorite-icon">*/}
             {/*TODO replace icon with full one if text was favorited*/}
@@ -27,3 +26,10 @@ export default ({text, status}) => (
         }
     </div>
 )
+
+TextCardBottom.propTypes = {
+    text: PropTypes.string.isRequired,
+    status: PropTypes.string
+};
+
+export default TextCardBottom;

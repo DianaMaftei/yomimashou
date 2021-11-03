@@ -1,3 +1,8 @@
+#app-header, .header, .header header {
+    position: relative;
+    z-index: initial;
+}
+
 #top-bar {
     color: var(--yomi-white);
     background-color: var(--yomi-dark-blue);
@@ -30,9 +35,4 @@
     width: 100%;
     font-size: 20px;
     padding: 0 20px;
-}
-
-#app-header, .header, .header header {
-    position: relative;
-    z-index: initial;
 }

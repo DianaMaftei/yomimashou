@@ -7,6 +7,7 @@ import "./addToDeck.scss";
 import InputLabel from "@material-ui/core/InputLabel";
 import SearchType from "../SearchType";
 import PopupType from "../PopupType";
+import ActionButton from "../../../../../components/buttons/actionBtn/ActionButton";
 
 class AddToDeck extends Component {
     constructor(props) {
@@ -46,7 +47,7 @@ class AddToDeck extends Component {
         let deckId = this.state.deckId;
         let deckName = this.state.deckName;
 
-        const url = deckId != 'NEW' ? studyApiUrl + '/api/study/card/add/' + deckId :
+        const url = deckId !== 'NEW' ? studyApiUrl + '/api/study/card/add/' + deckId :
             studyApiUrl + '/api/study/card/add?deckName=' + deckName;
 
         axios.post(url, {
@@ -76,7 +77,6 @@ class AddToDeck extends Component {
     }
 
     render() {
-        console.log(this.state.decks);
         let kanaKanjiInvalid = (!this.state.item.kana || this.state.item.kana.length === 0) &&
             (!this.state.item.kanji || this.state.item.kanji.length === 0);
         let deckInvalid = !this.state.deckId || (this.state.deckId === 'NEW' && !this.state.deckName);
@@ -154,11 +154,9 @@ class AddToDeck extends Component {
 
                     </div>
 
-                    <button disabled={kanaKanjiInvalid || !this.state.item.meanings || deckInvalid}
-                            className="btn add-btn"
-                            onClick={this.saveItem.bind(this)}>Add
-                    </button>
-
+                    <ActionButton disabled={kanaKanjiInvalid || !this.state.item.meanings || deckInvalid}
+                                  onClick={this.saveItem.bind(this)} label="Add" />
+                    
                     {this.state.added && <span>Item was added to deck</span>}
                 </div>
             </div>

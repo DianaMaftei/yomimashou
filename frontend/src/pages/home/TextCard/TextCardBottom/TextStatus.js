@@ -2,8 +2,9 @@ import React from 'react';
 import BookIcon from 'mdi-react/BookIcon';
 import BookOpenPageIcon from 'mdi-react/BookOpenPageVariantIcon';
 import BookOpenOutlineIcon from 'mdi-react/BookOpenOutlineIcon';
+import * as PropTypes from "prop-types";
 
-export default ({status}) => {
+const TextStatus = ({status}) => {
 
     const statuses = {
         OPEN: <BookOpenOutlineIcon/>,
@@ -17,3 +18,9 @@ export default ({status}) => {
         </div>
     );
 }
+
+TextStatus.propTypes = {
+    status: PropTypes.string.isRequired
+};
+
+export default TextStatus;

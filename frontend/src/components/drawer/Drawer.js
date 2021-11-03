@@ -7,9 +7,9 @@ import AddCircleOutlineIcon from 'mdi-react/AddCircleOutlineIcon';
 import BrainIcon from 'mdi-react/BrainIcon';
 import AssessmentIcon from 'mdi-react/AssessmentIcon';
 import SettingsIcon from 'mdi-react/SettingsIcon';
-
-import {withRouter, Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import {isAuthenticated} from "../../auth/auth";
+import DrawerLink from "./DrawerLink";
 
 export const showDrawer = (event) => {
     const container = document.getElementById('router-container');
@@ -30,7 +30,7 @@ export const closeDrawer = () => {
     }, 25);
 };
 
-function getLinkColor(pathname, pageUrl) {
+const getLinkColor = (pathname, pageUrl) => {
     return pathname === pageUrl ? colors.yomiWhite : colors.yomiGray500;
 }
 
@@ -46,60 +46,43 @@ const Drawer = ({history}) => {
                 <img className="logo" src={logo} alt="logo"/>
             </div>
             <div id="drawer-center">
-                <Link to={"/"} className="drawer-link" onClick={closeDrawer}>
-                    <div style={{color: getLinkColor(pathname, "/")}}>
-                        <span><ViewDashboardIcon size="42" color="inherit"/></span>
-                        <span>Texts</span>
-                    </div>
-                </Link>
-                <Link to={"/add"} className="drawer-link" onClick={closeDrawer}>
-                    <div style={{color: getLinkColor(pathname, "/add")}}>
-                        <span><AddCircleOutlineIcon size="42" color="inherit"/></span>
-                        <span>Add Text</span>
-                    </div>
-                </Link>
-                <Link to={"/decks"} className="drawer-link" onClick={closeDrawer}>
-                    <div style={{color: getLinkColor(pathname, "/decks")}}>
-                        <span><BrainIcon size="42" color="inherit"/></span>
-                        <span>Practice</span>
-                    </div>
-                </Link>
-                <Link to={"/"} className="drawer-link" onClick={closeDrawer}>
-                    <div>
-                        <span><AssessmentIcon size="42" color={colors.yomiGray500}/></span>
-                        <span>Dashboard</span>
-                    </div>
-                </Link>
+                <DrawerLink link="/" text="Texts" color={getLinkColor(pathname, "/")} onClick={closeDrawer}>
+                    <ViewDashboardIcon size="42" color="inherit"/>
+                </DrawerLink>
+                <DrawerLink link="/add" text="Add Text" color={getLinkColor(pathname, "/add")} onClick={closeDrawer}>
+                    <AddCircleOutlineIcon size="42" color="inherit"/>
+                </DrawerLink>
+                <DrawerLink link="/decks" text="Practice" color={getLinkColor(pathname, "/decks")}
+                            onClick={closeDrawer}>
+                    <BrainIcon size="42" color="inherit"/>
+                </DrawerLink>
+                <DrawerLink link="/" text="Dashboard" color={colors.yomiGray500} onClick={closeDrawer}>
+                    <AssessmentIcon size="42" color={colors.yomiGray500}/>
+                </DrawerLink>
             </div>
             {
-                isAuthenticated() &&
-                <div id="drawer-bottom">
-                    <Link to={"/"} className="drawer-link" onClick={closeDrawer}>
-                        <div id="drawer-settings">
-                            <span><SettingsIcon size="42" color={colors.yomiGray500}/></span>
-                            <span>Settings</span>
+                isAuthenticated() ? (
+                    <div id="drawer-bottom">
+                        <DrawerLink link="/" text="Settings" color={colors.yomiGray500} onClick={closeDrawer}>
+                            <SettingsIcon size="42" color={colors.yomiGray500}/>
+                        </DrawerLink>
+                        <div>|</div>
+                        <div>
+                            <span>Logout</span>
                         </div>
-                    </Link>
-                    <div>|</div>
-                    <div>
-                        <span>Logout</span>
                     </div>
-                </div>
+                ) : (
+                    <div id="drawer-bottom">
+                        <Link to={"/login"} className="drawer-link" onClick={closeDrawer}>
+                            <span style={{paddingRight: "20px"}}>Login</span>
+                        </Link>
+                        <div>|</div>
+                        <Link to={"/register"} className="drawer-link" onClick={closeDrawer}>
+                            <span>Register</span>
+                        </Link>
+                    </div>
+                )
             }
-
-            {
-                !isAuthenticated() &&
-                <div id="drawer-bottom">
-                    <Link to={"/login"} className="drawer-link" onClick={closeDrawer}>
-                        <span style={{paddingRight:"20px"}}>Login</span>
-                    </Link>
-                    <div>|</div>
-                    <Link to={"/register"} className="drawer-link" onClick={closeDrawer}>
-                        <span>Register</span>
-                    </Link>
-                </div>
-            }
-
         </div>
     );
 };

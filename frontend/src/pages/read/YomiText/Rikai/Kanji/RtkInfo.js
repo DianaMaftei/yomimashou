@@ -3,16 +3,17 @@ import BackButton from "../../../../../components/buttons/backBtn/BackButton";
 import colors from "../../../../../style/colorConstants";
 import PopupType from "../PopupType";
 
-const rtkInfo = ({character, keyword, components, story1, story2, style, changePopup}) => {
-    const getHighlightedStory = (story, keyword) => {
-        let indexOfKeyword = story.toLowerCase().indexOf(keyword.toLowerCase());
-        let keywordCaseInsensitive = story.substr(indexOfKeyword, keyword.length);
-        let highlightedStory = story;
-        highlightedStory = highlightedStory.replace(keywordCaseInsensitive, '<span style="color:placeholderColor; font-weight: 500">placeholder</span>');
-        highlightedStory = highlightedStory.replace('placeholderColor', colors.yomiLightRed);
-        highlightedStory = highlightedStory.replace('placeholder', keywordCaseInsensitive);
-        return highlightedStory;
-    }
+const getHighlightedStory = (story, keyword) => {
+    let indexOfKeyword = story.toLowerCase().indexOf(keyword.toLowerCase());
+    let keywordCaseInsensitive = story.substr(indexOfKeyword, keyword.length);
+    let highlightedStory = story;
+    highlightedStory = highlightedStory.replace(keywordCaseInsensitive, '<span style="color:placeholderColor; font-weight: 500">placeholder</span>');
+    highlightedStory = highlightedStory.replace('placeholderColor', colors.yomiLightRed);
+    highlightedStory = highlightedStory.replace('placeholder', keywordCaseInsensitive);
+    return highlightedStory;
+}
+
+const RtkInfo = ({character, keyword, components, story1, story2, style, changePopup}) => {
 
     return (
         <div id="rikai-window" style={style} className="elevation-lg">
@@ -36,7 +37,7 @@ const rtkInfo = ({character, keyword, components, story1, story2, style, changeP
                 </div>
             </div>
         </div>
-
     );
 };
-export default rtkInfo;
+
+export default RtkInfo;

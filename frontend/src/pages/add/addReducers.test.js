@@ -1,5 +1,5 @@
 import deepFreeze from 'deepfreeze';
-import add from "./index";
+import add from "./addReducers";
 
 describe('ReadReducers', function () {
 

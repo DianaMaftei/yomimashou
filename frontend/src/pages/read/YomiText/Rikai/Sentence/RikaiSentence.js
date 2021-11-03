@@ -52,7 +52,7 @@ function isWord(token) {
     );
 }
 
-export default ({style, sentence}) => {
+const RikaiSentence = ({style, sentence}) => {
     let sentenceContainsKanji = Kuroshiro.Util.hasKanji(sentence.text);
 
     return (
@@ -73,3 +73,4 @@ export default ({style, sentence}) => {
         </div>
     );
 }
+export default RikaiSentence

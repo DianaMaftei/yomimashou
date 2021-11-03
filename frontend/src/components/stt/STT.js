@@ -1,11 +1,11 @@
 import React from "react";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
 import Kuroshiro from "kuroshiro";
-import Button from "@material-ui/core/Button";
+import ActionButton from "../buttons/actionBtn/ActionButton";
 
 let recognition;
 let recognizing = false;
-let final_transcript ='';
+let final_transcript = '';
 let kuroshiro;
 let analyzer;
 let hiraganaSentence;
@@ -21,7 +21,7 @@ function init(text) {
     });
     kuroshiro.init(analyzer);
 
-    setTimeout(function(){
+    setTimeout(function () {
         kuroshiro.convert(text, {to: "hiragana", mode: "normal"}).then(function (result) {
             hiraganaSentence = stripTextOfPunctuation(result);
         });
@@ -30,7 +30,7 @@ function init(text) {
     recognition = new window.webkitSpeechRecognition();
     recognition.lang = 'ja-JP';
 
-    recognition.onresult = function(event) {
+    recognition.onresult = function (event) {
         var interim_transcript = '';
         for (var i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
@@ -40,6 +40,8 @@ function init(text) {
             }
         }
 
+        console.log(interim_transcript);
+
         kuroshiro.convert(final_transcript, {to: "hiragana", mode: "normal"}).then(function (result) {
             console.log("hiraganaSentence", hiraganaSentence);
             console.log("result", stripTextOfPunctuation(result));
@@ -48,8 +50,8 @@ function init(text) {
     };
 }
 
-function startButton() {
-    if(recognizing) {
+function start() {
+    if (recognizing) {
         recognition.stop();
         recognizing = false;
         final_transcript = '';
@@ -59,13 +61,15 @@ function startButton() {
     recognizing = true;
 }
 
-export default ({text}) => {
+const STT = ({text}) => {
     init(text);
 
     return (
         <div id="STT">
-            <Button variant="outlined" component="span" onClick={() => startButton(text)}>Practice Speaking</Button>
+            <ActionButton onClick={start} label="Practice Speaking"/>
             {hiraganaSentence}
         </div>
     );
 }
+
+export default STT;

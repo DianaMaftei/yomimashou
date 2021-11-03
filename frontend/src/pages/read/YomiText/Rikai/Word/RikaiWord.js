@@ -6,39 +6,40 @@ import PopupType from "../PopupType";
 import RikaiDict from "../RikaiDictionary";
 import SearchType from "../SearchType";
 
-export default ({style, result, wordExamples, changePopup, fetchKanji}) => {
-    const getMeaning = (meanings) => {
-        let meaningString = [...new Set(meanings.flat())].join(", ")
-        if (meaningString.length > 80) {
-            let substring = meaningString.substr(0, 80);
-            let lastIndexOfComma = substring.lastIndexOf(",");
-            substring = substring.substr(0, lastIndexOfComma);
-            return <span>{substring} <span className="carrot-down">&#9660;</span></span>
-        }
-        return meaningString;
+const getMeaning = (meanings) => {
+    let meaningString = [...new Set(meanings.flat())].join(", ")
+    if (meaningString.length > 80) {
+        let substring = meaningString.substr(0, 80);
+        let lastIndexOfComma = substring.lastIndexOf(",");
+        substring = substring.substr(0, lastIndexOfComma);
+        return <span>{substring} <span className="carrot-down">&#9660;</span></span>
     }
+    return meaningString;
+}
 
-    const getHighlightedSentence = (sentence, word) => {
-        const keyWords = [...word.kanji, ...word.kana];
-        let newSentence = sentence;
-        keyWords.forEach(word=> {
-            newSentence = newSentence.replace(word, '<span style="color:placeholderColor; font-weight: 500">placeholder</span>');
-            newSentence = newSentence.replace('placeholderColor', colors.yomiLightRed);
-            newSentence = newSentence.replace('placeholder', word);
-        })
-        return newSentence;
-    }
+const getHighlightedSentence = (sentence, word) => {
+    const keyWords = [...word.kanji, ...word.kana];
+    let newSentence = sentence;
+    keyWords.forEach(word=> {
+        newSentence = newSentence.replace(word, '<span style="color:placeholderColor; font-weight: 500">placeholder</span>');
+        newSentence = newSentence.replace('placeholderColor', colors.yomiLightRed);
+        newSentence = newSentence.replace('placeholder', word);
+    })
+    return newSentence;
+}
 
-    const handleKanjiClick = (changePopup,fetchKanji, kanji) => {
-        fetchKanji([...kanji], SearchType.KANJI);
-        changePopup(PopupType.KANJI)
-    }
+const handleKanjiClick = (changePopup,fetchKanji, kanji) => {
+    fetchKanji([...kanji], SearchType.KANJI);
+    changePopup(PopupType.KANJI)
+}
+
+const RikaiWord = ({style, result, wordExamples, changePopup, fetchKanji}) => {
 
     return (
         <div id="rikai-window" style={style} className="elevation-lg">
             <div className="rikai-display container">
                 <span className="rikai-word-tts">
-                    <TTS text={result.kanji[0]}/>
+                    <TTS text={result.kanji.length > 0 ? result.kanji[0] : result.kana[0]}/>
                 </span>
                 <div className="rikai-word-kanji">
                     {
@@ -80,3 +81,5 @@ export default ({style, result, wordExamples, changePopup, fetchKanji}) => {
         </div>
     );
 }
+
+export default RikaiWord;

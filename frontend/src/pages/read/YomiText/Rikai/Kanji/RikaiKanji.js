@@ -9,7 +9,7 @@ const handleBack = (showPreviousWord, changePopup) => {
     changePopup(PopupType.WORD);
 }
 
-export default ({style, result, showWordExamples, changePopup, showPreviousWord}) => (
+const RikaiKanji = ({style, result, showWordExamples, changePopup, showPreviousWord}) => (
     <div id="rikai-window" style={style} className="elevation-lg">
         <div className="rikai-display">
             <div className="rikai-kanji-top">
@@ -22,3 +22,5 @@ export default ({style, result, showWordExamples, changePopup, showPreviousWord}
         </div>
     </div>
 );
+
+export default RikaiKanji;

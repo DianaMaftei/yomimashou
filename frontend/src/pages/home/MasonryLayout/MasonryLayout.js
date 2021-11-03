@@ -1,8 +1,9 @@
 import React from 'react';
 import MasonryInfiniteScroller from 'react-masonry-infinite';
 import TextCard from "../TextCard/TextCard";
+import * as PropTypes from "prop-types";
 
-export default ({ texts, hasMore, loadMore, textsStatuses}) => {
+const MasonryLayout = ({ texts, hasMore, loadMore, textsStatuses}) => {
 
     let sizes = [
         { mq: '375px', columns: 1, gutter: 25 },
@@ -12,7 +13,7 @@ export default ({ texts, hasMore, loadMore, textsStatuses}) => {
 
     return (
         <div id="bricks-layout">
-            <MasonryInfiniteScroller hasMore={false} loadMore={() => {}} sizes={sizes}>
+            <MasonryInfiniteScroller hasMore={hasMore} loadMore={() => loadMore} sizes={sizes}>
                 {
                     texts && texts.map(text => <TextCard key={text.id} text={text} status={textsStatuses[text.id]}/>)
                 }
@@ -20,3 +21,12 @@ export default ({ texts, hasMore, loadMore, textsStatuses}) => {
         </div>
     )
 };
+
+MasonryLayout.propTypes = {
+    texts: PropTypes.arrayOf(PropTypes.object).isRequired,
+    hasMore: PropTypes.bool,
+    loadMore: PropTypes.func,
+    textsStatuses: PropTypes.arrayOf(PropTypes.string).isRequired
+};
+
+export default MasonryLayout;

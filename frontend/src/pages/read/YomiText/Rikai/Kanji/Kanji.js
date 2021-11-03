@@ -3,9 +3,7 @@ import KanjiStrokeDiagram from "./KanjiStrokeDiagram";
 import CardItemOrigin from "../AddToDeck/CardItemOrigin";
 import PopupType from "../PopupType";
 
-export default ({result, showWordExamples, changePopup}) => {
-
-  return (
+const Kanji = ({result, showWordExamples, changePopup}) => (
       <div className="kanji-box">
         <div className="kanji-info">
           <KanjiStrokeDiagram character={result.character} doOnClick={() => changePopup(PopupType.DRAW)}/>
@@ -43,6 +41,7 @@ export default ({result, showWordExamples, changePopup}) => {
               className="asterisk">*</span>{result.character}</div>
         </div>
       </div>
-  )
-};
+  );
+
+export default Kanji;
 

@@ -10,7 +10,7 @@ import Replay from 'mdi-react/ReplayIcon';
 
 window.Raphael = Raphael;
 
-export default ({character, doOnClick}) => {
+const KanjiStrokeDiagram = ({character, doOnClick}) => {
     let dmak = new window.Dmak(character, {
         'element': "kanji-draw",
         "stroke": {attr: {active: "#943a51"}},
@@ -32,3 +32,5 @@ export default ({character, doOnClick}) => {
         </div>
     );
 }
+
+export default KanjiStrokeDiagram;

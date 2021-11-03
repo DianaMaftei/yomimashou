@@ -1,27 +1,27 @@
 import React from "react";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import axios from "axios";
 import RikaiPopUp from "./Rikai/Rikai";
 import './Rikai/rikai.scss';
 import './yomi.scss';
-import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from './Rikai/RikaiTextParser';
+import {highlightMatch, isVisible, search, tryToFindTextAtMouse} from './Rikai/RikaiTextParser';
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
 import Kuroshiro from "kuroshiro";
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { apiUrl } from "../../../AppUrl";
-import { isAuthenticated, withHeaders } from "../../../auth/auth";
-import { filterTextFuriganaByKanjiCategory } from "./TextActions/furigana/FuriganaFilterByKanjiCategory";
+import {apiUrl} from "../../../AppUrl";
+import {isAuthenticated, withHeaders} from "../../../auth/auth";
+import {filterTextFuriganaByKanjiCategory} from "./TextActions/furigana/FuriganaFilterByKanjiCategory";
 import SearchType from "./Rikai/SearchType";
-import TextInfo from "../../../components/textInfo";
-import { Button } from "@material-ui/core/umd/material-ui.development";
+import TextInfo from "../../../components/textInfo/TextInfo";
 import TextActions from "./TextActions/TextActions";
 import PopupType from "./Rikai/PopupType";
 import Slide from "@material-ui/core/Slide";
+import ActionButton from "../../../components/buttons/actionBtn/ActionButton";
 
 const mapStateToProps = (state) => ({
-    words: state.add.words,
-    names: state.add.names,
-    analyzer: state.add.analyzer,
+    words: state.yomiText.words,
+    names: state.yomiText.names,
+    analyzer: state.yomiText.analyzer,
     textSelectInfo: state.yomiText.textSelectInfo,
     searchResult: state.popUp.searchResult,
     previousSearchResult: state.popUp.previousSearchResult,
@@ -165,8 +165,8 @@ export class YomiText extends React.Component {
     }
 
     onMouseClick(ev, searchResult, fetchData, setPopupInfo) {
-        if(this.props.popupInfo.closed) {
-            setPopupInfo( {
+        if (this.props.popupInfo.closed) {
+            setPopupInfo({
                 ...this.props.popupInfo,
                 closed: false
             });
@@ -298,7 +298,7 @@ export class YomiText extends React.Component {
                 this.props.switchDictionary();
                 this.props.setPopupInfo({
                     ...this.props.popupInfo,
-                    type:  this.props.popupInfo.type === PopupType.WORD ? PopupType.KANJI : PopupType.WORD
+                    type: this.props.popupInfo.type === PopupType.WORD ? PopupType.KANJI : PopupType.WORD
                 });
                 //TODO remove hightlight? or do a new search with the new dict option
                 break;
@@ -372,9 +372,7 @@ export class YomiText extends React.Component {
                 </div>
                 {
                     isAuthenticated() &&
-                    <div id="yomi-text-btn-container">
-                        <Button variant="contained" onClick={this.markAsRead}> Mark as Read </Button>
-                    </div>
+                    <ActionButton onClick={this.markAsRead} label="Mark as Read"/>
                 }
                 <RikaiPopUp/>
             </div>);

@@ -1,12 +1,12 @@
 import React from "react";
 import VolumeHighIcon from 'mdi-react/VolumeHighIcon';
-
 import "./tts.scss";
 import colors from "../../style/colorConstants";
+import * as PropTypes from "prop-types";
 
 const CHUNK_LENGTH_OF_TEXT = 120;
 
-function speechUtteranceChunker(utt, settings) {
+const speechUtteranceChunker = (utt, settings) => {
     settings = settings || {};
     let chunkLength = settings && settings.chunkLength || 160;
     let pattRegex = new RegExp('^.{' + Math.floor(chunkLength / 2) + ',' + chunkLength + '}[\.\!\?\,]{1}|^.{1,' + chunkLength + '}$|^.{1,' + chunkLength + '} ');
@@ -34,7 +34,7 @@ function speechUtteranceChunker(utt, settings) {
     }
 }
 
-function play(utterance, isTextLong) {
+const play = (utterance, isTextLong) => {
     if (!isTextLong) {
         window.speechSynthesis.speak(utterance);
         return;
@@ -45,14 +45,14 @@ function play(utterance, isTextLong) {
     });
 }
 
-function createNewUtterance(text) {
+const createNewUtterance = (text) => {
     let utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "ja-JP";
-    utterance.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name == 'Google 日本語'; })[0];
+    utterance.voice = speechSynthesis.getVoices().filter(function(voice) { return voice.name === 'Google 日本語'; })[0];
     return utterance;
 }
 
-export default ({text}) => {
+const TTS = ({text}) => {
     let utterance = createNewUtterance(text);
     let isTextLong = text.length > CHUNK_LENGTH_OF_TEXT;
 
@@ -62,3 +62,9 @@ export default ({text}) => {
         </div>
     );
 }
+
+TTS.propTypes = {
+    text: PropTypes.string.isRequired
+};
+
+export default TTS;

@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {apiUrl} from "../../../../../../AppUrl";
 import grid from "../../../../../../resources/grid.png";
 import solidWhite from "../../../../../../resources/solid-white.jpg";
-import { fabric } from "fabric";
+import {fabric} from "fabric";
 import "./kanjiDrawPad.scss";
 import LightbulbOnIcon from 'mdi-react/LightbulbOnOutlineIcon';
 import EraserIcon from 'mdi-react/EraserIcon';
@@ -81,11 +81,11 @@ function getKanjiCode(character) {
 
 class KanjiDrawPad extends Component {
     componentDidMount() {
-        if(this.props.open) {
+        if (this.props.open) {
             showHint = true;
             initDrawingPad(this.props.character)
-        }    else {
-            if(canvas) {
+        } else {
+            if (canvas) {
                 canvas.clear();
                 canvas.dispose();
                 canvas = null;

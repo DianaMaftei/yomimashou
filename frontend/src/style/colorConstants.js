@@ -1,4 +1,4 @@
-export default {
+const colorConstants = {
     yomiDarkBlue: "#013358",
     yomiDarkRed: "#8E000A",
     yomiLightBlue: "#95C9D9",
@@ -25,17 +25,6 @@ export default {
     yomiBlue700: "#35469C",
     yomiBlue800: "#2D3A8C",
     yomiBlue900: "#19216C",
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
+export default colorConstants;

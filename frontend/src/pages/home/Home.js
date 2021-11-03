@@ -1,65 +1,53 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import "./home.scss";
 import {apiUrl} from "../../AppUrl";
 import axios from "axios";
-import { connect } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import MasonryLayout from "./MasonryLayout/MasonryLayout";
 import 'react-image-crop/dist/ReactCrop.css';
-import { isAuthenticated, withHeaders } from "../../auth/auth";
+import {withHeaders} from "../../auth/auth";
 import Header from "../../components/header/Header";
 import PlusIcon from 'mdi-react/PlusIcon';
 import {Link} from "react-router-dom";
 import spinner from "../read/YomiText/Rikai/spinner.svg";
 
-const mapStateToProps = (state) => ({
-    texts: state.home.texts,
-    textsStatuses: state.home.textsStatuses
-});
+const Home = () => {
+    const dispatch = useDispatch();
+    const texts = useSelector(state => state.home.texts);
+    const textsStatuses = useSelector(state => state.home.textsStatuses);
 
-const mapDispatchToProps = (dispatch) => ({
-    getTexts: () => {
+    useEffect(() => {
         dispatch({
             type: 'GET_TEXTS',
             payload: axios.get(apiUrl + '/api/text')
         });
-    },
-    getTextsStatuses: () => {
+    }, [dispatch])
+
+    useEffect(() => {
         dispatch({
             type: 'GET_TEXTS_STATUSES',
             payload: axios.get(apiUrl + '/api/users/textStatus', withHeaders())
         });
-    }
-});
+    }, [dispatch])
 
-export class Home extends React.Component {
-    constructor(props) {
-        super(props);
-        props.getTexts();
-        // if(isAuthenticated()) {
-        //     props.getTextsStatuses();
-        // }
-    }
-
-    render() {
-        return (
-            <div className="home-page">
-                <div id="app-header">
-                    <Header leftIcon="menu"/>
-                </div>
-                {this.props.texts.length > 0 &&
-                    <MasonryLayout texts={this.props.texts} textsStatuses={this.props.textsStatuses}/>
-                }
-                {this.props.texts.length === 0 &&
-                    <div>
-                        <img id="spinner" src={spinner} alt=""/>
-                    </div>
-                }
-                <Link to={"/add"} id="add-btn">
-                    <PlusIcon size="42"/>
-                </Link>
+    return (
+        <div className="home-page">
+            <div id="app-header">
+                <Header leftIcon="menu"/>
             </div>
-        );
-    }
+            {texts.length === 0 ? (
+                <div>
+                    <img id="spinner" src={spinner} alt=""/>
+                </div>
+            ) : (
+                <MasonryLayout texts={texts} textsStatuses={textsStatuses}/>
+            )
+            }
+            <Link to={"/add"} id="add-btn">
+                <PlusIcon size="42"/>
+            </Link>
+        </div>
+    );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

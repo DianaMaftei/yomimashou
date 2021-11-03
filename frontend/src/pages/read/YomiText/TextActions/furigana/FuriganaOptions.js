@@ -5,7 +5,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import "./furiganaOptions.scss";
 import furiganaIcon from "./furigana_icon.svg";
 
-export default ({handleFurigana, kanjiLevels}) => {
+const FuriganaOptions = ({handleFurigana, kanjiLevels}) => {
     return (
         <div>
             <FormControl component="fieldset">
@@ -26,3 +26,4 @@ export default ({handleFurigana, kanjiLevels}) => {
         </div>
     )
 }
+export default FuriganaOptions;

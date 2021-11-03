@@ -1,20 +1,13 @@
-import React from 'react';
-import "./add.scss";
-
+import React, {useEffect} from 'react';
 import axios from "axios/index";
 import {apiUrl} from "../../AppUrl";
-import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom'
-import ActionButtons from "./ActionButtons";
+import {useDispatch, useSelector} from "react-redux";
+import {withRouter} from 'react-router-dom'
 import Tags from "./Tags";
 import Text from "./text/Text";
 import Header from "../../components/header/Header";
-
-const mapStateToProps = (state) => ({
-    text: state.add.text,
-    tagInput: state.add.tagInput,
-    textImage: state.add.textImage
-});
+import ActionButton from "../../components/buttons/actionBtn/ActionButton";
+import "./add.scss";
 
 const stripRubyAndFormatting = html => {
     let doc = new DOMParser().parseFromString(html, "text/html");
@@ -33,148 +26,111 @@ const isHTML = (str) => {
     var a = document.createElement('div');
     a.innerHTML = str;
 
-    for (var c = a.childNodes, i = c.length; i--; ) {
-        if (c[i].nodeType == 1) return true;
+    for (var c = a.childNodes, i = c.length; i--;) {
+        if (c[i].nodeType === 1) return true;
     }
 
     return false;
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    setTextToEmptyString: () => {
-        dispatch({
-            type: 'SET_TEXT',
-            text: {
-                content: ''
-            }
-        });
-    }, resetText: () => {
-        dispatch({
-            type: 'RESET_TEXT'
-        });
-    }, setText: (text) => {
-        dispatch({
-            type: 'SET_TEXT',
-            text: {
-                content: isHTML(text) ? stripRubyAndFormatting(text) : text
-            }
-        });
-    }, setTitle: (event) => {
-        dispatch({
-            type: 'SET_TEXT_TITLE',
-            title: event.target.value
-        });
-    }, setTags: (tags) => {
-        dispatch({
-            type: 'SET_TEXT_TAGS',
-            tags
-        });
-    }, setTagInput: (tag) => {
-        dispatch({
-            type: 'SET_TAG_INPUT',
-            tag
-        });
+const disableAddBtn = (text) => {
+    let textHasNoTitle = !text.title || text.title.length === 0;
+    let textHasNoContent = !text.content || text.content.trim().length === 0;
+    return textHasNoTitle || textHasNoContent;
+}
+
+const addTag = (text, tagInput, setTags, setTagInput) => {
+    if (!text.tags) {
+        text.tags = [];
     }
-});
-
-class Add extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.showTextPlaceholder = true;
-    }
-
-    componentWillMount() {
-        let username = localStorage.getItem('username');
-        if (!username) {
-            this.props.history.push('/');
-        }
-    }
-
-    componentDidMount() {
-        this.props.resetText();
-    }
-
-
-    disableAddBtn() {
-        let textHasNoTitle = !this.props.text.title || this.props.text.title.length === 0;
-        let textHasNoContent = !this.props.text.content || this.props.text.content.trim().length === 0;
-        return textHasNoTitle || textHasNoContent;
-    }
-
-    addTag() {
-        if (!this.props.text.tags) {
-            this.props.text.tags = [];
-        }
-        if (this.props.tagInput && this.props.tagInput.trim().length > 0) {
-            this.props.text.tags.push(this.props.tagInput);
-            this.props.setTags(this.props.text.tags);
-            this.props.setTagInput("");
-        }
-    }
-
-    updateTag(event) {
-        this.props.setTagInput(event.target.value);
-    }
-
-    deleteTag(index) {
-        this.props.text.tags.splice(index, 1);
-        this.props.setTags(this.props.text.tags);
-    }
-
-    submitText() {
-        let inputText = this.props.text;
-        const username = localStorage.getItem('username');
-        const token = localStorage.getItem('token');
-
-        let doc = new DOMParser().parseFromString(this.props.text.content, "text/html");
-        doc.body.innerHTML = doc.body.innerHTML.replace(/<\/p><p/g, '</p>\n<p');
-        let newtext = doc.body.innerText.replace(/\n/g, '<br>');
-        this.props.setText(newtext);
-
-        inputText.content = newtext;
-
-        let data = new FormData();
-        data.append('file', this.props.textImage);
-        data.append('text', new Blob([JSON.stringify(inputText)], {type: "application/json"}));
-
-        axios.post(apiUrl + '/api/text', data, { headers: {Authorization: token}}).then((response) => {
-            this.props.history.push('/read/' + response.data.id);
-        });
-    }
-
-    removePlaceholder() {
-        if (this.showTextPlaceholder) {
-            this.props.setTextToEmptyString();
-            this.showTextPlaceholder = false;
-        }
-    }
-
-    render() {
-        let editorContent = this.props.text.content != null ?
-            this.props.text.content : '<p id="default-content">Paste your text here</p>';
-
-        return (
-            <div id="add-page">
-                <div id="app-header">
-                    <Header leftIcon="menu" centerText="Add new text" fontSize={32}/>
-                </div>
-                <div className="add-text-container">
-                    <Text title={this.props.text.title} setTitle={this.props.setTitle.bind(this)}
-                          removePlaceholder={this.removePlaceholder.bind(this)} editorContent={editorContent}
-                          setText={this.props.setText.bind(this)} text={this.props.text.content}/>
-
-                    <div className="add-action-footer">
-                        <Tags tagInput={this.props.tagInput} updateTag={this.updateTag.bind(this)}
-                              addTag={this.addTag.bind(this)} tags={this.props.text.tags}
-                              deleteTag={this.deleteTag.bind(this)}/>
-                        <ActionButtons disableAddBtn={this.disableAddBtn()} submitText={this.submitText.bind(this)}/>
-                    </div>
-                </div>
-            </div>
-        );
+    if (tagInput && tagInput.trim().length > 0) {
+        text.tags.push(tagInput);
+        setTags(text.tags);
+        setTagInput("");
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Add));
+const deleteTag = (index, setTextTags, text) => {
+    text.tags.splice(index, 1);
+    setTextTags(text.tags);
+}
+
+const submitText = (setText, text, textImage, history) => {
+    const token = localStorage.getItem('token');
+
+    let doc = new DOMParser().parseFromString(text.content, "text/html");
+    doc.body.innerHTML = doc.body.innerHTML.replace(/<\/p><p/g, '</p>\n<p');
+    let newtext = doc.body.innerText.replace(/\n/g, '<br>');
+    setText(newtext);
+
+    text.content = newtext;
+
+    let data = new FormData();
+    data.append('file', textImage);
+    data.append('text', new Blob([JSON.stringify(text)], {type: "application/json"}));
+
+    axios.post(apiUrl + '/api/text', data, {headers: {Authorization: token}}).then((response) => {
+        history.push('/read/' + response.data.id);
+    });
+}
+
+const removePlaceholder = (showTextPlaceholder, toggleTextPlaceholder, setTextContent) => {
+    if (showTextPlaceholder) {
+        setTextContent('');
+        toggleTextPlaceholder();
+    }
+}
+
+const Add = ({history}) => {
+    const dispatch = useDispatch();
+    const text = useSelector(state => state.add.text);
+    const tagInput = useSelector(state => state.add.tagInput);
+    const textImage = useSelector(state => state.add.textImage);
+    const showTextPlaceholder = useSelector(state => state.add.showTextPlaceholder);
+
+    useEffect(() => {
+        let username = localStorage.getItem('username');
+        if (!username) {
+            history.push('/');
+        }
+    }, []);
+
+    useEffect(() => {
+        dispatch({
+            type: 'RESET_TEXT'
+        })
+    }, [dispatch])
+
+    const setTextContent = (content) => dispatch({
+        type: 'SET_TEXT_CONTENT',
+        content: isHTML(content) ? stripRubyAndFormatting(content) : content
+    });
+    const setTextTags = (tags) => dispatch({type: 'SET_TEXT_TAGS', tags});
+    const setTagInput = (tag) => dispatch({type: 'SET_TAG_INPUT', tag});
+    const toggleTextPlaceholder = (showTextPlaceholder) => dispatch({type: 'TOGGLE_PLACEHOLDER', showTextPlaceholder});
+
+    return (
+        <div id="add-page">
+            <div id="app-header">
+                <Header leftIcon="menu" centerText="Add new text" fontSize={32}/>
+            </div>
+            <div className="add-text-container">
+                <Text title={text.title} setTitle={e => dispatch({type: 'SET_TEXT_TITLE', title: e.target.value})}
+                      removePlaceholder={() => removePlaceholder(showTextPlaceholder, toggleTextPlaceholder, setTextContent)}
+                      setText={setTextContent} text={text.content}/>
+
+                <div className="add-action-footer">
+                    <Tags tagInput={tagInput} updateTag={e => dispatch({type: 'SET_TAG_INPUT', tag: e.target.value})}
+                          addTag={() => addTag(text, tagInput, setTextTags, setTagInput)} tags={text.tags}
+                          deleteTag={(index) => deleteTag(index, setTextTags, text)}/>
+
+                    <ActionButton disabled={disableAddBtn(text)}
+                                  onClick={() => submitText(setTextContent, text, textImage, history)} 
+                                  label="Add & Read" />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default withRouter(Add);

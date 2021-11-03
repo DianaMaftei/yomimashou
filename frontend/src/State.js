@@ -1,17 +1,25 @@
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import {applyMiddleware, combineReducers, compose, createStore} from 'redux';
 import popUp from "./reducers/popUp";
 import config from "./reducers/config";
-import yomiText from "./pages/read/YomiText";
+import yomiText from "./pages/read/YomiText/readReducers";
 import promiseMiddleware from 'redux-promise-middleware';
-import add from "./pages/add/index";
-import home from "./pages/home/reducers";
+import add from "./pages/add/addReducers";
+import image from "./pages/add/image-upload/imageReducers";
+import home from "./pages/home/homeReducers";
 import decks from "./pages/decks";
 import authenticate from "./pages/authentication/authenticateReducers";
-import study from "./pages/practice";
+import study from "./pages/practice/practiceReducers";
+import {actionSanitizer, stateSanitizer} from "./reduxDevtoolsConfig";
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = typeof window === 'object' &&
+window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+    actionSanitizer,
+    stateSanitizer
+}) : compose;
+
 const store = createStore(combineReducers({
     add,
+    image,
     home,
     yomiText,
     popUp,
@@ -25,7 +33,9 @@ const store = createStore(combineReducers({
 
 const subscribe = store.subscribe;
 
-export default {
+const State = {
     store,
     subscribe
 };
+
+export default State;

@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Chip, TextField} from "@material-ui/core/umd/material-ui.development";
 
-export default ({tagInput, updateTag, addTag, tags, deleteTag}) => (
+const Tags = ({tagInput, updateTag, addTag, tags, deleteTag}) => (
     <div id="tags">
         <h6>Tags</h6>
         <TextField
@@ -26,3 +26,5 @@ export default ({tagInput, updateTag, addTag, tags, deleteTag}) => (
         </div>
     </div>
 );
+
+export default Tags;

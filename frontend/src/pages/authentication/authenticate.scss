@@ -6,21 +6,6 @@
   margin: 0 auto;
   height: 100%;
 
-  .options-container {
-    text-align: center;
-    padding: 10% 3%;
-
-    #options-btns {
-      display: flex;
-      justify-content: space-evenly;
-
-      div {
-        font-weight: bold;
-        color: var(--yomi-light-red);
-      }
-    }
-  }
-
   .credentials-container {
     background-color: var(--yomi-blue-900);
     text-align: center;

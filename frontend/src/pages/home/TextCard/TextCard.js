@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from "@material-ui/core/Card/Card";
 import CardActionArea from "@material-ui/core/CardActionArea/CardActionArea";
-import TextInfo from "../../../components/textInfo";
+import TextInfo from "../../../components/textInfo/TextInfo";
 import TextCardBottom from "./TextCardBottom/TextCardBottom";
 import CardContent from "@material-ui/core//CardContent/CardContent";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -9,8 +9,9 @@ import CardActions from "@material-ui/core/CardActions/CardActions";
 import Divider from "@material-ui/core/Divider/Divider";
 import "./textCard.scss";
 import {Link} from "react-router-dom";
+import * as PropTypes from "prop-types";
 
-export default ({text, status}) => {
+const TextCard = ({text, status}) => {
     if (!text) return <div/>;
 
     return (
@@ -43,3 +44,11 @@ export default ({text, status}) => {
         </Card>
     );
 }
+
+TextCard.propTypes = {
+    text: PropTypes.object.isRequired,
+    status: PropTypes.string
+};
+
+
+export default TextCard;

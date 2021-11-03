@@ -9,7 +9,7 @@ import Decks from "./pages/decks/Decks";
 import Deck from "./pages/decks/EditDeck";
 import Practice from "./pages/practice/Practice";
 
-export default () => (
+const Routes = () => (
     <Switch>
       <Route exact path="/" component={() => <Home/>}/>
       <Route path="/practice/:id" component={() => <Practice/>}/>
@@ -24,3 +24,5 @@ export default () => (
     {/*  TODO default 404 */}
     </Switch>
 )
+
+export default Routes;
