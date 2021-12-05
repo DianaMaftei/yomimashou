@@ -6,24 +6,16 @@ import Subtitles from "./sources/Subtitles";
 import TextBox from "./sources/TextBox";
 import {useDispatch, useSelector} from "react-redux";
 import * as PropTypes from "prop-types";
-import axios from "axios";
-import {ocrApiUrl} from "../../../AppUrl";
+import {scanImagesAction, setSubtitlesAction, toggleLoaderAction} from "../addActions";
 
 const TextSource = ({setTabValue, onChangeText, onEditorClick, tabValue, text}) => {
     const dispatch = useDispatch();
     const showLoader = useSelector(state => state.add.showLoader);
     const subtitles = useSelector(state => state.add.subtitles);
 
-    const toggleLoader = () => dispatch({
-        type: 'TOGGLE_LOADER'
-    });
+    const toggleLoader = () => dispatch(toggleLoaderAction());
 
-    const scanImages = (formData, headers) => dispatch(
-        {
-            type: 'SCAN_IMAGES',
-            payload: axios.post(ocrApiUrl + '/api/ocr/full', formData, {headers})
-        }
-    );
+    const scanImages = (formData, headers) => dispatch(scanImagesAction(formData, headers));
 
     if (text && showLoader) {
         toggleLoader();
@@ -42,7 +34,7 @@ const TextSource = ({setTabValue, onChangeText, onEditorClick, tabValue, text}) 
                 2: <div id="tab-content-2" aria-labelledby="tab-2" hidden={tabValue !== 2}><h1>To do</h1></div>,
 
                 3: <Subtitles onChangeText={onChangeText} value={subtitles}
-                              setSubs={(subtitles) => dispatch({type: 'TOGGLE_LOADER', subtitles})}/>
+                              setSubs={(subtitles) => dispatch(setSubtitlesAction(subtitles))}/>
             }[tabValue]}
 
         </div>
@@ -54,7 +46,7 @@ TextSource.propTypes = {
     onChangeText: PropTypes.func.isRequired,
     onEditorClick: PropTypes.func.isRequired,
     tabValue: PropTypes.number.isRequired,
-    text: PropTypes.string.isRequired,
+    text: PropTypes.string,
 };
 
 export default TextSource;

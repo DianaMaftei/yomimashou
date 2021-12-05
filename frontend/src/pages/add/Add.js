@@ -8,6 +8,14 @@ import Text from "./text/Text";
 import Header from "../../components/header/Header";
 import ActionButton from "../../components/buttons/actionBtn/ActionButton";
 import "./add.scss";
+import {
+    resetTextAction,
+    setTagInputAction,
+    setTextContentAction,
+    setTextTagsAction,
+    setTextTitleAction,
+    togglePlaceholderAction
+} from "./addActions";
 
 const stripRubyAndFormatting = html => {
     let doc = new DOMParser().parseFromString(html, "text/html");
@@ -95,19 +103,12 @@ const Add = ({history}) => {
         }
     }, []);
 
-    useEffect(() => {
-        dispatch({
-            type: 'RESET_TEXT'
-        })
-    }, [dispatch])
+    useEffect(() => dispatch(resetTextAction()), [dispatch])
 
-    const setTextContent = (content) => dispatch({
-        type: 'SET_TEXT_CONTENT',
-        content: isHTML(content) ? stripRubyAndFormatting(content) : content
-    });
-    const setTextTags = (tags) => dispatch({type: 'SET_TEXT_TAGS', tags});
-    const setTagInput = (tag) => dispatch({type: 'SET_TAG_INPUT', tag});
-    const toggleTextPlaceholder = (showTextPlaceholder) => dispatch({type: 'TOGGLE_PLACEHOLDER', showTextPlaceholder});
+    const setTextContent = (content) => dispatch(setTextContentAction(isHTML(content) ? stripRubyAndFormatting(content) : content));
+    const setTextTags = (tags) => dispatch(setTextTagsAction(tags));
+    const setTagInput = (tag) => dispatch(setTagInputAction(tag));
+    const toggleTextPlaceholder = (showTextPlaceholder) => dispatch(togglePlaceholderAction(showTextPlaceholder));
 
     return (
         <div id="add-page">
@@ -115,18 +116,18 @@ const Add = ({history}) => {
                 <Header leftIcon="menu" centerText="Add new text" fontSize={32}/>
             </div>
             <div className="add-text-container">
-                <Text title={text.title} setTitle={e => dispatch({type: 'SET_TEXT_TITLE', title: e.target.value})}
+                <Text title={text.title} setTitle={e => dispatch(setTextTitleAction(e.target.value))}
                       removePlaceholder={() => removePlaceholder(showTextPlaceholder, toggleTextPlaceholder, setTextContent)}
                       setText={setTextContent} text={text.content}/>
 
                 <div className="add-action-footer">
-                    <Tags tagInput={tagInput} updateTag={e => dispatch({type: 'SET_TAG_INPUT', tag: e.target.value})}
+                    <Tags tagInput={tagInput} updateTag={e => setTagInput(e.target.value)}
                           addTag={() => addTag(text, tagInput, setTextTags, setTagInput)} tags={text.tags}
                           deleteTag={(index) => deleteTag(index, setTextTags, text)}/>
 
                     <ActionButton disabled={disableAddBtn(text)}
-                                  onClick={() => submitText(setTextContent, text, textImage, history)} 
-                                  label="Add & Read" />
+                                  onClick={() => submitText(setTextContent, text, textImage, history)}
+                                  label="Add & Read"/>
                 </div>
             </div>
         </div>

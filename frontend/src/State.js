@@ -4,7 +4,7 @@ import config from "./reducers/config";
 import yomiText from "./pages/read/YomiText/readReducers";
 import promiseMiddleware from 'redux-promise-middleware';
 import add from "./pages/add/addReducers";
-import image from "./pages/add/image-upload/imageReducers";
+import imageUpload from "./pages/add/image-upload/imageUploadReducers";
 import home from "./pages/home/homeReducers";
 import decks from "./pages/decks";
 import authenticate from "./pages/authentication/authenticateReducers";
@@ -19,7 +19,7 @@ window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_
 
 const store = createStore(combineReducers({
     add,
-    image,
+    imageUpload,
     home,
     yomiText,
     popUp,

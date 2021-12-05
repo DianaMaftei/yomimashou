@@ -5,7 +5,7 @@ let defaultState = {
     imageRef: null
 };
 
-const image = (state = defaultState, action) => {
+const imageUpload = (state = defaultState, action) => {
     switch (action.type) {
         case 'SET_SRC':
             return {
@@ -27,11 +27,9 @@ const image = (state = defaultState, action) => {
                 ...state,
                 showCrop: !state.showCrop
             };
-        case 'RESET_STATE':
-            return defaultState;
         default:
             return state
     }
 };
 
-export default image;
+export default imageUpload;
