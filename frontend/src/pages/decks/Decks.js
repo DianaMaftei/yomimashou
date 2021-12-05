@@ -5,15 +5,13 @@ import axios from "axios";
 import {studyApiUrl} from "../../AppUrl";
 import Header from "../../components/header/Header";
 import Deck from "./deck/Deck";
+import {getDecksAction} from "./decksActions";
 
 const Decks = ({history}) => {
     const dispatch = useDispatch();
     const decks = useSelector(state => state.decks.decks);
-
-    const fetchDecks = () => dispatch({
-        type: 'GET_DECKS',
-        payload: axios.get(studyApiUrl + '/api/study/deck')
-    });
+    
+    const fetchDecks = () => dispatch(getDecksAction());
 
     useEffect(fetchDecks, [dispatch])
 

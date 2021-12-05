@@ -28,7 +28,7 @@ const config = (state = defaultState, action) => {
                     currentDictionary: state.popUp.currentDictionary === 2 ? 1 : 2
                 }
             };
-        case 'SET_KANJI_LEVEL' :
+        case 'SET_KANJI_LEVELS' :
             return {
                 ...state,
                 kanjiLevels: action.kanjiLevels

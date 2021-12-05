@@ -1,6 +1,6 @@
 import deepFreeze from 'deepfreeze';
-import popUp from "./popUp";
-import SearchType from "../pages/read/YomiText/Rikai/SearchType";
+import popUpReducers from "./popUp";
+import SearchType from "./SearchType";
 
 describe('popUp', function () {
 
@@ -19,7 +19,7 @@ describe('popUp', function () {
             type: 'FOO_BAR'
         });
 
-        const finalState = popUp(initialState, action);
+        const finalState = popUpReducers(initialState, action);
 
         expect(finalState).toEqual(initialState);
     });
@@ -36,7 +36,7 @@ describe('popUp', function () {
             result: result
         });
 
-        const finalState = popUp(initialState, action);
+        const finalState = popUpReducers(initialState, action);
 
         expect(finalState.searchResult).toEqual(result);
     });
@@ -54,7 +54,7 @@ describe('popUp', function () {
             result: result
         });
 
-        const finalState = popUp(initialState, action);
+        const finalState = popUpReducers(initialState, action);
 
         expect(finalState.showResult).toEqual(result);
     });
@@ -76,7 +76,7 @@ describe('popUp', function () {
             result: result
         });
 
-        const finalState = popUp(initialFetchState, action);
+        const finalState = popUpReducers(initialFetchState, action);
 
         expect(finalState.showResult).toEqual(result);
     });
@@ -104,7 +104,7 @@ describe('popUp', function () {
             }
         });
 
-        const finalState = popUp(initialFetchState, action);
+        const finalState = popUpReducers(initialFetchState, action);
 
         expect(finalState.showResult).toEqual(result);
     });
@@ -123,7 +123,7 @@ describe('popUp', function () {
             }
         });
 
-        const finalState = popUp(initialState, action);
+        const finalState = popUpReducers(initialState, action);
 
         expect(finalState.error).toEqual(result);
     });
@@ -138,7 +138,7 @@ describe('popUp', function () {
             }
         });
 
-        const finalState = popUp(initialState, action);
+        const finalState = popUpReducers(initialState, action);
 
         expect(finalState.popupInfo.visible).toEqual(true);
     });
@@ -153,7 +153,7 @@ describe('popUp', function () {
             }
         });
 
-        const finalState = popUp(initialState, action);
+        const finalState = popUpReducers(initialState, action);
 
         expect(finalState.popupInfo.position).toEqual({ x: 20, y: 30 });
     });

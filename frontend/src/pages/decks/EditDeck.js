@@ -13,6 +13,7 @@ import Header from "../../components/header/Header";
 import "./decks.scss";
 import colors from "../../style/colorConstants";
 import ActionButton from "../../components/buttons/actionBtn/ActionButton";
+import {getCardsInDeckAction, getDeckAction} from "./decksActions";
 
 const StyledTableRow = withStyles(() => ({
     root: {
@@ -40,15 +41,9 @@ const EditDeck = ({match, history}) => {
     const cards = useSelector(state => state.decks.cardsInDeck);
     const id = match.params.id;
 
-    const fetchDeck = () => dispatch({
-        type: 'GET_DECK',
-        payload: axios.get(studyApiUrl + '/api/study/deck/' + id)
-    });
+    const fetchDeck = () => dispatch(getDeckAction(id));
 
-    const fetchCardsInDeck = () => dispatch({
-        type: 'GET_CARDS_IN_DECK',
-        payload: axios.get(studyApiUrl + '/api/study/card?deckId=' + id)
-    });
+    const fetchCardsInDeck = () => dispatch(getCardsInDeckAction(id));
 
     useEffect(() => fetchDeck(), [dispatch]);
     useEffect(() => fetchCardsInDeck(), [dispatch]);

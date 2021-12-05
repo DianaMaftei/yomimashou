@@ -11,6 +11,13 @@ import UserIcon from "mdi-react/UserIcon";
 import AuthenticateOptions from "./AuthenticateOptions";
 import {useDispatch, useSelector} from "react-redux";
 import ActionButton from "../../components/buttons/actionBtn/ActionButton";
+import {
+    setEmailAction,
+    setPasswordAction,
+    setUsernameAction,
+    showErrorAction,
+    showPasswordAction
+} from "./authenticateActions";
 
 const Authenticate = ({history}) => {
     const dispatch = useDispatch();
@@ -18,7 +25,7 @@ const Authenticate = ({history}) => {
     const user = useSelector(state => state.authenticate.user);
     const showError = useSelector(state => state.authenticate.showError);
     const showPassword = useSelector(state => state.authenticate.showPassword);
-    const toggleShowError = (show) => dispatch({type: 'SHOW_ERROR', show})
+    const toggleShowError = (show) => dispatch(showErrorAction(show))
 
     const doLogin = () => {
         axios.post(apiUrl + '/login', user).then(resp => {
@@ -60,7 +67,7 @@ const Authenticate = ({history}) => {
                                 id="username-input"
                                 type="text"
                                 value={user.username}
-                                onChange={e => dispatch({type: 'SET_USERNAME', username: e.target.value})}
+                                onChange={e => dispatch(setUsernameAction(e.target.value))}
                                 startAdornment={
                                     <InputAdornment position="start">
                                         <UserIcon fontSize="small"/>
@@ -76,7 +83,7 @@ const Authenticate = ({history}) => {
                             id="email-input"
                             type="email"
                             value={user.email}
-                            onChange={e => dispatch({type: 'SET_EMAIL', email: e.target.value})}
+                            onChange={e => dispatch(setEmailAction(e.target.value))}
                             startAdornment={
                                 <InputAdornment position="start">
                                     <EmailIcon size="24"/>
@@ -91,12 +98,12 @@ const Authenticate = ({history}) => {
                             id="password-input"
                             type={showPassword ? 'text' : 'password'}
                             value={user.password}
-                            onChange={e => dispatch({type: 'SET_PASSWORD', password: e.target.value})}
+                            onChange={e => dispatch(setPasswordAction(e.target.value))}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label="toggle password visibility"
-                                        onClick={() => dispatch({type: 'SHOW_PASSWORD'})}
+                                        onClick={() => dispatch(showPasswordAction())}
                                         onMouseDown={e => e.preventDefault()}
                                         edge="end"
                                     >

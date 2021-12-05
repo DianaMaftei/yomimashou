@@ -1,5 +1,5 @@
-import SearchType from "../pages/read/YomiText/Rikai/SearchType";
-import PopupType from "../pages/read/YomiText/Rikai/PopupType";
+import SearchType from "./SearchType";
+import PopupType from "./PopupType";
 
 const defaultPagination = {
   first: false,

@@ -4,12 +4,14 @@ import {useDispatch, useSelector} from "react-redux";
 import Check from 'mdi-react/CheckIcon';
 import LocalSeeIcon from "mdi-react/LocalSeeIcon";
 import IconButton from "../../../components/buttons/iconBtn/IconButton";
+import {setCroppedImageUrlAction, setImageRefAction, setSrcAction, toggleCropAction} from "./imageUploadActions";
+import {setTextImageAction} from "../addActions";
 
 const onSelectFile = (e, dispatch) => {
     if (e.target.files && e.target.files.length > 0) {
         const reader = new FileReader();
         reader.addEventListener("load", () =>
-            dispatch({type: 'SET_SRC', src: reader.result})
+            dispatch(setSrcAction(reader.result))
         );
         reader.readAsDataURL(e.target.files[0]);
     }
@@ -28,11 +30,9 @@ const makeClientCrop = (crop, imageRef, setCroppedImageUrl) => {
 }
 
 const setTextImage = (dispatch, croppedImageUrl) => {
-    dispatch({type: 'TOGGLE_CROP'});
-    dispatch({
-        type: 'SET_TEXT_IMAGE', textImage: new File([croppedImageUrl],
-            "uploaded_file.jpg", {type: "image/jpeg"})
-    });
+    dispatch(toggleCropAction());
+    dispatch(setTextImageAction(new File([croppedImageUrl],
+        "uploaded_file.jpg", {type: "image/jpeg"})));
 }
 
 const getCroppedImg = (image, crop, fileName) => {
@@ -83,18 +83,17 @@ const getObjectUrlFromBlob = (croppedImageUrl) => {
 const ImageUpload = () => {
     const dispatch = useDispatch();
     const [crop, setCrop] = useState({width: 200, aspect: 16 / 9});
-    const croppedImageUrl = useSelector(state => state.image.croppedImageUrl);
-    const showCrop = useSelector(state => state.image.showCrop);
-    const src = useSelector(state => state.image.src);
-    const imageRef = useSelector(state => state.image.imageRef);
+    const croppedImageUrl = useSelector(state => state.imageUpload.croppedImageUrl);
+    const showCrop = useSelector(state => state.imageUpload.showCrop);
+    const src = useSelector(state => state.imageUpload.src);
+    const imageRef = useSelector(state => state.imageUpload.imageRef);
 
     return (
         <div>
             <input accept="image/*" id="upload-img" name="image" type="file" style={{display: 'none'}}
                    onChange={(e) => onSelectFile(e, dispatch)}/>
             <label htmlFor="upload-img" style={{display: 'flex', justifyContent: 'space-around'}}>
-                <IconButton onClick={() => {
-                }} label="Upload image">
+                <IconButton label="Upload image">
                     <LocalSeeIcon size="24"/>
                 </IconButton>
             </label>
@@ -102,9 +101,9 @@ const ImageUpload = () => {
             {src && !showCrop && (
                 <div>
                     <ReactCrop src={src} crop={crop}
-                               onImageLoaded={(imageRef) => dispatch({type: 'SET_IMAGE_REF', imageRef})}
+                               onImageLoaded={(imageRef) => dispatch(setImageRefAction(imageRef))}
                                onComplete={(crop) => makeClientCrop(crop, imageRef,
-                                   (croppedImageUrl) => dispatch({type: 'SET_CROPPED_IMAGE_URL', croppedImageUrl}))}
+                                   (croppedImageUrl) => dispatch(setCroppedImageUrlAction(croppedImageUrl)))}
                                onChange={setCrop}
                     />
                     <div>

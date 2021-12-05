@@ -26,7 +26,7 @@ MasonryLayout.propTypes = {
     texts: PropTypes.arrayOf(PropTypes.object).isRequired,
     hasMore: PropTypes.bool,
     loadMore: PropTypes.func,
-    textsStatuses: PropTypes.arrayOf(PropTypes.string).isRequired
+    textsStatuses: PropTypes.object.isRequired
 };
 
 export default MasonryLayout;

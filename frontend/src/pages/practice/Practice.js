@@ -2,8 +2,6 @@ import React from 'react';
 import "./practice.scss";
 import Header from "../../components/header/Header";
 import {withRouter} from "react-router-dom";
-import axios from "axios";
-import {studyApiUrl} from "../../AppUrl";
 import {connect} from "react-redux";
 import Summary from "./summary/Summary";
 import {
@@ -15,6 +13,8 @@ import {
     setClientPositions
 } from "./PracticeAnimation";
 import StackCard from "./StackCard";
+import {getDueCardsAction, reviewCardAction, toggleSummaryAction} from "./practiceActions";
+import {getDeckAction} from "../decks/decksActions";
 
 const mapStateToProps = (state) => ({
     deck: state.decks.deck,
@@ -23,34 +23,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getDeck: (id) => {
-        dispatch({
-            type: 'GET_DECK',
-            payload: axios.get(studyApiUrl + '/api/study/deck/' + id)
-        });
-    },
-    getCardsDue: (deckId) => {
-        dispatch({
-            type: 'GET_DUE_CARDS',
-            payload: axios.get(studyApiUrl + '/api/study/card/due/?deckId=' + deckId)
-        });
-    },
-    toggleSummary: () => {
-        dispatch({
-            type: 'TOGGLE_SUMMARY'
-        });
-    },
-    reviewCard: (cardId, easeOfAnswer) => {
-        dispatch({
-            type: 'REVIEW_CARD',
-            payload: axios.post(studyApiUrl + '/api/study/card/review', null, {
-                params: {
-                    cardId,
-                    easeOfAnswer
-                }
-            })
-        });
-    }
+    getDeck: (id) => dispatch(getDeckAction(id)),
+    getCardsDue: (deckId) => dispatch(getDueCardsAction(deckId)),
+    toggleSummary: () => dispatch(toggleSummaryAction()),
+    reviewCard: (cardId, easeOfAnswer) => dispatch(reviewCardAction(cardId, easeOfAnswer))
 });
 
 class Practice extends React.Component {

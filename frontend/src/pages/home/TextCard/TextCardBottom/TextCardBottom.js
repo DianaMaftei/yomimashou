@@ -28,7 +28,7 @@ const TextCardBottom = ({text, status}) => (
 )
 
 TextCardBottom.propTypes = {
-    text: PropTypes.string.isRequired,
+    text: PropTypes.object.isRequired,
     status: PropTypes.string
 };
 

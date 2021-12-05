@@ -60,14 +60,6 @@ const yomiText = (state = defaultState, action) => {
                 ...state,
                 names: action.payload.data
             };
-        case 'SET_HIGHLIGHTED_TEXT':
-            return {
-                ...state,
-                text: {
-                    ...state.text,
-                    content: action.text
-                }
-            };
         case 'PARSE_TEXT_NAMES_REJECTED':
             return {
                 ...state,

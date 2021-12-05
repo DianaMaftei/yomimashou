@@ -1,11 +1,9 @@
 import React from "react";
 import {connect} from "react-redux";
-import axios from "axios";
 import RikaiLoading from './RikaiLoading';
 import RikaiKanji from './Kanji/RikaiKanji';
 import RikaiSentence from './Sentence/RikaiSentence';
 import './rikai.scss';
-import {apiUrl} from "../../../../AppUrl";
 import SearchType from "./SearchType";
 import RikaiWord from "./Word/RikaiWord";
 import RtkInfo from "./Kanji/RtkInfo";
@@ -13,6 +11,7 @@ import KanjiDrawPad from "./Kanji/KanjiDrawPad/KanjiDrawPad";
 import AddToDeck from "./AddToDeck/AddToDeck";
 import OutsideClickHandler from 'react-outside-click-handler';
 import PopupType from "./PopupType";
+import {fetchDataAction, setPopupInfoAction, updateSearchResultAction, updateShowResultAction} from "./popUpActions";
 
 const mapStateToProps = (state) => ({
     ...state.popUp,
@@ -25,29 +24,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    setPopupInfo: popupInfo => {
-        dispatch({
-            type: 'SET_POPUP_INFO',
-            popupInfo: popupInfo
-        });
-    }, fetchData: (list, url, number, limit) => {
-        dispatch({
-            type: 'FETCH_DATA',
-            payload: axios.get(
-                apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString()
-                + `&page=${number}&size=${limit}`)
-        });
-    }, updateSearchResult: result => {
-        dispatch({
-            type: 'UPDATE_SEARCH_RESULT',
-            result
-        });
-    }, updateShowResult: result => {
-        dispatch({
-            type: 'UPDATE_SHOW_RESULT',
-            result
-        });
-    }
+    setPopupInfo: popupInfo => dispatch(setPopupInfoAction(popupInfo)),
+    fetchData: (list, url, number, limit) => dispatch(fetchDataAction(url, list.toString(), number, limit)),
+    updateSearchResult: result => dispatch(updateSearchResultAction(result)),
+    updateShowResult: result => dispatch(updateShowResultAction(result))
 });
 
 const getPopupStyle = (popupInfo) => {
@@ -152,7 +132,7 @@ const getResultFromWordEntry = (searchTerms, results, searchType) => {
     if (!resultList) {
         return;
     }
-    
+
     let result = [];
 
     for (let i = 0; i < resultList.length; i++) {

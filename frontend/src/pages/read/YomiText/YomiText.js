@@ -17,6 +17,23 @@ import TextActions from "./TextActions/TextActions";
 import PopupType from "./Rikai/PopupType";
 import Slide from "@material-ui/core/Slide";
 import ActionButton from "../../../components/buttons/actionBtn/ActionButton";
+import {
+    setAnalyzerAction,
+    setFuriganaSentenceAction,
+    setFuriganaTextAction,
+    setFuriganaTitleAction,
+    switchDictionaryAction,
+    updateTextSelectInfoAction
+} from "../readActions";
+import {
+    fetchDataAction,
+    fetchTranslationAction,
+    fetchWordExamplesAction,
+    fetchWordListAction,
+    setKanjiLevelsAction,
+    setPopupInfoAction,
+    updateSearchResultAction
+} from "./Rikai/popUpActions";
 
 const mapStateToProps = (state) => ({
     words: state.yomiText.words,
@@ -35,80 +52,19 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    updateTextSelectInfo: textSelectInfo => {
-        dispatch({
-            type: 'UPDATE_TEXT_SELECT_INFO',
-            textSelectInfo
-        });
-    },
-    fetchData: (list, url, number, limit) => {
-        dispatch({
-            type: 'FETCH_DATA',
-            payload: axios.get(apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString() + `&page=${number}&size=${limit}`)
-        });
-    }, fetchWordExamples: (list, url, page, limit) => {
-        dispatch({
-            type: 'FETCH_WORD_EXAMPLES',
-            payload: axios.get(
-                apiUrl + '/api/dictionary/' + url + '?searchItem=' + list.toString()
-                + `&page=${page}&size=${limit}`)
-        });
-    },
-    updateSearchResult: result => {
-        dispatch({
-            type: 'UPDATE_SEARCH_RESULT',
-            result
-        });
-    },
-    setPopupInfo: popupInfo => {
-        dispatch({
-            type: 'SET_POPUP_INFO',
-            popupInfo: popupInfo
-        });
-    },
-    switchDictionary: () => {
-        dispatch({
-            type: 'SWITCH_DICTIONARY'
-        });
-    },
-    setFuriganaText: text => {
-        dispatch({
-            type: 'SET_FURIGANA_TEXT',
-            text
-        });
-    },
-    setFuriganaTitle: title => {
-        dispatch({
-            type: 'SET_FURIGANA_TITLE',
-            title
-        });
-    },
-    setFuriganaSentence: sentence => {
-        dispatch({
-            type: 'SET_FURIGANA_SENTENCE',
-            sentence
-        });
-    }, setAnalyzer: analyzer => {
-        dispatch({
-            type: 'SET_ANALYZER',
-            analyzer
-        });
-    }, setKanjiLevels: (kanjiLevels) => {
-        dispatch({
-            type: 'SET_KANJI_LEVEL',
-            kanjiLevels: kanjiLevels
-        });
-    }, fetchWordList: (sentence) => {
-        dispatch({
-            type: 'FETCH_WORD_LIST',
-            payload: axios.post(apiUrl + '/api/sentence/', sentence)
-        });
-    }, fetchTranslation: (sentence) => {
-        dispatch({
-            type: 'FETCH_TRANSLATION',
-            payload: axios.get('https://api.mymemory.translated.net/get?q=' + sentence + '&langpair=ja|en')
-        })
-    }
+    updateTextSelectInfo: textSelectInfo => dispatch(updateTextSelectInfoAction(textSelectInfo)),
+    fetchData: (list, url, number, limit) => dispatch(fetchDataAction(url, list.toString(), number, limit)),
+    fetchWordExamples: (list, url, page, limit) => dispatch(fetchWordExamplesAction(url, list.toString(), page, limit)),
+    updateSearchResult: result => dispatch(updateSearchResultAction(result)),
+    setPopupInfo: popupInfo => dispatch(setPopupInfoAction(popupInfo)),
+    switchDictionary: () => dispatch(switchDictionaryAction()),
+    setFuriganaText: text => dispatch(setFuriganaTextAction(text)),
+    setFuriganaTitle: title => dispatch(setFuriganaTitleAction(title)),
+    setFuriganaSentence: sentence => dispatch(setFuriganaSentenceAction(sentence)),
+    setAnalyzer: analyzer => dispatch(setAnalyzerAction(analyzer)),
+    setKanjiLevels: (kanjiLevels) => dispatch(setKanjiLevelsAction(kanjiLevels)),
+    fetchWordList: (sentence) => dispatch(fetchWordListAction(sentence)),
+    fetchTranslation: (sentence) => dispatch(fetchTranslationAction(sentence))
 });
 
 export class YomiText extends React.Component {

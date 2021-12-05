@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import TextSource from "./TextSource";
 import ImageUpload from "../image-upload/ImageUpload";
 import * as PropTypes from "prop-types";
+import {setSourceTabValueAction} from "../addActions";
 
 const Text = ({text, title, setTitle, removePlaceholder, setText}) => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const Text = ({text, title, setTitle, removePlaceholder, setText}) => {
 
             <ImageUpload/>
 
-            <TextSource setTabValue={(sourceTabValue) => dispatch({type: 'SET_SOURCE_TAB_VALUE', sourceTabValue})}
+            <TextSource setTabValue={(sourceTabValue) => dispatch(setSourceTabValueAction(sourceTabValue))}
                         tabValue={sourceTabValue}
                         onEditorClick={removePlaceholder}
                         onChangeText={setText} text={text}/>
