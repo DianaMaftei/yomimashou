@@ -1,6 +1,6 @@
 import React from 'react';
 import CardMedia from '@material-ui/core/CardMedia/CardMedia';
-import { apiUrl } from '../../AppUrl';
+import { readApiUrl } from '../../AppUrl';
 import './textInfo.scss';
 
 
@@ -15,7 +15,7 @@ const TextInfo = ({text}: TextInfoProps) => {
                 text.imageFileName &&
                 <CardMedia
                     component="img"
-                    image={apiUrl + '/api/file/' + text.imageFileName}
+                    image={readApiUrl + '/file/' + text.imageFileName}
                     title={text.imageFileName}
                 />
             }

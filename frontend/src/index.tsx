@@ -1,16 +1,13 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import 'normalize.css';
-import "./style/index.scss";
-import registerServiceWorker from "./registerServiceWorker";
-import state from "./State";
-import axios from "axios";
-import Routes from "./Routes";
-import Drawer, { closeDrawer } from "./components/drawer/Drawer";
+import './style/index.scss';
+import registerServiceWorker from './registerServiceWorker';
+import state from './State';
+import Routes from './Routes';
+import Drawer, { closeDrawer } from './components/drawer/Drawer';
 
-axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8';
 
 const render = () => {
     ReactDOM.render(
@@ -32,6 +29,6 @@ const render = () => {
 registerServiceWorker();
 render();
 
-if (module.hot) {
+if(module.hot) {
     module.hot.accept();
 }

@@ -1,23 +1,24 @@
-import axios from "axios";
-import {studyApiUrl} from "../../AppUrl";
+import { getAllDecks, getDeckById } from '../../service/DeckService';
+import { getCardsInDeck } from '../../service/CardService';
+
 
 export const getDecksAction = () => {
     return {
         type: 'GET_DECKS',
-        payload: axios.get(studyApiUrl + '/api/study/deck')
-    }
-}
+        payload: getAllDecks()
+    };
+};
 
-export const getDeckAction = (id) => {
+export const getDeckAction = (id: number) => {
     return {
         type: 'GET_DECK',
-        payload: axios.get(studyApiUrl + '/api/study/deck/' + id)
-    }
-}
+        payload: getDeckById(id)
+    };
+};
 
-export const getCardsInDeckAction = (id) => {
+export const getCardsInDeckAction = (id: number) => {
     return {
         type: 'GET_CARDS_IN_DECK',
-        payload: axios.get(studyApiUrl + '/api/study/card?deckId=' + id)
-    }
-}
+        payload: getCardsInDeck(id)
+    };
+};

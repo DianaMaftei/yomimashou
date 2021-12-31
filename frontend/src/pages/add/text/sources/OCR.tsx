@@ -2,8 +2,6 @@ import {Button} from "@material-ui/core";
 import spinner from "../../../read/YomiText/Rikai/spinner.svg";
 import Editor from "react-pell";
 import * as PropTypes from "prop-types";
-import React from "react";
-
 
 const onSelectOcrImages = (e, scanImages, toggleLoader) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -11,10 +9,7 @@ const onSelectOcrImages = (e, scanImages, toggleLoader) => {
         for (let i = 0; i < e.target.files.length; i++) {
             formData.append("file", e.target.files[i]);
         }
-        const headers = {
-            "Content-Type": "multipart/form-data",
-        }
-        scanImages(formData, headers);
+        scanImages(formData);
         toggleLoader()
     }
 }

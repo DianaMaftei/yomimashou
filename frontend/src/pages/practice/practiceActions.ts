@@ -1,27 +1,22 @@
-import axios from "axios";
-import {studyApiUrl} from "../../AppUrl";
+import { getCardsDue, reviewCard } from '../../service/CardService';
+
 
 export const toggleSummaryAction = () => {
     return {
         type: 'TOGGLE_SUMMARY'
-    }
-}
+    };
+};
 
-export const getDueCardsAction = (deckId) => {
+export const getDueCardsAction = (deckId: number) => {
     return {
         type: 'GET_DUE_CARDS',
-        payload: axios.get(studyApiUrl + '/api/study/card/due/?deckId=' + deckId)
-    }
-}
+        payload: getCardsDue(deckId)
+    };
+};
 
-export const reviewCardAction = (cardId, easeOfAnswer) => {
+export const reviewCardAction = (cardId: number, easeOfAnswer: number) => {
     return {
         type: 'REVIEW_CARD',
-        payload: axios.post(studyApiUrl + '/api/study/card/review', null, {
-            params: {
-                cardId,
-                easeOfAnswer
-            }
-        })
-    }
-}
+        payload: reviewCard(cardId, easeOfAnswer)
+    };
+};

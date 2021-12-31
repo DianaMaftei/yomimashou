@@ -17,7 +17,7 @@ const Text = ({text, title, setTitle, removePlaceholder, setText}: TextProps) =>
 
             <ImageUpload/>
 
-            <TextSource setTabValue={(sourceTabValue) => dispatch(setSourceTabValueAction(sourceTabValue))}
+            <TextSource setTabValue={(sourceTabValue: number) => dispatch(setSourceTabValueAction(sourceTabValue))}
                         tabValue={sourceTabValue}
                         onEditorClick={removePlaceholder}
                         onChangeText={setText} text={text}/>

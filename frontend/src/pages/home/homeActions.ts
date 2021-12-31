@@ -1,17 +1,16 @@
-import axios from "axios";
-import {apiUrl} from "../../AppUrl";
-import {withHeaders} from "../../auth/auth";
+import { getAllTexts, getTextsStatuses } from '../../service/TextService';
+
 
 export const getTextsAction = () => {
     return {
         type: 'GET_TEXTS',
-        payload: axios.get(apiUrl + '/api/text')
-    }
-}
+        payload: getAllTexts()
+    };
+};
 
 export const getTextsStatusesAction = () => {
     return {
         type: 'GET_TEXTS_STATUSES',
-        payload: axios.get(apiUrl + '/api/users/textStatus', withHeaders())
-    }
-}
+        payload: getTextsStatuses()
+    };
+};

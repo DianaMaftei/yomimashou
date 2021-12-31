@@ -1,38 +1,38 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {withRouter} from 'react-router-dom'
-import axios from "axios";
-import {studyApiUrl} from "../../AppUrl";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableBody from "@material-ui/core/TableBody";
-import {withStyles} from "@material-ui/core";
-import TableCell from "@material-ui/core/TableCell";
-import Header from "../../components/header/Header";
-import "./decks.scss";
-import colors from "../../style/colorConstants";
-import ActionButton from "../../components/buttons/actionBtn/ActionButton";
-import {getCardsInDeckAction, getDeckAction} from "./decksActions";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import { withStyles } from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
+import Header from '../../components/header/Header';
+import './decks.scss';
+import colors from '../../style/colorConstants';
+import ActionButton from '../../components/buttons/actionBtn/ActionButton';
+import { getCardsInDeckAction, getDeckAction } from './decksActions';
+import { deleteCard } from '../../service/CardService';
+
 
 const StyledTableRow = withStyles(() => ({
     root: {
         '&:nth-of-type(odd)': {
-            backgroundColor: colors.yomiGray200,
-        },
-    },
+            backgroundColor: colors.yomiGray200
+        }
+    }
 }))(TableRow);
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: colors.yomiDarkBlue,
         color: theme.palette.common.white,
-        fontWeight: "bold"
+        fontWeight: 'bold'
     },
     body: {
         fontSize: 14,
-        padding: "10px 5px"
-    },
+        padding: '10px 5px'
+    }
 }))(TableCell);
 
 const EditDeck = ({match, history}: EditDeckProps) => {
@@ -48,14 +48,14 @@ const EditDeck = ({match, history}: EditDeckProps) => {
     useEffect(() => fetchDeck(), [dispatch]);
     useEffect(() => fetchCardsInDeck(), [dispatch]);
 
-    const deleteCard = (cardId) => {
-        axios.delete(studyApiUrl + '/api/study/card/' + cardId)
-            .then(() => {
-                fetchCardsInDeck();
-            });
-    }
+    // TODO use action
+    const onDeleteCard = (cardId: number) => {
+        deleteCard(cardId).then(() => {
+            fetchCardsInDeck();
+        });
+    };
 
-    if (!deck) {
+    if(!deck) {
         return <div/>;
     }
 
@@ -87,7 +87,7 @@ const EditDeck = ({match, history}: EditDeckProps) => {
                                     {card.explanation}
                                 </StyledTableCell>
                                 <StyledTableCell padding="checkbox" align="center">
-                                    <ActionButton onClick={() => deleteCard(card.id)} label="Delete" />
+                                    <ActionButton onClick={() => onDeleteCard(card.id)} label="Delete"/>
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}
@@ -99,7 +99,7 @@ const EditDeck = ({match, history}: EditDeckProps) => {
             <br/>
         </div>
     );
-}
+};
 
 type EditDeckProps = {
     match: object

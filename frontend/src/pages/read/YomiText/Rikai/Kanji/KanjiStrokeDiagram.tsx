@@ -1,5 +1,5 @@
 import React from "react";
-import {apiUrl} from "../../../../../AppUrl";
+import {readApiUrl} from "../../../../../AppUrl";
 import Raphael from "raphael";
 import "dmak";
 import SkipPrevious from 'mdi-react/SkipPreviousIcon';
@@ -15,7 +15,7 @@ const KanjiStrokeDiagram = ({character, doOnClick}: KanjiStrokeDiagramProps) => 
         'element': "kanji-draw",
         "stroke": {attr: {active: "#943a51"}},
         step: 0.01,
-        "uri": apiUrl + '/api/dictionary/kanji/svg/'
+        "uri": readApiUrl + '/api/dictionary/kanji/svg/'
     });
 
     return (

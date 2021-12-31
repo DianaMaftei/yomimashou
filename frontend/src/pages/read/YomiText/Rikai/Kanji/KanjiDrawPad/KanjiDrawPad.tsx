@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {apiUrl} from "../../../../../../AppUrl";
+import {readApiUrl} from "../../../../../../AppUrl";
 import grid from "../../../../../../resources/grid.png";
 import solidWhite from "../../../../../../resources/solid-white.jpg";
 import {fabric} from "fabric";
@@ -49,7 +49,7 @@ function getOverlayUrl(character) {
     let hintBtn = document.getElementById("toggle-hint");
 
     if (showHint) {
-        overlay = apiUrl + '/api/dictionary/kanji/svg/' + getKanjiCode(character) + '.svg';
+        overlay = readApiUrl + '/api/dictionary/kanji/svg/' + getKanjiCode(character) + '.svg';
         hintBtn.style.color = colors.yomiLightRed;
     } else {
         overlay = solidWhite;

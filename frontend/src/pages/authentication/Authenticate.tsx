@@ -1,6 +1,4 @@
 import React from 'react';
-import axios from 'axios/index';
-import { apiUrl } from '../../AppUrl';
 import './authenticate.scss';
 import EmailIcon from 'mdi-react/EmailIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
@@ -12,29 +10,35 @@ import AuthenticateOptions from './AuthenticateOptions';
 import { useDispatch, useSelector } from 'react-redux';
 import ActionButton from '../../components/buttons/actionBtn/ActionButton';
 import { setEmailAction, setPasswordAction, setUsernameAction, showErrorAction, showPasswordAction } from './authenticateActions';
+import { loginUser, registerUser } from '../../service/AuthService';
+import { User } from '../../model/User';
+import { setItem } from '../../service/LocalStorageService';
 
 
 const Authenticate = ({history}) => {
     const dispatch = useDispatch();
     const isLogin = history.location.pathname === '/login';
-    const user = useSelector(state => state.authenticate.user);
+    const user: User = useSelector(state => state.authenticate.user);
     const showError = useSelector(state => state.authenticate.showError);
     const showPassword = useSelector(state => state.authenticate.showPassword);
     const toggleShowError = (show) => dispatch(showErrorAction(show));
 
+
+    // TODO use action
     const doLogin = () => {
-        axios.post(apiUrl + '/login', user).then(resp => {
-            localStorage.setItem('username', resp.headers['username']);
-            localStorage.setItem('token', resp.headers['authorization']);
+        loginUser(user).then(resp => {
+            setItem('username', resp.headers['username']);
+            setItem('token', resp.headers['authorization']);
             history.push('/');
         }).catch(err => {
             toggleShowError(true);
         });
     };
 
+    // TODO use action
     const register = () => {
         toggleShowError(false);
-        axios.post(apiUrl + '/api/users/register', user).then(() => {
+        registerUser(user).then(() => {
             doLogin();
         });
     };

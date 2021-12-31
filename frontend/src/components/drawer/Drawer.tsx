@@ -6,9 +6,10 @@ import AddCircleOutlineIcon from 'mdi-react/AddCircleOutlineIcon';
 import BrainIcon from 'mdi-react/BrainIcon';
 import AssessmentIcon from 'mdi-react/AssessmentIcon';
 import SettingsIcon from 'mdi-react/SettingsIcon';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import {isAuthenticated} from "../../auth/auth";
+import { Link, withRouter } from 'react-router-dom';
 import DrawerLink from "./DrawerLink";
+import { History } from 'history';
+import { isAuthenticated } from '../../service/AuthService';
 
 export const showDrawer = (event: Event) => {
     event.stopPropagation();
@@ -91,7 +92,7 @@ const Drawer = ({history}: DrawerProps) => {
 };
 
 type DrawerProps = {
-    history: RouteComponentProps
+    history: History
 }
 
 export default withRouter(Drawer);

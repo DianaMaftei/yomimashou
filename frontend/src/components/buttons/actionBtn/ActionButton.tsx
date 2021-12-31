@@ -12,7 +12,7 @@ const ActionButton = ({onClick, label, disabled=false}: ActionButtonProps) => (
 type ActionButtonProps = {
     onClick: React.MouseEventHandler<HTMLButtonElement>
     label: string
-    disabled: boolean
+    disabled?: boolean
 }
 
 export default ActionButton;

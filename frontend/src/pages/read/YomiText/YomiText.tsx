@@ -1,22 +1,19 @@
-import React from "react";
-import {connect} from "react-redux";
-import axios from "axios";
-import RikaiPopUp from "./Rikai/Rikai";
+import React from 'react';
+import { connect } from 'react-redux';
+import RikaiPopUp from './Rikai/Rikai';
 import './Rikai/rikai.scss';
 import './yomi.scss';
-import {highlightMatch, isVisible, search, tryToFindTextAtMouse} from './Rikai/RikaiTextParser';
-import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
-import Kuroshiro from "kuroshiro";
+import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from './Rikai/RikaiTextParser';
+import KuromojiAnalyzer from 'kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min';
+import Kuroshiro from 'kuroshiro';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import {apiUrl} from "../../../AppUrl";
-import {isAuthenticated, withHeaders} from "../../../auth/auth";
-import {filterTextFuriganaByKanjiCategory} from "./TextActions/furigana/FuriganaFilterByKanjiCategory";
-import SearchType from "./Rikai/SearchType";
-import TextInfo from "../../../components/textInfo/TextInfo";
-import TextActions from "./TextActions/TextActions";
-import PopupType from "./Rikai/PopupType";
-import Slide from "@material-ui/core/Slide";
-import ActionButton from "../../../components/buttons/actionBtn/ActionButton";
+import { filterTextFuriganaByKanjiCategory } from './TextActions/furigana/FuriganaFilterByKanjiCategory';
+import SearchType from './Rikai/SearchType';
+import TextInfo from '../../../components/textInfo/TextInfo';
+import TextActions from './TextActions/TextActions';
+import PopupType from './Rikai/PopupType';
+import Slide from '@material-ui/core/Slide';
+import ActionButton from '../../../components/buttons/actionBtn/ActionButton';
 import {
     setAnalyzerAction,
     setFuriganaSentenceAction,
@@ -24,7 +21,7 @@ import {
     setFuriganaTitleAction,
     switchDictionaryAction,
     updateTextSelectInfoAction
-} from "../readActions";
+} from '../readActions';
 import {
     fetchDataAction,
     fetchTranslationAction,
@@ -33,7 +30,10 @@ import {
     setKanjiLevelsAction,
     setPopupInfoAction,
     updateSearchResultAction
-} from "./Rikai/popUpActions";
+} from './Rikai/popUpActions';
+import { markTextAsRead } from '../../../service/TextService';
+import { isAuthenticated } from '../../../service/AuthService';
+
 
 const mapStateToProps = (state) => ({
     words: state.yomiText.words,
@@ -74,8 +74,8 @@ export class YomiText extends React.Component {
         this.props.setAnalyzer(null);
 
         this.analyzer = new KuromojiAnalyzer({
-            dictPath: "/static/kuromoji"
-        });
+                                                 dictPath: '/static/kuromoji'
+                                             });
 
         this.kuroshiro = new Kuroshiro();
         let that = this;
@@ -91,14 +91,14 @@ export class YomiText extends React.Component {
     }
 
     componentDidMount() {
-        document.addEventListener("keydown", this.keyDownHandler, false);
+        document.addEventListener('keydown', this.keyDownHandler, false);
 
-        let element = document.getElementById("yomi-text-container");
+        let element = document.getElementById('yomi-text-container');
         element.innerHTML = (this.props.text && (this.props.text.furigana || this.props.text.content)) || '';
     }
 
     componentWillUnmount() {
-        document.removeEventListener("keydown", this.keyDownHandler, false);
+        document.removeEventListener('keydown', this.keyDownHandler, false);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -112,7 +112,7 @@ export class YomiText extends React.Component {
 
     componentWillUpdate(nextProps, nextState) {
         if (this.props.text !== nextProps.text) {
-            let textElement = document.getElementById("yomi-text-container");
+            let textElement = document.getElementById('yomi-text-container');
             textElement.innerHTML = (nextProps.text && (nextProps.text.furigana || nextProps.text.content)) || '';
 
             // let titleElement = document.getElementById("yomi-text-title");
@@ -123,13 +123,15 @@ export class YomiText extends React.Component {
     onMouseClick(ev, searchResult, fetchData, setPopupInfo) {
         if (this.props.popupInfo.closed) {
             setPopupInfo({
-                ...this.props.popupInfo,
-                closed: false
-            });
+                             ...this.props.popupInfo,
+                             closed: false
+                         });
             return;
         }
 
-        if (!searchResult.type) return;
+        if (!searchResult.type) {
+            return;
+        }
 
         let self = this;
 
@@ -148,21 +150,23 @@ export class YomiText extends React.Component {
                 this.props.fetchWordList(searchResult.result);
                 this.props.fetchTranslation(searchResult.result);
                 this.kuroshiro.convert(searchResult.result, {
-                    to: "hiragana",
-                    mode: "furigana"
+                    to: 'hiragana',
+                    mode: 'furigana'
                 }).then(function (result) {
                     self.props.setFuriganaSentence(result);
                 });
             }
 
-            if (!document.getSelection().getRangeAt(0).getClientRects()[0]) return;
+            if (!document.getSelection().getRangeAt(0).getClientRects()[0]) {
+                return;
+            }
 
             setPopupInfo({
-                visibility: true, position: {
+                             visibility: true, position: {
                     x: document.getSelection().getRangeAt(0).getClientRects()[0].x - 10,
                     y: document.getSelection().getRangeAt(0).getClientRects()[0].y - document.body.scrollTop + 25
                 }
-            });
+                         });
         }
     };
 
@@ -202,9 +206,9 @@ export class YomiText extends React.Component {
                         updateTextSelectInfo(textAtMouseInfo);
 
                         let highlightColors = {
-                            1: "#f0a0a8",
-                            2: "#68b4ee",
-                            3: "#6fbca7"
+                            1: '#f0a0a8',
+                            2: '#68b4ee',
+                            3: '#6fbca7'
                         };
 
                         highlightMatch(textAtMouseInfo, highlightColors[currentDictionary]);
@@ -219,9 +223,9 @@ export class YomiText extends React.Component {
         window.getSelection().empty();
 
         let allText = textAtMouseInfo.prevRangeNode.textContent;
-        let previousSentence = "";
-        for (let i = textAtMouseInfo.prevRangeOfs - 1; i >= 0; i--) {
-            if (allText[i] !== "。") {
+        let previousSentence = '';
+        for(let i = textAtMouseInfo.prevRangeOfs - 1; i >= 0; i--) {
+            if (allText[i] !== '。') {
                 previousSentence += allText[i];
             } else {
                 break;
@@ -229,39 +233,39 @@ export class YomiText extends React.Component {
         }
 
         updateSearchResult({
-            type: SearchType.SENTENCE,
-            result: (previousSentence.split("").reverse().join("") + "。").trim()
-        });
+                               type: SearchType.SENTENCE,
+                               result: (previousSentence.split('').reverse().join('') + '。').trim()
+                           });
 
         let highlightInfo = {
             selEndList: [{offset: 0, node: textAtMouseInfo.prevRangeNode}],
             matchLen: 1,
             lastRo: textAtMouseInfo.prevRangeOfs,
-            prevRangeNode: textAtMouseInfo.prevRangeNode,
+            prevRangeNode: textAtMouseInfo.prevRangeNode
 
         };
 
-        highlightMatch(highlightInfo, "#11bc0e");
+        highlightMatch(highlightInfo, '#11bc0e');
     }
 
     getClassForDictionary() {
-        return this.props.currentDictionary === 2 ? "word-dict" : "kanji-dict";
+        return this.props.currentDictionary === 2 ? 'word-dict' : 'kanji-dict';
     }
 
     onKeyDown(ev) {
-        switch (ev.keyCode) {
+        switch(ev.keyCode) {
             case 192:	// ` - switch dictionaries (kanji, names, words, examples)
                 this.props.switchDictionary();
                 this.props.setPopupInfo({
-                    ...this.props.popupInfo,
-                    type: this.props.popupInfo.type === PopupType.WORD ? PopupType.KANJI : PopupType.WORD
-                });
+                                            ...this.props.popupInfo,
+                                            type: this.props.popupInfo.type === PopupType.WORD ? PopupType.KANJI : PopupType.WORD
+                                        });
                 //TODO remove hightlight? or do a new search with the new dict option
                 break;
             case 81:	// q - hide popup
                 this.props.setPopupInfo({
-                    visibility: false
-                });
+                                            visibility: false
+                                        });
                 break;
             default:
                 return;
@@ -284,24 +288,19 @@ export class YomiText extends React.Component {
         let title = this.props.text.title;
 
         this.kuroshiro.convert(text, {
-            to: "hiragana",
-            mode: "furigana"
+            to: 'hiragana',
+            mode: 'furigana'
         }).then(function (result) {
             setFuriganaText(filterTextFuriganaByKanjiCategory(result, kanjiLevels));
         });
 
         this.kuroshiro.convert(title, {
-            to: "hiragana",
-            mode: "furigana"
+            to: 'hiragana',
+            mode: 'furigana'
         }).then(function (result) {
             setFuriganaTitle(filterTextFuriganaByKanjiCategory(result, kanjiLevels));
         });
     };
-
-    markAsRead = () => {
-        axios.post(apiUrl + '/api/users/textStatus?progressStatus=READ&textId=' + this.props.id, {}, withHeaders());
-    };
-
 
     render() {
         return (
@@ -327,8 +326,9 @@ export class YomiText extends React.Component {
                     <div id="yomi-text-container"/>
                 </div>
                 {
+                    //TODO use mark as read action
                     isAuthenticated() &&
-                    <ActionButton onClick={this.markAsRead} label="Mark as Read"/>
+                    <ActionButton onClick={() => markTextAsRead(this.props.id)} label="Mark as Read"/>
                 }
                 <RikaiPopUp/>
             </div>);

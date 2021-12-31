@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import "./home.scss";
 import {useDispatch, useSelector} from "react-redux";
 import MasonryLayout from "./MasonryLayout/MasonryLayout";

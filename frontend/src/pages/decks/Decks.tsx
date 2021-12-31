@@ -1,26 +1,27 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {withRouter} from 'react-router-dom'
-import axios from "axios";
-import {studyApiUrl} from "../../AppUrl";
-import Header from "../../components/header/Header";
-import Deck from "./deck/Deck";
-import {getDecksAction} from "./decksActions";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import Header from '../../components/header/Header';
+import Deck from './deck/Deck';
+import { getDecksAction } from './decksActions';
+import { deleteDeck } from '../../service/DeckService';
+import { History } from 'history';
 
-const Decks = ({history}) => {
+
+const Decks = ({history}: DecksProps) => {
     const dispatch = useDispatch();
     const decks = useSelector(state => state.decks.decks);
-    
+
     const fetchDecks = () => dispatch(getDecksAction());
 
-    useEffect(fetchDecks, [dispatch])
+    useEffect(fetchDecks, [dispatch]);
 
-    const deleteDeck = (deckId) => {
-        axios.delete(studyApiUrl + '/api/study/deck/' + deckId)
-            .then(fetchDecks);
-    }
+    const onDelete = (deckId: number) => {
+        //TODO use action
+        deleteDeck(deckId).then(fetchDecks);
+    };
 
-    if (!decks) {
+    if(!decks) {
         return <div/>;
     }
 
@@ -30,9 +31,9 @@ const Decks = ({history}) => {
                 <Header leftIcon="menu" centerText="My decks" fontSize={32}/>
             </div>
             <div className="text-center">
-                {decks.map((deck, index) => <Deck key={"deck-" + index} deck={deck}
-                                                  onEdit={(deckId) => history.push('/deck/' + deckId)}
-                                                  onDelete={deleteDeck}/>)}
+                {decks.map((deck, index) => <Deck key={'deck-' + index} deck={deck}
+                                                  onEdit={(deckId: number) => history.push('/deck/' + deckId)}
+                                                  onDelete={onDelete}/>)}
 
                 {
                     !decks || decks.length === 0 &&
@@ -41,6 +42,10 @@ const Decks = ({history}) => {
             </div>
         </div>
     );
+};
+
+type DecksProps = {
+    history: History
 }
 
 export default withRouter(Decks);

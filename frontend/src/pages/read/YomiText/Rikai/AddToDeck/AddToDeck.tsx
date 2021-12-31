@@ -8,6 +8,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import SearchType from "../SearchType";
 import PopupType from "../PopupType";
 import ActionButton from "../../../../../components/buttons/actionBtn/ActionButton";
+import { getAllDecks } from '../../../../../service/DeckService';
 
 class AddToDeck extends Component {
     constructor(props) {
@@ -22,7 +23,8 @@ class AddToDeck extends Component {
             }
         };
 
-        axios.get(studyApiUrl + '/api/study/deck/').then(decks => {
+        // TODO use action
+        getAllDecks().then(decks => {
             this.setState({...this.state, decks: decks.data})
         })
     }
@@ -156,7 +158,7 @@ class AddToDeck extends Component {
 
                     <ActionButton disabled={kanaKanjiInvalid || !this.state.item.meanings || deckInvalid}
                                   onClick={this.saveItem.bind(this)} label="Add" />
-                    
+
                     {this.state.added && <span>Item was added to deck</span>}
                 </div>
             </div>

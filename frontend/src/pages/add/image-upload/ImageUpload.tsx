@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import ReactCrop from 'react-image-crop';
 import {useDispatch, useSelector} from 'react-redux';
 import Check from 'mdi-react/CheckIcon';
@@ -6,6 +5,7 @@ import LocalSeeIcon from "mdi-react/LocalSeeIcon";
 import IconButton from "../../../components/buttons/iconBtn/IconButton";
 import {setCroppedImageUrlAction, setImageRefAction, setSrcAction, toggleCropAction} from "./imageUploadActions";
 import {setTextImageAction} from "../addActions";
+import {useState} from "react";
 
 const onSelectFile = (e, dispatch) => {
     if (e.target.files && e.target.files.length > 0) {

@@ -1,4 +1,3 @@
-import React from 'react';
 import './textSource.scss';
 import TextSourceTabs from './TextSourceTabs';
 import OCR from './sources/OCR';
@@ -15,9 +14,9 @@ const TextSource = ({setTabValue, onChangeText, onEditorClick, tabValue, text}: 
 
     const toggleLoader = () => dispatch(toggleLoaderAction());
 
-    const scanImages = (formData, headers) => dispatch(scanImagesAction(formData, headers));
+    const scanImages = (formData: FormData) => dispatch(scanImagesAction(formData));
 
-    if(text && showLoader) {
+    if (text && showLoader) {
         toggleLoader();
     }
 

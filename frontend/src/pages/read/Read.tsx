@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import YomiText from './YomiText/YomiText';
 import "./read.scss";
@@ -49,8 +49,8 @@ const Read = ({match, history}: ReadProps) => {
 }
 
 type ReadProps = {
-    match: object
-    history: object
+    match: any
+    history: History
 }
 
 export default withRouter(Read);

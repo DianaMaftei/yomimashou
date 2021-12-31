@@ -5,7 +5,7 @@ let defaultState = {
     imageRef: null
 };
 
-const imageUpload = (state = defaultState, action) => {
+const imageUpload = (state = defaultState, action: object) => {
     switch (action.type) {
         case 'SET_SRC':
             return {

@@ -1,76 +1,77 @@
-import axios from "axios";
-import {apiUrl} from "../../AppUrl";
+import { getTextById, parseTextNames, parseTextWords } from '../../service/TextService';
+import { Text } from '../../model/Text';
 
-export const getTextByIdAction = (id) => {
+
+export const getTextByIdAction = (id: number) => {
     return {
         type: 'GET_TEXT_BY_ID',
-        payload: axios.get(apiUrl + '/api/text/' + id)
-    }
-}
+        payload: getTextById(id)
+    };
+};
 
 export const resetDictionariesAction = () => {
     return {
         type: 'RESET_DICTIONARIES'
-    }
-}
+    };
+};
 
-export const parseTextWordsAction = (text) => {
+export const parseTextWordsAction = (text: Text) => {
     return {
         type: 'PARSE_TEXT_WORDS',
-        payload: axios.post(apiUrl + '/api/text/parse/words', text.title + " " + text.content.replace(/<br>/g, ""))
-    }
-}
+        payload: parseTextWords(text.title + ' ' + text.content.replace(/<br>/g, ''))
+    };
+};
 
-export const parseTextNamesAction = (text) => {
+export const parseTextNamesAction = (text: Text) => {
     return {
         type: 'PARSE_TEXT_NAMES',
-        payload: axios.post(apiUrl + '/api/text/parse/names', text.title + " " + text.content.replace(/<br>/g, ""))
-    }
-}
+        payload: parseTextNames(text.title + ' ' + text.content.replace(/<br>/g, ''))
+    };
+};
 
 export const toggleTextActionsMenuAction = () => {
     return {
         type: 'TOGGLE_TEXT_ACTIONS_MENU'
-    }
-}
+    };
+};
 
-export const updateTextSelectInfoAction = (textSelectInfo) => {
+export const updateTextSelectInfoAction = (textSelectInfo: object) => {
     return {
         type: 'UPDATE_TEXT_SELECT_INFO',
         textSelectInfo
-    }
-}
+    };
+};
 
-export const setAnalyzerAction = (analyzer) => {
+export const setAnalyzerAction = (analyzer: object) => {
     return {
         type: 'SET_ANALYZER',
         analyzer
-    }
-}
+    };
+};
 
-export const setFuriganaTextAction = (text) => {
+export const setFuriganaTextAction = (text: string) => {
     return {
         type: 'SET_FURIGANA_TEXT',
         text
-    }
-}
+    };
+};
 
-export const setFuriganaTitleAction = (title) => {
+export const setFuriganaTitleAction = (title: string) => {
     return {
         type: 'SET_FURIGANA_TITLE',
         title
-    }
-}
+    };
+};
 
-export const setFuriganaSentenceAction = (sentence) => {
+export const setFuriganaSentenceAction = (sentence: string) => {
     return {
         type: 'SET_FURIGANA_SENTENCE',
         sentence
-    }
-}
+    };
+};
 
 export const switchDictionaryAction = () => {
     return {
         type: 'SWITCH_DICTIONARY'
-    }
-}
+    };
+};
