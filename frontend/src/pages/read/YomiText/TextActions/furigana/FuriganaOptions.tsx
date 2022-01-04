@@ -1,9 +1,10 @@
-import React from "react";
-import FormControl from "@material-ui/core/FormControl/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import "./furiganaOptions.scss";
-import furiganaIcon from "./furigana_icon.svg";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel/FormControlLabel';
+import React from 'react';
+import furiganaIcon from './furigana_icon.svg';
+import './furiganaOptions.scss';
+
 
 const FuriganaOptions = ({handleFurigana, kanjiLevels}: FuriganaOptionsProps) => {
     return (

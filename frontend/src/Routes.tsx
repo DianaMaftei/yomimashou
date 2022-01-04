@@ -1,13 +1,14 @@
-import React from "react";
-import {Route, Switch} from "react-router-dom";
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Add from './pages/add/Add';
 
-import Authenticate from "./pages/authentication/Authenticate";
-import Home from "./pages/home/Home";
-import Add from "./pages/add/Add";
-import Read from "./pages/read/Read";
-import Decks from "./pages/decks/Decks";
-import Deck from "./pages/decks/EditDeck";
-import Practice from "./pages/practice/Practice";
+import Authenticate from './pages/authentication/Authenticate';
+import Decks from './pages/decks/Decks';
+import Deck from './pages/decks/EditDeck';
+import Home from './pages/home/Home';
+import Practice from './pages/practice/Practice';
+import Read from './pages/read/Read';
+
 
 const Routes = () => (
     <Switch>

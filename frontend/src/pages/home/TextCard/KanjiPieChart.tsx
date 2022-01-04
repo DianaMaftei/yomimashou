@@ -1,6 +1,7 @@
 import React from 'react';
-import "./TextCard.scss";
-import { Cell, Pie, PieChart } from "recharts";
+import { Cell, Pie, PieChart } from 'recharts';
+import './TextCard.scss';
+
 
 const KanjiPieChart = ({kanjiCountByLevel, className}: KanjiPieChartProps) => {
     if (!kanjiCountByLevel) return <div/>;

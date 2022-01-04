@@ -1,12 +1,13 @@
-import React from "react";
-import {readApiUrl} from "../../../../../AppUrl";
-import Raphael from "raphael";
-import "dmak";
-import SkipPrevious from 'mdi-react/SkipPreviousIcon';
-import SkipNext from 'mdi-react/SkipNextIcon';
+import 'dmak';
 import Pause from 'mdi-react/PauseIcon';
 import Play from 'mdi-react/PlayIcon';
 import Replay from 'mdi-react/ReplayIcon';
+import SkipNext from 'mdi-react/SkipNextIcon';
+import SkipPrevious from 'mdi-react/SkipPreviousIcon';
+import Raphael from 'raphael';
+import React from 'react';
+import { readApiUrl } from '../../../../../AppUrl';
+
 
 window.Raphael = Raphael;
 

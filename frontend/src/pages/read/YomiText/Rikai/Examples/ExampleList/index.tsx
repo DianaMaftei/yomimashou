@@ -1,6 +1,4 @@
-import React from "react";
-import ExampleListWithoutResults from './ExampleListWithoutResults';
-import ExampleListWithResults from './ExampleListWithResults';
+import React from 'react';
 
 
 export default ({resultList}) => {

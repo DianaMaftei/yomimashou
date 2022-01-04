@@ -1,5 +1,6 @@
 import React from 'react';
-import NameList from "./NameList";
+import NameList from './NameList';
+
 
 export default (hidePopup, style, result, limit) => (
     <div id="rikai-window" style={style}>

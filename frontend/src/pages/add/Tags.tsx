@@ -1,5 +1,6 @@
-import React from "react";
 import { Button, Chip, TextField } from '@material-ui/core';
+import React from 'react';
+
 
 const Tags = ({tagInput, updateTag, addTag, tags, deleteTag}: TagsProps) => (
     <div id="tags">

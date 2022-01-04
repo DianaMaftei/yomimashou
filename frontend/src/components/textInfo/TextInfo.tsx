@@ -1,5 +1,5 @@
-import React from 'react';
 import CardMedia from '@material-ui/core/CardMedia/CardMedia';
+import React from 'react';
 import { readApiUrl } from '../../AppUrl';
 import './textInfo.scss';
 

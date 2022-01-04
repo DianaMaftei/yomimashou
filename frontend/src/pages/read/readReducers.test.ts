@@ -1,5 +1,6 @@
 import deepFreeze from 'deepfreeze';
-import yomiText from "./readReducers";
+import yomiText from './readReducers';
+
 
 describe('YomiTextReducers', function () {
 

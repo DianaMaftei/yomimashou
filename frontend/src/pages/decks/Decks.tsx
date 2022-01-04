@@ -1,11 +1,11 @@
+import { History } from 'history';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Header from '../../components/header/Header';
+import { deleteDeck } from '../../service/DeckService';
 import Deck from './deck/Deck';
 import { getDecksAction } from './decksActions';
-import { deleteDeck } from '../../service/DeckService';
-import { History } from 'history';
 
 
 const Decks = ({history}: DecksProps) => {

@@ -1,6 +1,6 @@
+import { Button } from '@material-ui/core';
 import React from 'react';
 import './iconBtn.scss';
-import { Button } from '@material-ui/core';
 
 
 const IconButton = ({onClick, children, label}: IconButtonProps) => (

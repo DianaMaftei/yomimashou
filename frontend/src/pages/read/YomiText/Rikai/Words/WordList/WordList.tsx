@@ -1,6 +1,7 @@
-import React from "react";
-import WordListLimited from "./WordListLimited";
-import WordListFull from "./WordListFull";
+import React from 'react';
+import WordListFull from './WordListFull';
+import WordListLimited from './WordListLimited';
+
 
 class WordList extends React.Component {
 

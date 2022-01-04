@@ -1,7 +1,7 @@
-import { http } from './http';
-import { readApiUrl, loginUrl } from '../AppUrl';
 import { AxiosResponse } from 'axios';
+import { loginUrl, readApiUrl } from '../AppUrl';
 import { User } from '../model/User';
+import { http } from './http';
 import { getItem, removeItem } from './LocalStorageService';
 
 

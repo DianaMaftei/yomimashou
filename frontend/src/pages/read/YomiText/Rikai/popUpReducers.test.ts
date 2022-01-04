@@ -1,6 +1,7 @@
 import deepFreeze from 'deepfreeze';
-import popUpReducers from "./popUp";
-import SearchType from "./SearchType";
+import popUpReducers from './popUp';
+import SearchType from './SearchType';
+
 
 describe('popUp', function () {
 

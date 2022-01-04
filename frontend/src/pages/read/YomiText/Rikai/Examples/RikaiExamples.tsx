@@ -1,6 +1,7 @@
 import React from 'react';
 import ExampleList from './ExampleList/index';
 
+
 const RikaiExamples = ({hidePopup, style, result}: RikaiExamplesProps) => (
     <div id="rikai-window" style={style}>
         <div className="rikai-top">

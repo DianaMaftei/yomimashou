@@ -1,18 +1,18 @@
+import { withStyles } from '@material-ui/core';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import { withStyles } from '@material-ui/core';
-import TableCell from '@material-ui/core/TableCell';
-import Header from '../../components/header/Header';
-import './decks.scss';
-import colors from '../../style/colorConstants';
 import ActionButton from '../../components/buttons/actionBtn/ActionButton';
-import { getCardsInDeckAction, getDeckAction } from './decksActions';
+import Header from '../../components/header/Header';
 import { deleteCard } from '../../service/CardService';
+import colors from '../../style/colorConstants';
+import './decks.scss';
+import { getCardsInDeckAction, getDeckAction } from './decksActions';
 
 
 const StyledTableRow = withStyles(() => ({

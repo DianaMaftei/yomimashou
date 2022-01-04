@@ -1,6 +1,6 @@
 import VolumeHighIcon from 'mdi-react/VolumeHighIcon';
-import './tts.scss';
 import colors from '../../style/colorConstants';
+import './tts.scss';
 
 
 const CHUNK_LENGTH_OF_TEXT = 120;

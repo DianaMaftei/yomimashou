@@ -1,6 +1,7 @@
-import {Button, TextField} from "@material-ui/core";
-import * as PropTypes from "prop-types";
-import React from "react";
+import { Button, TextField } from '@material-ui/core';
+import * as PropTypes from 'prop-types';
+import React from 'react';
+
 
 const onSelectFile = (e, onChangeText) => {
     if (e.target.files && e.target.files.length > 0) {

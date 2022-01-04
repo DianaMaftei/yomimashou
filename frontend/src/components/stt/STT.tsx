@@ -1,6 +1,7 @@
-import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min";
-import Kuroshiro from "kuroshiro";
-import ActionButton from "../buttons/actionBtn/ActionButton";
+import Kuroshiro from 'kuroshiro';
+import KuromojiAnalyzer from 'kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min';
+import ActionButton from '../buttons/actionBtn/ActionButton';
+
 
 let recognition;
 let recognizing = false;

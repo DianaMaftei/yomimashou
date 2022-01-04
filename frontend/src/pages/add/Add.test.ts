@@ -1,9 +1,9 @@
-import React from "react";
-import { shallow } from "enzyme";
-import Add from "./Add";
-import Text from "./text/Text";
-import Tags from "./Tags";
-import ActionButtons from "./ActionButtons";
+import { shallow } from 'enzyme';
+import ActionButtons from './ActionButtons';
+import Add from './Add';
+import Tags from './Tags';
+import Text from './text/Text';
+
 
 describe("Add", () => {
     let props;

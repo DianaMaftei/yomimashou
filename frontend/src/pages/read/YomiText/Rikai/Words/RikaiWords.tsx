@@ -1,5 +1,6 @@
 import React from 'react';
-import WordList from "./WordList/WordList";
+import WordList from './WordList/WordList';
+
 
 export default (hidePopup, style, result, last, showExamples, showMore) => (
     <div id="rikai-window" style={style}>

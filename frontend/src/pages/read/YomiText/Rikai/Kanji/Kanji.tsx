@@ -1,6 +1,6 @@
 import React from 'react';
-import KanjiStrokeDiagram from './KanjiStrokeDiagram';
 import PopupType from '../PopupType';
+import KanjiStrokeDiagram from './KanjiStrokeDiagram';
 
 
 const Kanji = ({result, showWordExamples, changePopup}: KanjiProps) => (

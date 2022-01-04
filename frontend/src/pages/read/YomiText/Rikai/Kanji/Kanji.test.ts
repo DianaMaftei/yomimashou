@@ -1,6 +1,6 @@
-import React from "react";
-import { shallow } from "enzyme";
-import Kanji from "./Kanji";
+import { shallow } from 'enzyme';
+import Kanji from './Kanji';
+
 
 describe("Kanji", () => {
     let props;

@@ -1,5 +1,6 @@
-import deepFreeze from "deepfreeze";
-import config from "./config";
+import deepFreeze from 'deepfreeze';
+import config from './config';
+
 
 describe('config', function () {
 

@@ -1,14 +1,15 @@
-import React, {Component} from "react";
-import {readApiUrl} from "../../../../../../AppUrl";
-import grid from "../../../../../../resources/grid.png";
-import solidWhite from "../../../../../../resources/solid-white.jpg";
-import {fabric} from "fabric";
-import "./kanjiDrawPad.scss";
-import LightbulbOnIcon from 'mdi-react/LightbulbOnOutlineIcon';
+import { fabric } from 'fabric';
 import EraserIcon from 'mdi-react/EraserIcon';
-import BackButton from "../../../../../../components/buttons/backBtn/BackButton";
-import colors from "../../../../../../style/colorConstants";
-import PopupType from "../../PopupType";
+import LightbulbOnIcon from 'mdi-react/LightbulbOnOutlineIcon';
+import React, { Component } from 'react';
+import { readApiUrl } from '../../../../../../AppUrl';
+import BackButton from '../../../../../../components/buttons/backBtn/BackButton';
+import grid from '../../../../../../resources/grid.png';
+import solidWhite from '../../../../../../resources/solid-white.jpg';
+import colors from '../../../../../../style/colorConstants';
+import PopupType from '../../PopupType';
+import './kanjiDrawPad.scss';
+
 
 let canvas;
 let showHint = true;

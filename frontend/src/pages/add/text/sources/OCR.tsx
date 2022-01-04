@@ -1,7 +1,8 @@
-import {Button} from "@material-ui/core";
-import spinner from "../../../read/YomiText/Rikai/spinner.svg";
-import Editor from "react-pell";
-import * as PropTypes from "prop-types";
+import { Button } from '@material-ui/core';
+import * as PropTypes from 'prop-types';
+import Editor from 'react-pell';
+import spinner from '../../../read/YomiText/Rikai/spinner.svg';
+
 
 const onSelectOcrImages = (e, scanImages, toggleLoader) => {
     if (e.target.files && e.target.files.length > 0) {

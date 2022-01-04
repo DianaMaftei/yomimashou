@@ -1,10 +1,11 @@
 import React from 'react';
-import colors from "../../../../../style/colorConstants"
-import AddToDeckButton from "../../../../../components/buttons/addToDeckBtn/AddToDeckButton";
-import TTS from "../../../../../components/tts/TTS";
-import PopupType from "../PopupType";
-import RikaiDict from "../RikaiDictionary";
-import SearchType from "../SearchType";
+import AddToDeckButton from '../../../../../components/buttons/addToDeckBtn/AddToDeckButton';
+import TTS from '../../../../../components/tts/TTS';
+import colors from '../../../../../style/colorConstants';
+import PopupType from '../PopupType';
+import RikaiDict from '../RikaiDictionary';
+import SearchType from '../SearchType';
+
 
 const getMeaning = (meanings) => {
     let meaningString = [...new Set(meanings.flat())].join(", ")

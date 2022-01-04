@@ -1,5 +1,5 @@
-import { getAllDecks, getDeckById } from '../../service/DeckService';
 import { getCardsInDeck } from '../../service/CardService';
+import { getAllDecks, getDeckById } from '../../service/DeckService';
 
 
 export const getDecksAction = () => {

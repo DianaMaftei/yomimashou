@@ -27,7 +27,7 @@
 	Please do not change or remove any of the copyrights or links to web pages
 	when modifying any of the files. - Jon
 */
-import RikaiDict from "./RikaiDictionary";
+import RikaiDict from './RikaiDictionary';
 
 // expression to get all text nodes that are not in (RP or RT) elements
 let textNodeExpr = 'descendant-or-self::text()[not(parent::rp) and not(ancestor::rt)]';

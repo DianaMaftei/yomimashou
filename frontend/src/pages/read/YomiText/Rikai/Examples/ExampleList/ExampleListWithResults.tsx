@@ -1,5 +1,6 @@
-import React from "react";
-import Example from "../ExampleItem/ExampleItem";
+import React from 'react';
+import Example from '../ExampleItem/ExampleItem';
+
 
 const getExamplesFromResultList = (resultList) => {
     return resultList.map((result, i) => <Example

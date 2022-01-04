@@ -27,7 +27,8 @@
 	Please do not change or remove any of the copyrights or links to web pages
 	when modifying any of the files. - Jon
 */
-import SearchType from "./SearchType";
+import SearchType from './SearchType';
+
 
 let RikaiDict = (function () {
 

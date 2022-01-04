@@ -1,18 +1,18 @@
-import React from 'react';
-import './authenticate.scss';
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@material-ui/core';
 import EmailIcon from 'mdi-react/EmailIcon';
 import EyeIcon from 'mdi-react/EyeIcon';
 import EyeOffIcon from 'mdi-react/EyeOffIcon';
-import { Link, withRouter } from 'react-router-dom';
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@material-ui/core';
 import UserIcon from 'mdi-react/UserIcon';
-import AuthenticateOptions from './AuthenticateOptions';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 import ActionButton from '../../components/buttons/actionBtn/ActionButton';
-import { setEmailAction, setPasswordAction, setUsernameAction, showErrorAction, showPasswordAction } from './authenticateActions';
-import { loginUser, registerUser } from '../../service/AuthService';
 import { User } from '../../model/User';
+import { loginUser, registerUser } from '../../service/AuthService';
 import { setItem } from '../../service/LocalStorageService';
+import './authenticate.scss';
+import { setEmailAction, setPasswordAction, setUsernameAction, showErrorAction, showPasswordAction } from './authenticateActions';
+import AuthenticateOptions from './AuthenticateOptions';
 
 
 const Authenticate = ({history}) => {

@@ -1,6 +1,7 @@
-import React from "react";
-import NameListFull from "./NameListFull";
-import NameListLimited from "./NameListLimited";
+import React from 'react';
+import NameListFull from './NameListFull';
+import NameListLimited from './NameListLimited';
+
 
 class NameList extends React.Component {
 

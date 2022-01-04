@@ -1,5 +1,6 @@
-import React from "react";
-import NameItem from "./NameItem";
+import React from 'react';
+import NameItem from './NameItem';
+
 
 export default (results) => (
     <div id="name-list-full">

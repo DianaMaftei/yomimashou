@@ -1,17 +1,18 @@
-import React from "react";
-import {connect} from "react-redux";
-import RikaiLoading from './RikaiLoading';
-import RikaiKanji from './Kanji/RikaiKanji';
-import RikaiSentence from './Sentence/RikaiSentence';
-import './rikai.scss';
-import SearchType from "./SearchType";
-import RikaiWord from "./Word/RikaiWord";
-import RtkInfo from "./Kanji/RtkInfo";
-import KanjiDrawPad from "./Kanji/KanjiDrawPad/KanjiDrawPad";
-import AddToDeck from "./AddToDeck/AddToDeck";
+import React from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
-import PopupType from "./PopupType";
-import {fetchDataAction, setPopupInfoAction, updateSearchResultAction, updateShowResultAction} from "./popUpActions";
+import { connect } from 'react-redux';
+import AddToDeck from './AddToDeck/AddToDeck';
+import KanjiDrawPad from './Kanji/KanjiDrawPad/KanjiDrawPad';
+import RikaiKanji from './Kanji/RikaiKanji';
+import RtkInfo from './Kanji/RtkInfo';
+import { fetchDataAction, setPopupInfoAction, updateSearchResultAction, updateShowResultAction } from './popUpActions';
+import PopupType from './PopupType';
+import './rikai.scss';
+import RikaiLoading from './RikaiLoading';
+import SearchType from './SearchType';
+import RikaiSentence from './Sentence/RikaiSentence';
+import RikaiWord from './Word/RikaiWord';
+
 
 const mapStateToProps = (state) => ({
     ...state.popUp,

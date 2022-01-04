@@ -1,13 +1,14 @@
-import {useEffect} from 'react';
-import "./home.scss";
-import {useDispatch, useSelector} from "react-redux";
-import MasonryLayout from "./MasonryLayout/MasonryLayout";
-import 'react-image-crop/dist/ReactCrop.css';
-import Header from "../../components/header/Header";
 import PlusIcon from 'mdi-react/PlusIcon';
-import {Link} from "react-router-dom";
-import spinner from "../read/YomiText/Rikai/spinner.svg";
-import {getTextsAction, getTextsStatusesAction} from "./homeActions";
+import { useEffect } from 'react';
+import 'react-image-crop/dist/ReactCrop.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Header from '../../components/header/Header';
+import spinner from '../read/YomiText/Rikai/spinner.svg';
+import './home.scss';
+import { getTextsAction, getTextsStatusesAction } from './homeActions';
+import MasonryLayout from './MasonryLayout/MasonryLayout';
+
 
 const Home = () => {
     const dispatch = useDispatch();

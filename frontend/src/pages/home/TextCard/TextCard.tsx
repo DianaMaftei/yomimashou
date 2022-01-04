@@ -1,14 +1,14 @@
-import React from 'react';
+import CardContent from '@material-ui/core//CardContent/CardContent';
 import Card from '@material-ui/core/Card/Card';
 import CardActionArea from '@material-ui/core/CardActionArea/CardActionArea';
-import TextInfo from '../../../components/textInfo/TextInfo';
-import TextCardBottom from './TextCardBottom/TextCardBottom';
-import CardContent from '@material-ui/core//CardContent/CardContent';
-import Typography from '@material-ui/core/Typography/Typography';
 import CardActions from '@material-ui/core/CardActions/CardActions';
 import Divider from '@material-ui/core/Divider/Divider';
-import './textCard.scss';
+import Typography from '@material-ui/core/Typography/Typography';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import TextInfo from '../../../components/textInfo/TextInfo';
+import './textCard.scss';
+import TextCardBottom from './TextCardBottom/TextCardBottom';
 
 
 const TextCard = ({text, status}: TextCardProps) => {

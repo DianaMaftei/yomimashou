@@ -1,19 +1,13 @@
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Slide from '@material-ui/core/Slide';
+import Kuroshiro from 'kuroshiro';
+import KuromojiAnalyzer from 'kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min';
 import React from 'react';
 import { connect } from 'react-redux';
-import RikaiPopUp from './Rikai/Rikai';
-import './Rikai/rikai.scss';
-import './yomi.scss';
-import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from './Rikai/RikaiTextParser';
-import KuromojiAnalyzer from 'kuroshiro-analyzer-kuromoji/dist/kuroshiro-analyzer-kuromoji.min';
-import Kuroshiro from 'kuroshiro';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { filterTextFuriganaByKanjiCategory } from './TextActions/furigana/FuriganaFilterByKanjiCategory';
-import SearchType from './Rikai/SearchType';
-import TextInfo from '../../../components/textInfo/TextInfo';
-import TextActions from './TextActions/TextActions';
-import PopupType from './Rikai/PopupType';
-import Slide from '@material-ui/core/Slide';
 import ActionButton from '../../../components/buttons/actionBtn/ActionButton';
+import TextInfo from '../../../components/textInfo/TextInfo';
+import { isAuthenticated } from '../../../service/AuthService';
+import { markTextAsRead } from '../../../service/TextService';
 import {
     setAnalyzerAction,
     setFuriganaSentenceAction,
@@ -31,8 +25,14 @@ import {
     setPopupInfoAction,
     updateSearchResultAction
 } from './Rikai/popUpActions';
-import { markTextAsRead } from '../../../service/TextService';
-import { isAuthenticated } from '../../../service/AuthService';
+import PopupType from './Rikai/PopupType';
+import RikaiPopUp from './Rikai/Rikai';
+import './Rikai/rikai.scss';
+import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from './Rikai/RikaiTextParser';
+import SearchType from './Rikai/SearchType';
+import { filterTextFuriganaByKanjiCategory } from './TextActions/furigana/FuriganaFilterByKanjiCategory';
+import TextActions from './TextActions/TextActions';
+import './yomi.scss';
 
 
 const mapStateToProps = (state) => ({

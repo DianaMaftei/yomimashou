@@ -1,8 +1,8 @@
-import React from "react";
-import { shallow } from "enzyme";
-import deepFreeze from "deepfreeze";
-import { getResult, Rikai } from "./Rikai";
-import SearchType from "./SearchType";
+import deepFreeze from 'deepfreeze';
+import { shallow } from 'enzyme';
+import { getResult, Rikai } from './Rikai';
+import SearchType from './SearchType';
+
 
 describe("Rikai", () => {
     let props;

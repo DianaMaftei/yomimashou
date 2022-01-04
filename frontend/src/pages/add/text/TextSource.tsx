@@ -1,10 +1,10 @@
-import './textSource.scss';
-import TextSourceTabs from './TextSourceTabs';
+import { useDispatch, useSelector } from 'react-redux';
+import { scanImagesAction, setSubtitlesAction, toggleLoaderAction } from '../addActions';
 import OCR from './sources/OCR';
 import Subtitles from './sources/Subtitles';
 import TextBox from './sources/TextBox';
-import { useDispatch, useSelector } from 'react-redux';
-import { scanImagesAction, setSubtitlesAction, toggleLoaderAction } from '../addActions';
+import './textSource.scss';
+import TextSourceTabs from './TextSourceTabs';
 
 
 const TextSource = ({setTabValue, onChangeText, onEditorClick, tabValue, text}: TextSourceProps) => {

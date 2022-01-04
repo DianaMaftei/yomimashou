@@ -1,7 +1,7 @@
-import { studyApiUrl } from '../AppUrl';
 import { AxiosResponse } from 'axios';
-import { http } from './http';
+import { studyApiUrl } from '../AppUrl';
 import { Card } from '../model/Card';
+import { http } from './http';
 
 
 export const getCardsInDeck = (deckId: number): Promise<AxiosResponse<Card[]>> => {

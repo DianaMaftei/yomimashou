@@ -1,4 +1,5 @@
-import { JLPTlevels } from "./KanjiByCategory";
+import { JLPTlevels } from './KanjiByCategory';
+
 
 export const filterTextFuriganaByKanjiCategory = (text, kanjiLevels) => {
     const matchRubyTags = /(?=<ruby>)(.*?)(?:<\/ruby>)/g;

@@ -1,7 +1,8 @@
-import React from "react";
-import BackButton from "../../../../../components/buttons/backBtn/BackButton";
-import colors from "../../../../../style/colorConstants";
-import PopupType from "../PopupType";
+import React from 'react';
+import BackButton from '../../../../../components/buttons/backBtn/BackButton';
+import colors from '../../../../../style/colorConstants';
+import PopupType from '../PopupType';
+
 
 const getHighlightedStory = (story: string, keyword: string) => {
     let indexOfKeyword = story.toLowerCase().indexOf(keyword.toLowerCase());

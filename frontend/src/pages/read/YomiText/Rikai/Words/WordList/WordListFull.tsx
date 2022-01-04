@@ -1,5 +1,6 @@
-import React from "react";
-import WordItem from "../WordItem/WordItem";
+import React from 'react';
+import WordItem from '../WordItem/WordItem';
+
 
 export default (results, showExamples) => (
     <div id="word-list-full">

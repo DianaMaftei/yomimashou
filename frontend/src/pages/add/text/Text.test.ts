@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
-import Text from './Text';
 import Editor from 'react-pell';
+import Text from './Text';
 
 
 describe('Text', () => {

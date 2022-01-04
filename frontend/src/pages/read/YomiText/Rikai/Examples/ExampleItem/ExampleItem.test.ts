@@ -1,6 +1,6 @@
-import React from "react";
-import { shallow } from "enzyme";
-import ExampleItem from "./ExampleItem";
+import { shallow } from 'enzyme';
+import ExampleItem from './ExampleItem';
+
 
 describe("ExampleItem", () => {
     let props;

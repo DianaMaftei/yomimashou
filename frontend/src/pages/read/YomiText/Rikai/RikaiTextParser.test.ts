@@ -1,4 +1,5 @@
-import {isInline} from "./RikaiTextParser";
+import { isInline } from './RikaiTextParser';
+
 
 jest.mock('./RikaiDictionary', () => jest.fn());
 

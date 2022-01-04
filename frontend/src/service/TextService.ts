@@ -1,7 +1,7 @@
-import { http } from './http';
-import { readApiUrl } from '../AppUrl';
 import { AxiosResponse } from 'axios';
+import { readApiUrl } from '../AppUrl';
 import { Text } from '../model/Text';
+import { http } from './http';
 
 
 export const getAllTexts = (): Promise<AxiosResponse<Text[]>> => {

@@ -1,5 +1,5 @@
-import React from 'react';
 import LabelOutlineIcon from 'mdi-react/LabelOutlineIcon';
+import React from 'react';
 
 
 const TextCardBottom = ({text, status}: TextCardBottomProps) => (

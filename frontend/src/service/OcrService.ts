@@ -1,6 +1,6 @@
-import { http } from './http';
-import { ocrApiUrl } from '../AppUrl';
 import { AxiosResponse } from 'axios';
+import { ocrApiUrl } from '../AppUrl';
+import { http } from './http';
 
 
 export const scanImages = (formData: FormData): Promise<AxiosResponse<any>> => {

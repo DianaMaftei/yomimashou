@@ -1,8 +1,9 @@
+import Button from '@material-ui/core/Button';
+import axios from 'axios';
 import React from 'react';
-import FuriganaOptions from "./furigana/FuriganaOptions";
-import "./textActions.scss";
-import Button from "@material-ui/core/Button";
-import axios from "axios";
+import FuriganaOptions from './furigana/FuriganaOptions';
+import './textActions.scss';
+
 
 const dldMp3 = (textContent, textTitle) => {
     axios.post('https://talkify.net/api/speech/v1/?key=' + process.env.REACT_APP_TALKIFY_KEY, {

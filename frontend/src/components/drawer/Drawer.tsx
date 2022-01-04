@@ -1,15 +1,16 @@
-import "./drawer.scss";
-import logo from "./appLogo.svg";
-import colors from "../../style/colorConstants";
-import ViewDashboardIcon from 'mdi-react/ViewDashboardIcon';
-import AddCircleOutlineIcon from 'mdi-react/AddCircleOutlineIcon';
-import BrainIcon from 'mdi-react/BrainIcon';
-import AssessmentIcon from 'mdi-react/AssessmentIcon';
-import SettingsIcon from 'mdi-react/SettingsIcon';
-import { Link, withRouter } from 'react-router-dom';
-import DrawerLink from "./DrawerLink";
 import { History } from 'history';
+import AddCircleOutlineIcon from 'mdi-react/AddCircleOutlineIcon';
+import AssessmentIcon from 'mdi-react/AssessmentIcon';
+import BrainIcon from 'mdi-react/BrainIcon';
+import SettingsIcon from 'mdi-react/SettingsIcon';
+import ViewDashboardIcon from 'mdi-react/ViewDashboardIcon';
+import { Link, withRouter } from 'react-router-dom';
 import { isAuthenticated } from '../../service/AuthService';
+import colors from '../../style/colorConstants';
+import logo from './appLogo.svg';
+import './drawer.scss';
+import DrawerLink from './DrawerLink';
+
 
 export const showDrawer = (event: Event) => {
     event.stopPropagation();

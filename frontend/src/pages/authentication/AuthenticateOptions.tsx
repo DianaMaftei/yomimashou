@@ -1,9 +1,9 @@
 import FacebookIcon from 'mdi-react/FacebookIcon';
-import colors from '../../style/colorConstants';
 import GoogleIcon from 'mdi-react/GoogleIcon';
 import React from 'react';
-import './authenticateOptions.scss';
 import IconButton from '../../components/buttons/iconBtn/IconButton';
+import colors from '../../style/colorConstants';
+import './authenticateOptions.scss';
 
 
 const AuthenticateOptions = ({isLogin}: AuthenticateOptionsProps) => (

@@ -1,5 +1,5 @@
-import './practice.scss';
 import colors from '../../style/colorConstants';
+import './practice.scss';
 
 
 export const setClientPositions = () => {

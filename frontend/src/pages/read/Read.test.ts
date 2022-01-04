@@ -1,8 +1,8 @@
-import React from "react";
-import { shallow } from "enzyme";
-import '../../__mocks__/xhr-mock.js';
+import { shallow } from 'enzyme';
 import '../../__mocks__/LocalStorageMock.js';
-import { Read } from "./Read";
+import '../../__mocks__/xhr-mock.js';
+import { Read } from './Read';
+
 
 describe("Read", () => {
     let props;

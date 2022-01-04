@@ -1,20 +1,14 @@
 import React from 'react';
-import "./practice.scss";
-import Header from "../../components/header/Header";
-import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
-import Summary from "./summary/Summary";
-import {
-    getBackgroundColors,
-    handleTouchEnd,
-    handleTouchMove,
-    handleTouchStart,
-    performAnimation,
-    setClientPositions
-} from "./PracticeAnimation";
-import StackCard from "./StackCard";
-import {getDueCardsAction, reviewCardAction, toggleSummaryAction} from "./practiceActions";
-import {getDeckAction} from "../decks/decksActions";
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import Header from '../../components/header/Header';
+import { getDeckAction } from '../decks/decksActions';
+import './practice.scss';
+import { getDueCardsAction, reviewCardAction, toggleSummaryAction } from './practiceActions';
+import { getBackgroundColors, handleTouchEnd, handleTouchMove, handleTouchStart, performAnimation, setClientPositions } from './PracticeAnimation';
+import StackCard from './StackCard';
+import Summary from './summary/Summary';
+
 
 const mapStateToProps = (state) => ({
     deck: state.decks.deck,

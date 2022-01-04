@@ -1,7 +1,7 @@
-import { http } from './http';
-import { studyApiUrl } from '../AppUrl';
 import { AxiosResponse } from 'axios';
+import { studyApiUrl } from '../AppUrl';
 import { Deck } from '../model/Deck';
+import { http } from './http';
 
 
 export const getAllDecks = (): Promise<AxiosResponse<Deck[]>> => {

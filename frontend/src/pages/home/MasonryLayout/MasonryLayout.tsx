@@ -1,7 +1,7 @@
 import React from 'react';
 import MasonryInfiniteScroller from 'react-masonry-infinite';
-import TextCard from "../TextCard/TextCard";
-import * as PropTypes from "prop-types";
+import TextCard from '../TextCard/TextCard';
+
 
 const MasonryLayout = ({ texts, hasMore, loadMore, textsStatuses}: MasonryLayoutProps) => {
 

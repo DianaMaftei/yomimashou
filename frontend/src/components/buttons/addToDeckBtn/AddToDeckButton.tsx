@@ -1,6 +1,6 @@
-import React from 'react';
-import StyleIcon from 'mdi-react/StyleIcon';
 import AddIcon from 'mdi-react/AddIcon';
+import StyleIcon from 'mdi-react/StyleIcon';
+import React from 'react';
 import './addToDeckBtn.scss';
 
 

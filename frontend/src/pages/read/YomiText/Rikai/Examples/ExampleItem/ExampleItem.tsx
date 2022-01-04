@@ -1,7 +1,5 @@
-import React from "react";
-import TTS from "../../../../../../components/tts/TTS";
-import CardItemOrigin from "../../AddToDeck/CardItemOrigin";
-import Kuroshiro from "kuroshiro";
+import React from 'react';
+import TTS from '../../../../../../components/tts/TTS';
 
 // const getCardItem = (example) => {
 //   let sentenceContainsKanji = Kuroshiro.Util.hasKanji(example.sentence);

@@ -1,12 +1,12 @@
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import 'normalize.css';
-import './style/index.scss';
-import registerServiceWorker from './registerServiceWorker';
-import state from './State';
-import Routes from './Routes';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import Drawer, { closeDrawer } from './components/drawer/Drawer';
+import registerServiceWorker from './registerServiceWorker';
+import Routes from './Routes';
+import state from './State';
+import './style/index.scss';
 
 
 const render = () => {

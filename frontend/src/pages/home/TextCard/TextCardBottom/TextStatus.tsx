@@ -1,7 +1,7 @@
-import React from 'react';
 import BookIcon from 'mdi-react/BookIcon';
-import BookOpenPageIcon from 'mdi-react/BookOpenPageVariantIcon';
 import BookOpenOutlineIcon from 'mdi-react/BookOpenOutlineIcon';
+import BookOpenPageIcon from 'mdi-react/BookOpenPageVariantIcon';
+import React from 'react';
 
 
 const TextStatus = ({status}: TextStatusProps) => {

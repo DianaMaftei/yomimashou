@@ -1,5 +1,5 @@
-import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
+import React from 'react';
 import './header.scss';
 import TopBar from './TopBar';
 

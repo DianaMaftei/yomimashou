@@ -1,6 +1,6 @@
 // @ts-ignore
-import Editor from 'react-pell';
 import React from 'react';
+import Editor from 'react-pell';
 
 
 const TextBox = ({content, onClick, onChange}: TextBoxProps) => {

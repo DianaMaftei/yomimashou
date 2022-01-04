@@ -1,10 +1,10 @@
-import React from "react";
-import { shallow } from "enzyme";
+import deepFreeze from 'deepfreeze';
+import { shallow } from 'enzyme';
 import '../../../__mocks__/xhr-mock.js';
-import { YomiText } from "./YomiText";
-import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from "./Rikai/RikaiTextParser";
-import deepFreeze from "deepfreeze";
-import SearchType from "./Rikai/SearchType";
+import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from './Rikai/RikaiTextParser';
+import SearchType from './Rikai/SearchType';
+import { YomiText } from './YomiText';
+
 
 jest.mock('./Rikai/RikaiTextParser', () => ({
     highlightMatch: jest.fn(),

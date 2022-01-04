@@ -1,9 +1,9 @@
+import { TextField } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import TextSource from './TextSource';
-import ImageUpload from '../image-upload/ImageUpload';
 import { setSourceTabValueAction } from '../addActions';
-import { TextField } from '@material-ui/core';
+import ImageUpload from '../image-upload/ImageUpload';
+import TextSource from './TextSource';
 
 
 const Text = ({text, title, setTitle, removePlaceholder, setText}: TextProps) => {

@@ -1,6 +1,6 @@
-import React from 'react';
 import MenuIcon from 'mdi-react/MenuIcon';
 import MoreVertIcon from 'mdi-react/MoreVertIcon';
+import React from 'react';
 import colors from '../../style/colorConstants';
 import BackButton from '../buttons/backBtn/BackButton';
 import { showDrawer } from '../drawer/Drawer';

@@ -1,12 +1,12 @@
-import React from 'react';
-import "./deck.scss";
-import FilterIcon from 'mdi-react/FilterIcon';
-import EditIcon from 'mdi-react/EditIcon';
 import DeleteIcon from 'mdi-react/DeleteIcon';
-import colors from "../../../style/colorConstants";
-import DeckMasteryIndicator from "./deck-mastery-indicator/DeckMasteryIndicator";
-import {Link} from "react-router-dom";
-import * as PropTypes from "prop-types";
+import EditIcon from 'mdi-react/EditIcon';
+import FilterIcon from 'mdi-react/FilterIcon';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import colors from '../../../style/colorConstants';
+import DeckMasteryIndicator from './deck-mastery-indicator/DeckMasteryIndicator';
+import './deck.scss';
+
 
 const getFontSize = (textLength) => {
     const baseSize = 16

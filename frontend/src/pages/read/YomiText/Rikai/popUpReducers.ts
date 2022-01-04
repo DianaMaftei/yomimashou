@@ -1,5 +1,6 @@
-import SearchType from "./SearchType";
-import PopupType from "./PopupType";
+import PopupType from './PopupType';
+import SearchType from './SearchType';
+
 
 const defaultPagination = {
   first: false,

@@ -1,15 +1,11 @@
-import {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import Header from '../../components/header/Header';
+import './read.scss';
+import { getTextByIdAction, parseTextWordsAction, resetDictionariesAction, toggleTextActionsMenuAction } from './readActions';
 import YomiText from './YomiText/YomiText';
-import "./read.scss";
-import Header from "../../components/header/Header";
-import {withRouter} from "react-router-dom";
-import {
-    getTextByIdAction,
-    parseTextWordsAction,
-    resetDictionariesAction,
-    toggleTextActionsMenuAction
-} from "./readActions";
+
 
 const Read = ({match, history}: ReadProps) => {
     const {id} = match.params;

@@ -1,10 +1,11 @@
+import { History } from 'history';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Tags from './Tags';
-import TextContainer from './text/Text';
-import Header from '../../components/header/Header';
 import ActionButton from '../../components/buttons/actionBtn/ActionButton';
+import Header from '../../components/header/Header';
+import { Text } from '../../model/Text';
+import { createText } from '../../service/TextService';
 import './add.scss';
 import {
     resetTextAction,
@@ -14,9 +15,8 @@ import {
     setTextTitleAction,
     togglePlaceholderAction
 } from './addActions';
-import { createText } from '../../service/TextService';
-import { History } from 'history';
-import { Text } from '../../model/Text';
+import Tags from './Tags';
+import TextContainer from './text/Text';
 
 
 const stripRubyAndFormatting = (html: string) => {

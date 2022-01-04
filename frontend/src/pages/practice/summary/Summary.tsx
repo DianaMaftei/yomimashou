@@ -1,12 +1,13 @@
-import React from 'react';
-import "./summary.scss";
-import CardContent from "@material-ui/core/CardContent/CardContent";
-import CardActions from "@material-ui/core/CardActions/CardActions";
-import Card from "@material-ui/core/Card/Card";
-import DoneIcon from 'mdi-react/DoneIcon';
+import Card from '@material-ui/core/Card/Card';
+import CardActions from '@material-ui/core/CardActions/CardActions';
+import CardContent from '@material-ui/core/CardContent/CardContent';
 import CloseIcon from 'mdi-react/CloseIcon';
+import DoneIcon from 'mdi-react/DoneIcon';
 import StarIcon from 'mdi-react/StarIcon';
-import ActionButton from "../../../components/buttons/actionBtn/ActionButton";
+import React from 'react';
+import ActionButton from '../../../components/buttons/actionBtn/ActionButton';
+import './summary.scss';
+
 
 const Summary = ({summary, practiceMore}: SummaryProps) => {
     if (!summary.show) {

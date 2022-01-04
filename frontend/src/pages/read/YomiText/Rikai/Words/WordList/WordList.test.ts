@@ -1,6 +1,6 @@
-import React from "react";
-import { shallow } from "enzyme";
-import WordList from "./WordList";
+import { shallow } from 'enzyme';
+import WordList from './WordList';
+
 
 describe("WordList", () => {
     let props;

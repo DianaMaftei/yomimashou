@@ -1,5 +1,5 @@
-import { getTextById, parseTextNames, parseTextWords } from '../../service/TextService';
 import { Text } from '../../model/Text';
+import { getTextById, parseTextNames, parseTextWords } from '../../service/TextService';
 
 
 export const getTextByIdAction = (id: number) => {

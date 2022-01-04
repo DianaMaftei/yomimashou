@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
-import {FormControl, MenuItem, Select, TextField} from "@material-ui/core";
-import axios from "axios";
-import {studyApiUrl} from "../../../../../AppUrl";
-import BackButton from "../../../../../components/buttons/backBtn/BackButton";
-import "./addToDeck.scss";
-import InputLabel from "@material-ui/core/InputLabel";
-import SearchType from "../SearchType";
-import PopupType from "../PopupType";
-import ActionButton from "../../../../../components/buttons/actionBtn/ActionButton";
+import { FormControl, MenuItem, Select, TextField } from '@material-ui/core';
+import InputLabel from '@material-ui/core/InputLabel';
+import axios from 'axios';
+import React, { Component } from 'react';
+import { studyApiUrl } from '../../../../../AppUrl';
+import ActionButton from '../../../../../components/buttons/actionBtn/ActionButton';
+import BackButton from '../../../../../components/buttons/backBtn/BackButton';
 import { getAllDecks } from '../../../../../service/DeckService';
+import PopupType from '../PopupType';
+import SearchType from '../SearchType';
+import './addToDeck.scss';
+
 
 class AddToDeck extends Component {
     constructor(props) {
