@@ -50,8 +50,8 @@ class AddToDeck extends Component {
         let deckId = this.state.deckId;
         let deckName = this.state.deckName;
 
-        const url = deckId !== 'NEW' ? studyApiUrl + '/api/study/card/add/' + deckId :
-            studyApiUrl + '/api/study/card/add?deckName=' + deckName;
+        const url = deckId !== 'NEW' ? studyApiUrl + '/study/card/add/' + deckId :
+            studyApiUrl + '/study/card/add?deckName=' + deckName;
 
         axios.post(url, {
             kana: "" + this.state.item.kana,

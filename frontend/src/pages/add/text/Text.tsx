@@ -1,5 +1,4 @@
 import { TextField } from '@material-ui/core';
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSourceTabValueAction } from '../addActions';
 import ImageUpload from '../image-upload/ImageUpload';

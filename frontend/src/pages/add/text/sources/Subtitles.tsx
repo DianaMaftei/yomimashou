@@ -1,6 +1,5 @@
 import { Button, TextField } from '@material-ui/core';
 import * as PropTypes from 'prop-types';
-import React from 'react';
 
 
 const onSelectFile = (e, onChangeText) => {

@@ -1,5 +1,3 @@
-// @ts-ignore
-import React from 'react';
 import Editor from 'react-pell';
 
 
