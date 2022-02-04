@@ -1,3 +1,6 @@
+import { User } from './User';
+
+
 export type Text = {
     id: number;
     title: string;
@@ -6,5 +9,7 @@ export type Text = {
     imageFileName: string;
     tags: string[];
     kanjiCountByLevel: Map<string, number>;
-    characterCount: number
+    characterCount: number;
+    creationDate: Date;
+    createdBy: User;
 };

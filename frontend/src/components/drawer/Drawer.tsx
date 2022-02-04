@@ -17,9 +17,7 @@ export const showDrawer = (event: Event) => {
     event.preventDefault();
     const container = document.getElementById('router-container');
     if (container) {
-        container.classList.remove(...container.classList);
-        container.classList.add("router-container");
-        container.classList.add("push-effect");
+        resetClassList(container);
         container.classList.add("drawer-open");
     }
 }
@@ -28,12 +26,16 @@ export const closeDrawer = () => {
     setTimeout(function () {
         const container = document.getElementById('router-container');
         if (container) {
-            container.classList.remove(...container.classList);
-            container.classList.add("router-container");
-            container.classList.add("push-effect");
+            resetClassList(container);
         }
     }, 25);
 };
+
+const resetClassList = (container: HTMLElement) => {
+    container.classList.remove(...container.classList);
+    container.classList.add('router-container');
+    container.classList.add('push-effect');
+}
 
 const getLinkColor = (pathname: string, pageUrl: string) => {
     return pathname === pageUrl ? colors.yomiWhite : colors.yomiGray500;

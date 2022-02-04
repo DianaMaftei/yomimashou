@@ -1,11 +1,11 @@
 import CardMedia from '@material-ui/core/CardMedia/CardMedia';
-import React from 'react';
 import { readApiUrl } from '../../AppUrl';
+import { Text } from '../../model/Text';
 import './textInfo.scss';
 
 
 const TextInfo = ({text}: TextInfoProps) => {
-    if(!text) {
+    if (!text) {
         return <div/>;
     }
 
@@ -41,7 +41,7 @@ const TextInfo = ({text}: TextInfoProps) => {
 };
 
 type TextInfoProps = {
-    text: object
+    text: Text
 }
 
 export default TextInfo;

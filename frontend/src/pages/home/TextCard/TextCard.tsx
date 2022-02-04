@@ -4,15 +4,15 @@ import CardActionArea from '@material-ui/core/CardActionArea/CardActionArea';
 import CardActions from '@material-ui/core/CardActions/CardActions';
 import Divider from '@material-ui/core/Divider/Divider';
 import Typography from '@material-ui/core/Typography/Typography';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import TextInfo from '../../../components/textInfo/TextInfo';
+import { Text } from '../../../model/Text';
 import './textCard.scss';
 import TextCardBottom from './TextCardBottom/TextCardBottom';
 
 
 const TextCard = ({text, status}: TextCardProps) => {
-    if(!text) {
+    if (!text) {
         return <div/>;
     }
 
@@ -48,7 +48,7 @@ const TextCard = ({text, status}: TextCardProps) => {
 };
 
 type TextCardProps = {
-    text: object
+    text: Text
     status?: string
 }
 
