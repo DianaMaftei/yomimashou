@@ -30,9 +30,6 @@ public abstract class Scraper {
     @Value("${api.creator.password}")
     public String password;
 
-    // TODO consider adding Aozora Bunko scraper, as well as others
-    // TODO add schedulers for each
-
     @Autowired
     public RestTemplate restTemplate;
 
@@ -46,7 +43,7 @@ public abstract class Scraper {
         }
     }
 
-    protected abstract List<ScrapedText> getContent() throws IOException;
+    protected abstract List<ScrapedText> getContent();
 
     private void addTextToApplication(ScrapedText scrapedText) throws MalformedURLException {
 
