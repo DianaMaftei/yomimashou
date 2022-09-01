@@ -13,7 +13,7 @@
     <artifactId>creator</artifactId>
 
     <properties>
-        <jsoup.version>1.13.1</jsoup.version>
+        <jsoup.version>1.15.3</jsoup.version>
         <json.version>20200518</json.version>
     </properties>
 
