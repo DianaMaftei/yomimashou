@@ -24,8 +24,8 @@ public class ApplicationUser {
     private String email;
     @NotNull
     private String password;
-  @ElementCollection
-  private Map<Long, ProgressStatus> textsStatuses;
+    @ElementCollection
+    private Map<Long, ProgressStatus> textsStatuses;
 
     public long getId() {
         return id;

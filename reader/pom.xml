@@ -19,8 +19,8 @@
     <main.basedir>${project.parent.basedir}</main.basedir>
     <javax.ws.rs-api.version>2.1</javax.ws.rs-api.version>
     <java-jwt.version>3.4.0</java-jwt.version>
-    <kuromoji.version>0.7.7</kuromoji.version>
-    <kuromoji-jumandic>0.9.0</kuromoji-jumandic>
+    <kuromoji-ipadic>0.9.0</kuromoji-ipadic>
+    <lombok.version>1.18.2</lombok.version>
   </properties>
 
   <dependencies>
@@ -51,6 +51,10 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -79,20 +83,27 @@
       <version>${java-jwt.version}</version>
     </dependency>
 
-    <!--kuropmoji-->
+    <!--kuromoji-->
     <dependency>
-      <groupId>org.atilika.kuromoji</groupId>
-      <artifactId>kuromoji</artifactId>
-      <version>${kuromoji.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
+      <groupId>com.atilika.kuromoji</groupId>
+      <artifactId>kuromoji-ipadic</artifactId>
+      <version>${kuromoji-ipadic}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.atilika.kuromoji</groupId>
-      <artifactId>kuromoji-jumandic</artifactId>
-      <version>${kuromoji-jumandic}</version>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
     </dependency>
+
+    <!--    test-->
+      <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+          <scope>test</scope>
+      </dependency>
+
   </dependencies>
 
   <repositories>

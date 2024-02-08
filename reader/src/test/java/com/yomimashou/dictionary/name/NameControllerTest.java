@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,6 +64,6 @@ public class NameControllerTest {
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-    assertThat(response.getContentAsString().indexOf("kanji\":\"猫")).isGreaterThan(0);
+    assertThat(response.getContentAsString(StandardCharsets.UTF_8).indexOf("kanji\":\"猫")).isGreaterThan(0);
   }
 }

@@ -1,4 +1,4 @@
-package com.yomimashou.text.dictionary;
+package com.yomimashou.dictionary.name;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -8,35 +8,44 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.yomimashou.dictionary.BloomFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WordDictionary {
+public class NameDictionary {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(WordDictionary.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(NameDictionary.class);
 
-  @Value("${path.word.entries}")
+  @Value("${path.name.entries}")
   private String filePath;
 
   private Reader reader;
-  private Set<String> words;
+  private BloomFilter<String> bloomFilterForNames;
 
-  public boolean isWordInDictionary(String word) {
-    if (words == null) {
-      words = buildWordDictionary(filePath);
+  public boolean isNameInDictionary(String item) {
+    if (bloomFilterForNames == null) {
+      buildNamesDictionary(filePath);
     }
-    return words.contains(word);
+
+    return bloomFilterForNames.contains(item);
   }
 
-  private Set<String> buildWordDictionary(String filePath) {
-    String file = getFileContent(filePath);
-    return Arrays.stream(file.split("\\|")).parallel().collect(Collectors.toSet());
+  private void buildNamesDictionary(String filePath) {
+    String file = getFile(filePath);
+    Set<String> names = Arrays.stream(file.split("\\|")).parallel().collect(Collectors.toSet());
+
+    double falsePositiveProbability = 0.1;
+    int expectedNumberOfElements = names.size();
+    bloomFilterForNames = new BloomFilter<>(falsePositiveProbability, expectedNumberOfElements);
+
+    names.forEach(bloomFilterForNames::add);
   }
 
-  private String getFileContent(String fileName) {
+  private String getFile(String fileName) {
     StringBuilder result = new StringBuilder();
 
     try (BufferedReader bufferedReader = new BufferedReader(getReader(fileName))) {
@@ -45,7 +54,7 @@ public class WordDictionary {
         result.append(line);
       }
     } catch (IOException e) {
-      LOGGER.error("Could not read from file: " + fileName, e);
+      LOGGER.error("Could not get file " + fileName, e);
     }
 
     return result.toString();

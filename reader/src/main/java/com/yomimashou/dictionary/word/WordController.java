@@ -22,14 +22,6 @@ public class WordController {
     this.wordService = wordService;
   }
 
-  @GetMapping
-  public Page<Word> getByReadingElemOrKanjiElem(@RequestParam("searchItem") final String searchItem, final Pageable pageable) {
-    if (searchItem.isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing search item");
-    }
-    return wordService.getByReadingElemOrKanjiElem(searchItem.split(","), pageable);
-  }
-
   @GetMapping(value = "/byStartingKanji")
   public Page<Word> getByStartingKanji(@RequestParam("searchItem") final String searchItem, final Pageable pageable) {
     if (searchItem.isEmpty()) {

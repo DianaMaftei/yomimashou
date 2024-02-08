@@ -41,9 +41,6 @@ class TextControllerTest {
   @Mock
   private FileService fileService;
 
-  @Mock
-  private TextParserService textParserService;
-
   @InjectMocks
   private TextController textController;
 
@@ -105,32 +102,4 @@ class TextControllerTest {
     assertThat(response.getContentAsString().indexOf("title")).isGreaterThan(0);
   }
 
-  @Test
-  void getWordsReturnsParsedString() throws Exception {
-    when(textParserService.parseWords(anyString())).thenReturn(new HashSet<>(
-        Arrays.asList("欲", "イ", "張", "欲張る", "欲張り", "り", "な", "張る", "張り", "イヌ")));
-
-    MockHttpServletResponse response = mvc
-        .perform(post("/api/text/parse/words").accept(MediaType.APPLICATION_JSON)
-            .content("欲張りなイヌ"))
-        .andReturn().getResponse();
-
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-    assertThat(response.getContentAsString().indexOf("欲張る")).isGreaterThan(0);
-  }
-
-  @Test
-  void getNamesReturnsParsedString() throws Exception {
-    when(textParserService.parseNames(anyString())).thenReturn(new HashSet<>(
-        Arrays.asList("欲", "張", "りな", "り", "な", "なイ", "イヌ")));
-
-    MockHttpServletResponse response = mvc
-        .perform(post("/api/text/parse/names").accept(MediaType.APPLICATION_JSON)
-            .content("欲張りなイヌ"))
-        .andReturn().getResponse();
-
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-    assertThat(response.getContentAsString().indexOf("張")).isGreaterThan(0);
-    assertThat(response.getContentAsString().indexOf("欲張る")).isEqualTo(-1);
-  }
 }

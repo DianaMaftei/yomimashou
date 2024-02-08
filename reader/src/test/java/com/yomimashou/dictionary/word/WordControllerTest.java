@@ -17,9 +17,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -28,65 +28,89 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ExtendWith(MockitoExtension.class)
 class WordControllerTest {
 
-  public static final String API_DICTIONARY_WORDS_URL = "/api/dictionary/words";
-  private MockMvc mvc;
+    public static final String API_DICTIONARY_WORDS_URL = "/api/dictionary/words";
+    private MockMvc mvc;
 
-  @Mock
-  private WordService wordService;
+    @Mock
+    private WordService wordService;
 
-  @InjectMocks
-  private WordController wordController;
+    @InjectMocks
+    private WordController wordController;
 
-  private Pageable pageable;
+    private Pageable pageable;
 
-  @BeforeEach
-  void setup() {
-    mvc = MockMvcBuilders.standaloneSetup(wordController)
-        .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-        .build();
+    @BeforeEach
+    void setup() {
+        mvc = MockMvcBuilders.standaloneSetup(wordController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
 
-    pageable = PageRequest.of(0, 10);
-  }
+        pageable = PageRequest.of(0, 10);
+    }
 
-  @Test
-  void shouldGetAListOfWordEntriesBasedOnASearchItem() throws Exception {
-    final Word word = new Word();
-    word.setKanjiElements(new HashSet<>(Arrays.asList("猫")));
-    final String searchItem = "猫";
-    when(wordService.getByReadingElemOrKanjiElem(new String[]{searchItem}, pageable))
-        .thenReturn(new PageImpl<>(Collections.singletonList(word), pageable, 1));
-    final MockHttpServletResponse response = mvc.perform(
-        get(API_DICTIONARY_WORDS_URL)
-            .param("searchItem", searchItem)
-            .param("page", "0")
-            .param("size", "10")
-            .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+    @Test
+    void getByStartingKanjiShouldGetAListOfWordsThatStartWithTheGivenKanji() throws Exception {
+        // Arrange
+        Word word = Word.builder().kanjiElements(Collections.singleton("猫舌")).build();
+        Word word2 = Word.builder().kanjiElements(Collections.singleton("猫背")).build();
+        final String searchItem = "猫";
+        when(wordService.getByStartingKanji(searchItem, pageable))
+                .thenReturn(new PageImpl<>(Arrays.asList(word, word2), pageable, 2));
 
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-    assertThat(response.getContentAsString().indexOf("kanjiElements\":[\"猫\"]")).isGreaterThan(0);
-  }
+        // Act
+        final MockHttpServletResponse response = getMockHttpServletResponse("/byStartingKanji", searchItem);
 
-  @Test
-  void shouldThrowExceptionWhenSearchItemIsNull() throws Exception {
-    final String searchItem = null;
-    final MockHttpServletResponse response = mvc.perform(
-        get(API_DICTIONARY_WORDS_URL)
-            .param("searchItem", searchItem)
-            .param("page", "0")
-            .param("size", "1")
-            .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        // Assert
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString(StandardCharsets.UTF_8).indexOf("kanjiElements\":[\"猫舌\"]")).isGreaterThan(0);
+        assertThat(response.getContentAsString(StandardCharsets.UTF_8).indexOf("kanjiElements\":[\"猫背\"]")).isGreaterThan(0);
+    }
 
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-  }
+    @Test
+    void getByContainingKanjiShouldGetAListOfWordsThatContainTheGivenKanji() throws Exception {
+        // Arrange
+        Word word = Word.builder().kanjiElements(Collections.singleton("家系")).build();
+        Word word2 = Word.builder().kanjiElements(Collections.singleton("国家独占")).build();
+        Word word3 = Word.builder().kanjiElements(Collections.singleton("愛煙家")).build();
+        final String searchItem = "家";
+        when(wordService.getByContainingKanji(searchItem, pageable))
+                .thenReturn(new PageImpl<>(Arrays.asList(word, word2, word3), pageable, 3));
 
-  @Test
-  void shouldThrowExceptionWhenSearchItemIsAnEmptyString() throws Exception {
-    final MockHttpServletResponse response = mvc.perform(
-        get(API_DICTIONARY_WORDS_URL)
-            .param("searchItem", "")
-            .param("page", "0")
-            .param("size", "1")
-            .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-  }
+        // Act
+        final MockHttpServletResponse response = getMockHttpServletResponse("/byContainingKanji", searchItem);
+
+        // Assert
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString(StandardCharsets.UTF_8).indexOf("kanjiElements\":[\"家系\"]")).isGreaterThan(0);
+        assertThat(response.getContentAsString(StandardCharsets.UTF_8).indexOf("kanjiElements\":[\"国家独占\"]")).isGreaterThan(0);
+        assertThat(response.getContentAsString(StandardCharsets.UTF_8).indexOf("kanjiElements\":[\"愛煙家\"]")).isGreaterThan(0);
+    }
+
+    @Test
+    void getByEndingKanjiShouldGetAListOfWordsThatEndWithTheGivenKanji() throws Exception {
+        // Arrange
+        Word word = Word.builder().kanjiElements(Collections.singleton("金曜日")).build();
+        Word word2 = Word.builder().kanjiElements(Collections.singleton("在りし日")).build();
+        final String searchItem = "日";
+        when(wordService.getByEndingKanji(searchItem, pageable))
+                .thenReturn(new PageImpl<>(Arrays.asList(word, word2), pageable, 2));
+
+        // Act
+        final MockHttpServletResponse response = getMockHttpServletResponse("/byEndingKanji", searchItem);
+
+        // Assert
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString(StandardCharsets.UTF_8).indexOf("kanjiElements\":[\"金曜日\"]")).isGreaterThan(0);
+        assertThat(response.getContentAsString(StandardCharsets.UTF_8).indexOf("kanjiElements\":[\"在りし日\"]")).isGreaterThan(0);
+    }
+
+    private MockHttpServletResponse getMockHttpServletResponse(String urlPath, String searchItem) throws Exception {
+        final MockHttpServletResponse response = mvc.perform(
+                get(API_DICTIONARY_WORDS_URL + urlPath)
+                        .param("searchItem", searchItem)
+                        .param("page", "0")
+                        .param("size", "10")
+                        .accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        return response;
+    }
 }

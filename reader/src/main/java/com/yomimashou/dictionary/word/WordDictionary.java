@@ -1,4 +1,4 @@
-package com.yomimashou.text.dictionary;
+package com.yomimashou.dictionary.word;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -14,36 +14,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NameDictionary {
+public class WordDictionary {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(NameDictionary.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WordDictionary.class);
 
-  @Value("${path.name.entries}")
+  @Value("${path.word.entries}")
   private String filePath;
 
   private Reader reader;
-  private BloomFilter<String> bloomFilterForNames;
+  private Set<String> words;
 
-  public boolean isNameInDictionary(String item) {
-    if (bloomFilterForNames == null) {
-      buildNamesDictionary(filePath);
+  public boolean isWordInDictionary(String word) {
+    if (words == null) {
+      words = buildWordDictionary(filePath);
     }
-
-    return bloomFilterForNames.contains(item);
+    return words.contains(word);
   }
 
-  private void buildNamesDictionary(String filePath) {
-    String file = getFile(filePath);
-    Set<String> names = Arrays.stream(file.split("\\|")).parallel().collect(Collectors.toSet());
-
-    double falsePositiveProbability = 0.1;
-    int expectedNumberOfElements = names.size();
-    bloomFilterForNames = new BloomFilter<>(falsePositiveProbability, expectedNumberOfElements);
-
-    names.forEach(bloomFilterForNames::add);
+  private Set<String> buildWordDictionary(String filePath) {
+    String file = getFileContent(filePath);
+    return Arrays.stream(file.split("\\|")).parallel().collect(Collectors.toSet());
   }
 
-  private String getFile(String fileName) {
+  private String getFileContent(String fileName) {
     StringBuilder result = new StringBuilder();
 
     try (BufferedReader bufferedReader = new BufferedReader(getReader(fileName))) {
@@ -52,7 +45,7 @@ public class NameDictionary {
         result.append(line);
       }
     } catch (IOException e) {
-      LOGGER.error("Could not get file " + fileName, e);
+      LOGGER.error("Could not read from file: " + fileName, e);
     }
 
     return result.toString();

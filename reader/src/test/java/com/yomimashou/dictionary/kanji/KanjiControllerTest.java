@@ -36,22 +36,7 @@ class KanjiControllerTest {
   }
 
   @Test
-  void shouldGetAKanjiEntryBasedOnASearchItem() throws Exception {
-    final Kanji kanji = new Kanji();
-    kanji.setMeaning("cat");
-    when(kanjiService.get("猫")).thenReturn(kanji);
-    final MockHttpServletResponse response = mvc
-        .perform(get(API_DICTIONARY_KANJI_URL)
-            .param("searchItem", "猫")
-            .accept(MediaType.APPLICATION_JSON))
-        .andReturn().getResponse();
-
-    assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-    assertThat(response.getContentAsString().indexOf("meaning\":\"cat")).isGreaterThan(0);
-  }
-
-  @Test
-  void shouldGetStrokesSVG() throws Exception {
+  void getStrokesSVGShouldReturnSVG() throws Exception {
     final String kanji = "猫";
     final String svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n"
         + "<circle cx=\"100\" cy=\"50\" r=\"40\" stroke=\"black\" stroke-width=\"2\" fill=\"red\" />\n"

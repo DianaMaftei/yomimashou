@@ -1,12 +1,6 @@
 package com.yomimashou.dictionary.word;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.yomimashou.appscommon.model.Word;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,64 +10,56 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class WordServiceTest {
 
-  @InjectMocks
-  private WordService wordService;
+    @InjectMocks
+    private WordService wordService;
 
-  @Mock
-  private WordRepository wordRepository;
+    @Mock
+    private WordRepository wordRepository;
 
-  @Test
-  void getByEqualsKanjiSearchesByFixedMatchForKanjiOrReadingElements() {
-    final String[] searchItems = {"searchItem"};
-    final List<Word> words = Collections.emptyList();
+    @Test
+    void getByStartingKanjiSearchesByKanjiOrReadingElementsStartingWithSearchItem() {
+        final List<Word> words = Collections.singletonList(Word.builder().kanjiElements(Collections.singleton("猫舌")).build());
+        when(wordRepository.findDistinctByKanjiElementsStartsWithOrderByPriority("猫", Pageable.unpaged()))
+                .thenReturn(new PageImpl<>(words));
 
-    when(wordRepository.findDistinctByKanjiElementsInOrReadingElementsIn(searchItems, searchItems,
-        Pageable.unpaged()))
-        .thenReturn(new PageImpl<>(words));
+        Page<Word> wordsPage = wordService.getByStartingKanji("猫", Pageable.unpaged());
 
-    final Page<Word> wordList = wordService.getByReadingElemOrKanjiElem(searchItems, Pageable.unpaged());
+        verify(wordRepository).findDistinctByKanjiElementsStartsWithOrderByPriority("猫", Pageable.unpaged());
+        assertThat(wordsPage.getTotalElements()).isEqualTo(words.size());
+    }
 
-    verify(wordRepository, times(1))
-        .findDistinctByKanjiElementsInOrReadingElementsIn(searchItems, searchItems,
-            Pageable.unpaged());
-  }
+    @Test
+    void getByEndingKanjiSearchesByKanjiOrReadingElementsEndingWithSearchItem() {
+        final List<Word> words = Collections.singletonList(Word.builder().kanjiElements(Collections.singleton("金曜日")).build());
+        when(wordRepository.findDistinctByKanjiElementsEndsWithOrderByPriority("日", Pageable.unpaged()))
+                .thenReturn(new PageImpl<>(words));
 
-  @Test
-  void getByStartingKanjiSearchesByKanjiOrReadingElementsStartingWithSearchItem() {
-    final List<Word> words = Collections.emptyList();
+        Page<Word> wordsPage = wordService.getByEndingKanji("日", Pageable.unpaged());
 
-    when(wordRepository.findDistinctByKanjiElementsLikeOrderByPriority("猫%", Pageable.unpaged()))
-        .thenReturn(new PageImpl<>(words));
-    final Page<Word> wordList = wordService.getByStartingKanji("猫", Pageable.unpaged());
+        verify(wordRepository).findDistinctByKanjiElementsEndsWithOrderByPriority("日", Pageable.unpaged());
+        assertThat(wordsPage.getTotalElements()).isEqualTo(words.size());
+    }
 
-    verify(wordRepository, times(1))
-        .findDistinctByKanjiElementsLikeOrderByPriority("猫%", Pageable.unpaged());
-  }
+    @Test
+    void getByContainingKanjiSearchesByKanjiOrReadingElementsContainingSearchItem() {
+        final List<Word> words = Collections.singletonList(Word.builder().kanjiElements(Collections.singleton("国家独占")).build());
+        when(wordRepository.findDistinctByKanjiElementsContainsOrderByPriority("家", Pageable.unpaged()))
+                .thenReturn(new PageImpl<>(words));
 
-  @Test
-  void getByEndingKanjiSearchesByKanjiOrReadingElementsEndingWithSearchItem() {
-    final List<Word> words = Collections.emptyList();
+        Page<Word> wordsPage = wordService.getByContainingKanji("家", Pageable.unpaged());
 
-    when(wordRepository.findDistinctByKanjiElementsLikeOrderByPriority("%猫", Pageable.unpaged()))
-        .thenReturn(new PageImpl<>(words));
-    final Page<Word> wordList = wordService.getByEndingKanji("猫", Pageable.unpaged());
-
-    verify(wordRepository, times(1))
-        .findDistinctByKanjiElementsLikeOrderByPriority("%猫", Pageable.unpaged());
-  }
-
-  @Test
-  void getByContainingKanjiSearchesByKanjiOrReadingElementsContainingSearchItem() {
-    final List<Word> words = Collections.emptyList();
-
-    when(wordRepository.findDistinctByKanjiElementsLikeOrderByPriority("%猫%", Pageable.unpaged()))
-        .thenReturn(new PageImpl<>(words));
-    final Page<Word> wordList = wordService.getByContainingKanji("猫", Pageable.unpaged());
-
-    verify(wordRepository, times(1))
-        .findDistinctByKanjiElementsLikeOrderByPriority("%猫%", Pageable.unpaged());
-  }
+        verify(wordRepository).findDistinctByKanjiElementsContainsOrderByPriority("家", Pageable.unpaged());
+        assertThat(wordsPage.getTotalElements()).isEqualTo(words.size());
+    }
 }

@@ -1,4 +1,4 @@
-package com.yomimashou.text.dictionary;
+package com.yomimashou.dictionary;
 
 /**
  * This program is free software: you can redistribute it and/or modify
