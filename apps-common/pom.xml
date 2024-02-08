@@ -53,6 +53,10 @@
       <artifactId>validation-api</artifactId>
       <version>${validation-api.version}</version>
     </dependency>
+      <dependency>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok</artifactId>
+      </dependency>
   </dependencies>
 
   <build>

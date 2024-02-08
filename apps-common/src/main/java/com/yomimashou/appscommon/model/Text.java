@@ -1,9 +1,14 @@
 package com.yomimashou.appscommon.model;
 
 import com.yomimashou.appscommon.audit.Auditable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -13,6 +18,10 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Text extends Auditable<String> {
 
   @Id
@@ -20,6 +29,7 @@ public class Text extends Auditable<String> {
   private Long id;
 
   @NotNull
+  @Column(columnDefinition = "TEXT")
   private String title;
 
   @NotNull
@@ -39,67 +49,9 @@ public class Text extends Auditable<String> {
 
   private int characterCount;
 
-  public Long getId() {
-    return id;
-  }
+  @ElementCollection
+  private Map<String, String> parsedWords;
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public void setContent(String content) {
-    this.content = content;
-  }
-
-  public List<String> getTags() {
-    return tags;
-  }
-
-  public void setTags(List<String> tags) {
-    this.tags = tags;
-  }
-
-  public String getExcerpt() {
-    return excerpt;
-  }
-
-  public void setExcerpt(String excerpt) {
-    this.excerpt = excerpt;
-  }
-
-  public Map<String, Integer> getKanjiCountByLevel() {
-    return kanjiCountByLevel;
-  }
-
-  public void setKanjiCountByLevel(Map<String, Integer> kanjiCountByLevel) {
-    this.kanjiCountByLevel = kanjiCountByLevel;
-  }
-
-  public String getImageFileName() {
-    return imageFileName;
-  }
-
-  public void setImageFileName(String imageFileName) {
-    this.imageFileName = imageFileName;
-  }
-
-  public int getCharacterCount() {
-    return characterCount;
-  }
-
-  public void setCharacterCount(int characterCount) {
-    this.characterCount = characterCount;
-  }
+  @Column(columnDefinition = "TEXT")
+  private String parsedKanji;
 }
