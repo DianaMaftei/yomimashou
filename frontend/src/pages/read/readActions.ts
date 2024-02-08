@@ -1,5 +1,5 @@
 import { Text } from '../../model/Text';
-import { getTextById, parseTextNames, parseTextWords } from '../../service/TextService';
+import { analyzeText, getTextById, parseTextNames, parseTextWords } from '../../service/TextService';
 
 
 export const getTextByIdAction = (id: number) => {
@@ -42,13 +42,6 @@ export const updateTextSelectInfoAction = (textSelectInfo: object) => {
     };
 };
 
-export const setAnalyzerAction = (analyzer: object) => {
-    return {
-        type: 'SET_ANALYZER',
-        analyzer
-    };
-};
-
 export const setFuriganaTextAction = (text: string) => {
     return {
         type: 'SET_FURIGANA_TEXT',
@@ -73,5 +66,12 @@ export const setFuriganaSentenceAction = (sentence: string) => {
 export const switchDictionaryAction = () => {
     return {
         type: 'SWITCH_DICTIONARY'
+    };
+};
+
+export const analyzeTextAction = (text: Text) => {
+    return {
+        type: 'ANALYZE_TEXT',
+        payload: analyzeText(text)
     };
 };

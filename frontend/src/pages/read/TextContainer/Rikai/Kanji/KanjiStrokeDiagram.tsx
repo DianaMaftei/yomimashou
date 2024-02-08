@@ -16,7 +16,7 @@ const KanjiStrokeDiagram = ({character, doOnClick}: KanjiStrokeDiagramProps) => 
         'element': "kanji-draw",
         "stroke": {attr: {active: "#943a51"}},
         step: 0.01,
-        "uri": readApiUrl + '/api/dictionary/kanji/svg/'
+        "uri": readApiUrl + '/dictionary/kanji/svg/'
     });
 
     return (

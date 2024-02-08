@@ -6,8 +6,8 @@ import authenticate from './pages/authentication/authenticateReducers';
 import decks from './pages/decks/decksReducers';
 import home from './pages/home/homeReducers';
 import study from './pages/practice/practiceReducers';
-import yomiText from './pages/read/readReducers';
-import popUp from './pages/read/YomiText/Rikai/popUpReducers';
+import readText from './pages/read/readReducers';
+import popUp from './pages/read/TextContainer/Rikai/popUpReducers';
 import config from './reducers/config';
 import { actionSanitizer, stateSanitizer } from './reduxDevtoolsConfig';
 
@@ -22,7 +22,7 @@ const store = createStore(combineReducers({
     add,
     imageUpload,
     home,
-    yomiText,
+    readText,
     popUp,
     config,
     authenticate,

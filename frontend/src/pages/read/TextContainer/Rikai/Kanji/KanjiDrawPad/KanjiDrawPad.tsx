@@ -50,7 +50,7 @@ function getOverlayUrl(character) {
     let hintBtn = document.getElementById("toggle-hint");
 
     if (showHint) {
-        overlay = readApiUrl + '/api/dictionary/kanji/svg/' + getKanjiCode(character) + '.svg';
+        overlay = readApiUrl + '/dictionary/kanji/svg/' + getKanjiCode(character) + '.svg';
         hintBtn.style.color = colors.yomiLightRed;
     } else {
         overlay = solidWhite;

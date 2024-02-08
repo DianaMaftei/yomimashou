@@ -1,7 +1,7 @@
 import { Button } from '@material-ui/core';
 import * as PropTypes from 'prop-types';
 import Editor from 'react-pell';
-import spinner from '../../../read/YomiText/Rikai/spinner.svg';
+import spinner from '../../../../resources/spinner.svg';
 
 
 const onSelectOcrImages = (e, scanImages, toggleLoader) => {

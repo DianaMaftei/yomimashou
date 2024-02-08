@@ -1,6 +1,5 @@
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
-import React from 'react';
 import FuriganaOptions from './furigana/FuriganaOptions';
 import './textActions.scss';
 

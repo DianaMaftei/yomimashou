@@ -4,7 +4,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Header from '../../components/header/Header';
-import spinner from '../read/YomiText/Rikai/spinner.svg';
+import spinner from '../../resources/spinner.svg';
 import './home.scss';
 import { getTextsAction, getTextsStatusesAction } from './homeActions';
 import MasonryLayout from './MasonryLayout/MasonryLayout';

@@ -12,4 +12,6 @@ export type Text = {
     characterCount: number;
     creationDate: Date;
     createdBy: User;
+    parsedWords: Map<string, string>;
+    parsedKanji: string;
 };

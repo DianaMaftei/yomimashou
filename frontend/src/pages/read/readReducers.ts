@@ -2,13 +2,13 @@ let defaultState = {
     text: {},
     words: [],
     names: [],
-    analyzer: null,
     textSelectInfo: {},
-    showTextActions: false
+    showTextActions: false,
+    analyzedText: {}
 };
 
-const yomiText = (state = defaultState, action) => {
-    switch (action.type) {
+const readText = (state = defaultState, action) => {
+    switch(action.type) {
         case 'UPDATE_TEXT_SELECT_INFO':
             return {
                 ...state,
@@ -26,11 +26,6 @@ const yomiText = (state = defaultState, action) => {
                 ...state,
                 words: [],
                 names: []
-            };
-        case 'SET_ANALYZER':
-            return {
-                ...state,
-                analyzer: action.analyzer
             };
         case 'PARSE_TEXT_WORDS_PENDING':
             return {
@@ -96,9 +91,24 @@ const yomiText = (state = defaultState, action) => {
                     furiganaTitle: action.title
                 }
             };
+        case 'ANALYZE_TEXT_FULFILLED':
+            return {
+                ...state,
+                analyzedText: action.payload.data
+            };
+        case 'ANALYZE_TEXT_REJECTED':
+            return {
+                ...state,
+                error: action.payload
+            };
+        case 'ANALYZE_TEXT_PENDING':
+            return {
+                ...state,
+                analyzedText: {}
+            };
         default:
-            return state
+            return state;
     }
 };
 
-export default yomiText;
+export default readText;

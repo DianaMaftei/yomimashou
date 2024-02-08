@@ -29,12 +29,12 @@ const getHighlightedSentence = (sentence, word) => {
     return newSentence;
 }
 
-const handleKanjiClick = (changePopup,fetchKanji, kanji) => {
-    fetchKanji([...kanji], SearchType.KANJI);
+const handleKanjiClick = (changePopup, showKanji, kanji) => {
+    showKanji([...kanji], SearchType.KANJI);
     changePopup(PopupType.KANJI)
 }
 
-const RikaiWord = ({style, result, wordExamples, changePopup, fetchKanji}: RikaiWordProps) => {
+const RikaiWord = ({style, result, wordExamples, changePopup, showKanji}: RikaiWordProps) => {
 
     return (
         <div id="rikai-window" style={style} className="elevation-lg">
@@ -46,7 +46,7 @@ const RikaiWord = ({style, result, wordExamples, changePopup, fetchKanji}: Rikai
                     {
                         result.kanji.join(", ").split("").map((currentChar, index) => {
                             if (RikaiDict.isKanji(currentChar)) {
-                                return <span key={currentChar + index} style={{color:colors.yomiLightRed}} onClick={() => handleKanjiClick(changePopup, fetchKanji, currentChar)}>{currentChar}</span>
+                                return <span key={currentChar + index} style={{color:colors.yomiLightRed}} onClick={() => handleKanjiClick(changePopup, showKanji, currentChar)}>{currentChar}</span>
                             } else {
                                 return currentChar;
                             }
@@ -88,7 +88,7 @@ type RikaiWordProps = {
     result: object
     wordExamples: Array<string>
     changePopup: any
-    fetchKanji: any
+    showKanji: any
 }
 
 export default RikaiWord;

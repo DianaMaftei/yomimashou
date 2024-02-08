@@ -16,9 +16,9 @@ export const stateSanitizer = (state) => {
         ...state,
         add: state.add.textImage ? {...state.add, textImage: '<<IMAGE_BLOB>>'} : state.add,
         image: {
-            ...state.image,
-            imageRef: state.image.imageRef ? '<<IMAGE_REF>>' : state.image.imageRef,
-            src: state.image.src ? '<<IMAGE_SRC>>' : state.image.src
+            ...state.imageUpload,
+            imageRef: state.imageUpload.imageRef ? '<<IMAGE_REF>>' : state.imageUpload.imageRef,
+            src: state.imageUpload.src ? '<<IMAGE_SRC>>' : state.imageUpload.src
         }
     }
 }

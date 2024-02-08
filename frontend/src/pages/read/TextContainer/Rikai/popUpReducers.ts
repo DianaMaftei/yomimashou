@@ -15,7 +15,7 @@ let defaultState = {
   showResult: {},
   previousSearchResult: {},
   previousShowResult: {},
-  wordExamples: {},
+  wordExamples: [],
   popupInfo: {
     position: {},
     type: PopupType.WORD,
@@ -62,7 +62,7 @@ const popUp = (state = defaultState, action) => {
     case 'FETCH_WORD_EXAMPLES_PENDING':
       return {
         ...state,
-        wordExamples: {}
+        wordExamples: []
       };
     case 'FETCH_WORD_EXAMPLES_FULFILLED':
       return {

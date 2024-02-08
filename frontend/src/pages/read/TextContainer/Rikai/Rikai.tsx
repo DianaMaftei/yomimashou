@@ -149,6 +149,18 @@ const getResultFromWordEntry = (searchTerms, results, searchType) => {
     return result;
 };
 
+const mapWord = (result) => {
+    let word = {};
+    word.kanji = result.kanjiElements;
+    word.kana = result.readingElements;
+    word.meanings = result.meanings.map(
+        meaning => meaning.glosses.replace(/\|/g, ", "));
+    word.grammar = result.meanings.filter(meaning => meaning.partOfSpeech.length > 0).map(
+        meaning => meaning.partOfSpeech.split("|")).flat();
+
+    return word;
+}
+
 const sortResultsByRelevance = (searchTerms, results) => {
     let resultList = [];
 
@@ -175,7 +187,7 @@ const getResultFromEntry = (searchResult, fetchedResult) => {
     if (fetchedResult.type === SearchType.WORD) {
         return {
             type: SearchType.WORD,
-            result: getResultFromWordEntry(searchResult.data, fetchedResult.result)
+            result: mapWord(fetchedResult.result)
         };
     }
 
@@ -256,7 +268,7 @@ export class Rikai extends React.Component {
         this.props.setPopupInfo({...this.props.popupInfo, type: popupType});
     }
 
-    fetchKanji(kanji) {
+    showKanji(kanji) {
         this.props.updateSearchResult({
             matchLen: 1,
             result: [...kanji],
@@ -294,8 +306,8 @@ export class Rikai extends React.Component {
         switch (this.props.popupInfo.type) {
             case (PopupType.WORD):
                 popUpComponent =
-                    <RikaiWord style={style} result={result.result[0]} wordExamples={this.props.wordExamples}
-                               changePopup={this.changePopupType.bind(this)} fetchKanji={this.fetchKanji.bind(this)}/>;
+                    <RikaiWord style={style} result={result.result} wordExamples={this.props.wordExamples}
+                               changePopup={this.changePopupType.bind(this)} showKanji={this.showKanji.bind(this)}/>;
                 break;
             case (PopupType.KANJI) :
                 popUpComponent =

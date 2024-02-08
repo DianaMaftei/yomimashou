@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import '../../../__mocks__/xhr-mock.js';
 import { highlightMatch, isVisible, search, tryToFindTextAtMouse } from './Rikai/RikaiTextParser';
 import SearchType from './Rikai/SearchType';
-import { YomiText } from './YomiText';
+import { TextContainer } from './TextContainer';
 
 
 jest.mock('./Rikai/RikaiTextParser', () => ({
@@ -13,19 +13,19 @@ jest.mock('./Rikai/RikaiTextParser', () => ({
     tryToFindTextAtMouse: jest.fn().mockReturnValue({ prevRangeNode: { ownerDocument: "mock value" } })
 }));
 
-describe("YomiText", () => {
+describe("TextContainer", () => {
     let props;
-    let shallowYomiText;
+    let shallowTextContainer;
 
     global.speechSynthesis = jest.fn();
 
     const wrapper = () => {
-        if (!shallowYomiText) {
-            shallowYomiText = shallow(
-                <YomiText {...props} />
+        if (!shallowTextContainer) {
+            shallowTextContainer = shallow(
+                <TextContainer {...props} />
             );
         }
-        return shallowYomiText;
+        return shallowTextContainer;
     };
 
     beforeAll(() => {
@@ -55,10 +55,10 @@ describe("YomiText", () => {
             setAnalyzer: jest.fn(() => {
             })
         };
-        shallowYomiText = undefined;
+        shallowTextContainer = undefined;
     });
 
-    it("should render YomiText component", () => {
+    it("should render TextContainer component", () => {
         expect(wrapper().find("#yomi-text").length).toBe(1);
     });
 

@@ -41,13 +41,13 @@ describe("Read", () => {
         expect(wrapper().find("#read-page").length).toBe(1);
     });
 
-    it("should contain a YomiText component", () => {
+    it("should contain a TextContainer component", () => {
         props.text = {
             content: "some text content",
             tile: "some text title"
         };
         props.getWordsForText = jest.fn();
 
-        expect(wrapper().find("Connect(YomiText)")).toHaveLength(1);
+        expect(wrapper().find("Connect(TextContainer)")).toHaveLength(1);
     });
 });

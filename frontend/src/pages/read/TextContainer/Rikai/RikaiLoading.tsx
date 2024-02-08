@@ -1,4 +1,4 @@
-import spinner from './spinner.svg';
+import spinner from '../../../../resources/spinner.svg';
 
 
 const RikaiLoading = (style) => (

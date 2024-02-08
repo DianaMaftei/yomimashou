@@ -1,8 +1,8 @@
 import deepFreeze from 'deepfreeze';
-import yomiText from './readReducers';
+import readText from './readReducers';
 
 
-describe('YomiTextReducers', function () {
+describe('ReadTextReducers', function () {
 
     const initialState = deepFreeze({
         textSelectInfo: {}
@@ -14,7 +14,7 @@ describe('YomiTextReducers', function () {
             type: 'FOO_BAR'
         });
 
-        const finalState = yomiText(initialState, action);
+        const finalState = readText(initialState, action);
 
         expect(finalState).toEqual(initialState);
     });
@@ -29,7 +29,7 @@ describe('YomiTextReducers', function () {
             textSelectInfo: textSelectInfo
         });
 
-        const finalState = yomiText(initialState, action);
+        const finalState = readText(initialState, action);
 
         expect(finalState.textSelectInfo).toEqual(textSelectInfo);
     });

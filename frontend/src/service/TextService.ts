@@ -1,6 +1,8 @@
 import { AxiosResponse } from 'axios';
 import { readApiUrl } from '../AppUrl';
+import { AnalyzedText } from '../model/AnalyzedText';
 import { Text } from '../model/Text';
+import { analyzeTextAction } from '../pages/read/readActions';
 import { http } from './http';
 
 
@@ -46,4 +48,8 @@ export const updateText = (text: Text): Promise<AxiosResponse<Text>> => {
 
 export const deleteText = (text: Text): Promise<AxiosResponse<Text>> => {
     return http.delete<Text>(`/text/${text.id}`);
+};
+
+export const analyzeText = (text: string): Promise<AxiosResponse<AnalyzedText[]>> => {
+    return http.post<any>(`${readApiUrl}/text/analyze`, text);
 };
