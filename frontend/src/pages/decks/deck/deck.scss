@@ -1,0 +1,119 @@
+.deck {
+    margin: 0 auto;
+    position: relative;
+    z-index: 1000;
+    max-width: 320px;
+    width: 90vw;
+    height: 160px;
+    list-style: none;
+    pointer-events: none;
+    padding-top: 20px;
+}
+
+.deck ul {
+    padding: 0;
+}
+
+.deck-card {
+    color: var(--yomi-white);
+    background: var(--yomi-white);
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    text-align: center;
+    overflow: hidden;
+    position: absolute;
+    opacity: 0;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: auto;
+}
+
+.card-1 {
+    background-color: var(--yomi-blue-900);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 4;
+    transform: translate3d(0px, 20px, 0px);
+}
+
+.card-2 {
+    background-color: var(--yomi-blue-700);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
+    transform: translate3d(0px, 10px, 0px);
+    width: 95%;
+    position: absolute;
+    margin-left: 2.5%;
+    text-align: center;
+}
+
+.card-3 {
+    background-color: var(--yomi-blue-500);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+    transform: translate3d(0px, 0px, 0px);
+    width: 90%;
+    position: absolute;
+    margin-left: 5%;
+    text-align: center;
+}
+
+.deck-card-top {
+    height: 30px;
+    text-align: left;
+}
+
+.deck-card-top i {
+    transform: scale(1.8,1) scaleY(-1);
+    width: 20px;
+    height: 100%;
+    margin-left: 20px;
+}
+
+.deck-card-top span {
+    margin: 10px;
+    position: relative;
+    top: 10px;
+}
+
+.deck-card-body {
+    height: 100%;
+    margin: 0 auto;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: var(--yomi-white);
+}
+
+.deck-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px 20px 20px;
+    margin-top: auto;
+}
+
+.deck-chart .recharts-wrapper {
+    z-index: 2000;
+    background-color: white;
+    border-radius: 50%;
+    right: -20px;
+    top: -10px;
+    float: right;
+}
+
+.deck-chart .recharts-sector {
+    stroke-linejoin: round;
+    stroke-width: 12px;
+}

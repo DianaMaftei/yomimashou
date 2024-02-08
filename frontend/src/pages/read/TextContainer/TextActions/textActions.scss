@@ -1,0 +1,27 @@
+#text-actions {
+    background-color: var(--yomi-dark-blue);
+    color: var(--yomi-white);
+    position: absolute;
+    top: 55px;
+    left: 0;
+    padding: 20px;
+    z-index: 3;
+    width: 100%;
+    text-align: center;
+}
+
+.text-actions-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.text-actions-buttons span, .text-actions-buttons button {
+    color: var(--yomi-white);
+    border-color: var(--yomi-white);
+    font-size: 12px;
+}
+
+#furigana-icon {
+    position: relative;
+    top: -3px;
+}

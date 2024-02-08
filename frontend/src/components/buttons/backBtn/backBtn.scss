@@ -1,0 +1,11 @@
+.back-btn {
+    height: 30px;
+    width: 30px;
+    background-color: var(--yomi-dark-blue);
+    border-radius: 50%;
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--yomi-white);
+}

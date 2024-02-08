@@ -1,0 +1,14 @@
+#action-btn {
+  text-align: center;
+  padding: 20px;
+
+  button {
+    background-color: var(--yomi-light-red);
+    color: var(--yomi-white);
+  }
+
+  button:disabled,
+  button[disabled]{
+    opacity: 0.7;
+  }
+}

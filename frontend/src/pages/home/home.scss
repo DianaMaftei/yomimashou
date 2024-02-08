@@ -1,0 +1,36 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#bricks-layout {
+    position: relative;
+    top: -50px;
+    z-index: 2;
+}
+
+#bricks-layout>div>div{
+    margin: 0 auto;
+}
+
+#add-btn {
+    margin-top: auto;
+    margin-left: auto;
+    height: 50px;
+    width: 50px;
+    background-color: var(--yomi-blue-900);
+    position: sticky;
+    position: -webkit-sticky;
+    bottom: 25px;
+    right: 25px;
+    float: right;
+    z-index: 2;
+    border-radius: 50%;
+    color: var(--yomi-white);
+    transition: top 0.3s; /* Transition effect when sliding down (and up) */
+}
+
+#add-btn .mdi-icon {
+    margin: 4px;
+}

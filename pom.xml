@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.dianamaftei</groupId>
+  <groupId>com.yomimashou</groupId>
   <artifactId>yomimashou-parent</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -16,26 +16,31 @@
     <module>apps-common</module>
     <module>creator</module>
     <module>frontend</module>
-    <module>backend</module>
+    <module>reader</module>
     <module>study</module>
+    <module>ocr</module>
   </modules>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.7.RELEASE</version>
+    <version>2.5.6</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+
     <main.basedir>${project.basedir}</main.basedir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
     <querydsl.version>4.1.4</querydsl.version>
     <junit-jupiter.version>5.4.0</junit-jupiter.version>
     <mockito.version>2.23.4</mockito.version>
     <commons-text.version>1.6</commons-text.version>
+    <jackson-databind.version>2.9.9</jackson-databind.version>
+    <validation-api.version>2.0.1.Final</validation-api.version>
   </properties>
 
   <dependencies>
@@ -50,8 +55,8 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -75,6 +80,11 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
       <version>${commons-text.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
     </dependency>
 
   </dependencies>

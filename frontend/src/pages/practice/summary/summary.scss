@@ -1,0 +1,57 @@
+#summary {
+    width: 320px;
+    height: 200px;
+    padding: 0;
+    margin: 0 auto;
+    margin-top: 100px;
+    color: var(--yomi-dark-blue);
+}
+
+.practice-results {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.practice-results .icon {
+    border: none;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.practice-results .mdi-icon {
+    position: relative;
+    top: 7px;
+    padding: 3px;
+}
+
+.icon-know {
+    background-color: #c2be16;
+    color: white;
+}
+.icon-know-well {
+    background-color: #8AC05E;
+    color: white;
+}
+
+.icon-notknow {
+    background-color: #F04A32;
+    color: white;
+}
+
+.practice-results span {
+    border-right: 1px solid var(--yomi-dark-blue);
+    width: 20vw;
+}
+
+.practice-results span:last-child {
+    border-right: none
+}
+
+.recharts-wrapper {
+    margin: 0 auto 25px;
+}
+
+.recharts-sector {
+    stroke-linejoin: round;
+    stroke-width: 7px;
+}

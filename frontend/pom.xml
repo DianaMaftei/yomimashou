@@ -6,7 +6,7 @@
     <artifactId>frontend</artifactId>
 
     <parent>
-        <groupId>com.github.dianamaftei</groupId>
+        <groupId>com.yomimashou</groupId>
         <artifactId>yomimashou-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>

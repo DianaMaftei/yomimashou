@@ -1,0 +1,325 @@
+/* this is to reset almost everything under the popup to a sane value */
+
+#rikai-window {
+    position: absolute;
+    z-index: 100;
+    background: #fbfafa;
+    top: 5px;
+    left: 5px;
+    width: auto;
+    height: auto;
+    max-width: 300px;
+    display: none;
+    border: 2px solid #e6e6e6;
+    border-radius: 5px 5px 5px 5px;
+    margin-bottom: 10px;
+}
+
+/* used for word and name definitions */
+
+#rikai-window .w-word {
+    padding: 5px;
+}
+
+#rikai-window .w-kanji {
+    font-size: 20px;
+    color: #497c7b;
+    margin-right: 0.7em;
+}
+
+#rikai-window .w-kana {
+    font-size: 14px;
+    color: #c53d62;
+    margin-right: 0.7em;
+}
+
+#rikai-window .w-grammar {
+    color: #dc9c05;
+    font-size: 12px;
+}
+
+#rikai-window .w-def {
+    font-size: 13px;
+}
+
+#rikai-window .w-def span {
+    font-weight: 700;
+    color: #1686e6;
+    cursor: pointer;
+}
+
+#rikai-window .w-type {
+    color: #f19755;
+    font-size: 11px;
+    padding: 0 10px;
+}
+
+#rikai-window .example {
+    font-size: 13px;
+    padding: 5px;
+}
+
+#rikai-window .example-btn,.add-list-btn {
+    float: right !important;
+    cursor: pointer !important;
+    color: #1686e6 !important;
+    padding: 5px 5px 0 15px !important;
+}
+
+/* used for kanji information */
+
+#rikai-window .kanji-box {
+    padding: 10px;
+}
+
+#rikai-window .k-kanji {
+    font-family: serif;
+    font-size: 48px;
+    color: #497c7b;
+    text-align: center;
+}
+
+#rikai-window .k-main-data {
+    display: inline-block;
+    padding-left: 10px;
+    margin-top: 15px;
+    min-width: 100px;
+}
+
+#rikai-window .k-main-data-line {
+    display: block;
+    font-size: 12px;
+}
+
+/* kanji: readings */
+
+/* kanji radical, grade, freq, strokes box */
+
+#rikai-window .rikai-top {
+    text-align: center;
+    height: 25px;
+    background-color: #732472;
+    line-height: 23px;
+    /*border-radius: 5px 5px 0 0;*/
+    padding-left: 5px;
+}
+
+#rikai-window .rikai-title {
+    font-size: 15px;
+    color: whitesmoke;
+    margin-right: 27px;
+    padding: 5px;
+}
+
+#rikai-window .closeBtn {
+    position: absolute;
+    right: 6px;
+    cursor: pointer;
+    height: 8px;
+    width: 8px;
+    background-color: whitesmoke;
+    padding: 4px 15px 13px 3px;
+    border-radius: 50%;
+    line-height: 11px;
+    font-weight: bold;
+    top: 2px;
+}
+
+#rikai-window .definition-dark {
+    background-color: #eeeded;
+}
+
+#rikai-window .definition-light {
+    background-color: #fbfafa;
+}
+
+#spinner {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#rikai-window .example-words-search {
+    display: flex;
+    justify-content: space-around;
+}
+
+#rikai-window .example-words-search span {
+    color: #497c7b;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#rikai-window .example-words-search .asterisk {
+    vertical-align: sub;
+}
+
+#sample-btn button {
+    height: 28px;
+    width: 36px;
+    padding-top: 2px;
+    display: flex;
+    justify-content: space-evenly;
+    border-radius: 5px;
+    background-color: white;
+}
+
+#sample-btn {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: -10px;
+    margin-bottom: 14px;
+}
+
+#sentence {
+    font-size: 20px;
+}
+
+#sentence > ruby {
+    font-size: 20px;
+}
+
+#sentence > ruby > rt {
+    display: block;
+    font-size: 50%;
+    text-align: start;
+}
+
+.rikai-display {
+    padding: 10px !important;
+    max-width: 360px;
+    min-width: 280px;
+}
+
+.rikai-word-kanji {
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 500;
+    padding-left: 20px;
+    font-family: 'Noto Serif JP', serif;
+    max-width: 79%;
+}
+
+.rikai-word-tts {
+    position: absolute;
+    top: 16px;
+}
+
+.rikai-word-kana {
+    padding-left: 24px;
+    font-size: 14px;
+}
+
+.rikai-word-grammar {
+    color: var(--yomi-gray-600);
+    font-size: 12px;
+    padding-top: 12px;
+}
+
+.rikai-word-meaning {
+    font-weight: 600;
+    color: var(--yomi-gray-800);
+}
+
+.rikai-word-examples {
+    padding-top: 20px;
+    font-size: 14px;
+    padding-left: 20px;
+}
+
+.rikai-word-examples > div{
+    padding-bottom: 10px;
+}
+
+.rikai-word-examples i {
+    position: absolute;
+    left: 8px;
+}
+
+.rikai-word-examples .example-sentence {
+    font-size: 16px;
+}
+
+.rikai-word-more-ex {
+    float: right;
+    padding: 0 20px 10px;
+    font-size: 12px;
+    text-decoration: underline;
+    text-decoration-color: var(--yomi-dark-red);
+    letter-spacing: 0.5px;
+}
+
+.carrot-down {
+    color: var(--yomi-gray-500);
+}
+
+.rikai-kanji-top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.practice-label {
+    font-size: 10px;
+    color: gray;
+    text-align: center;
+}
+
+.examples-label {
+    margin-top: 14px;
+}
+
+.view-mnemonics {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--yomi-dark-red);
+}
+
+.kanji-rtk-top {
+    display: flex;
+    height: 50px;
+}
+.kanji-rtk-top .back-btn {
+    position: absolute;
+}
+
+.kanji-rtk-title {
+    margin: 0 auto;
+}
+
+.kanji-rtk-character {
+    font-size: 30px;
+    font-weight: 500;
+    font-family: 'Noto Serif JP', serif !important;
+    color: var(--yomi-dark-red);
+}
+
+.kanji-rtk-keyword {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+.kanji-rtk ol {
+    padding-left: 20px;
+}
+
+.kanji-rtk li {
+    padding-bottom: 20px;
+}
+
+.kanji-rtk-components {
+    font-size: 14px;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 256px;
+}
+
+.rikai-loading {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+}

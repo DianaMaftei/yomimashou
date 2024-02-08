@@ -1,0 +1,13 @@
+.rubi-jlpt-levels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.rubi-jlpt-levels>label span {
+    color: var(--yomi-white);
+}
+
+.rubi-jlpt-levels label{
+    margin-left: 10px;
+}

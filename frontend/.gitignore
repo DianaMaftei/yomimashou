@@ -1,0 +1,15 @@
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Node.js
+node_modules/
+node/
+build/
+dist/
+.env
+
+### Project
+/coverage/

@@ -1,0 +1,14 @@
+.options-container {
+  text-align: center;
+  padding: 10% 3%;
+
+  #options-btns {
+    display: flex;
+    justify-content: space-evenly;
+
+    div {
+      font-weight: bold;
+      color: var(--yomi-light-red);
+    }
+  }
+}

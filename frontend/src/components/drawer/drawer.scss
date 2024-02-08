@@ -1,0 +1,105 @@
+#drawer {
+    background-color: var(--yomi-dark-blue);
+    padding: 30px 0 0 20px;
+    color: var(--yomi-gray-500);
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    width: 100%;;
+    height: 100%;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+
+    #drawer-top {
+        width: 35%;
+        max-width: 150px;
+
+        img {
+            padding-left: 10px;
+        }
+    }
+
+    #drawer-center {
+        margin-top: 20vh;
+
+        div {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+
+            span {
+                padding: 0 10px;
+            }
+        }
+    }
+
+    #drawer-bottom {
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+
+        div {
+            padding: 0 20px 0 0;
+
+            span {
+                padding: 0 10px 0 0;
+            }
+        }
+
+        .drawer-link {
+             color: var(--yomi-gray-500);
+             cursor: pointer;
+             text-decoration: none;
+
+            &:hover {
+                color: var(--yomi-gray-100);
+                text-decoration: none;
+            }
+
+            #drawer-settings {
+                display: flex;
+                align-items: center;
+            }
+         }
+    }
+}
+
+
+/*DRAWER OPEN*/
+
+.push-effect#router-container {
+    -webkit-perspective: 1500px;
+    perspective: 1500px;
+    height: 100%;
+}
+
+.push-effect #app-container {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.push-effect.drawer-open #app-container {
+    -webkit-transform: translate3d(230px, 0px, -300px);
+    transform: translate3d(230px, 0px, -300px);
+    height: 95vh;
+    overflow: hidden;
+    border-radius: 30px;
+}
+
+.push-effect.drawer-open #drawer {
+    visibility: visible;
+    -webkit-transition: -webkit-transform 0.5s;
+    transition: transform 0.5s;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+}
+
+.push-effect.drawer-open #container-overlay {
+    visibility: visible;
+}

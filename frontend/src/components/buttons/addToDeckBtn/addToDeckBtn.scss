@@ -1,0 +1,11 @@
+.add-to-deck-btn {
+    float: right;
+
+    svg:first-child {
+        transform: rotate(164deg);
+        position: relative;
+        right: -14px;
+    }
+    
+    color: var(--yomi-dark-blue);
+}

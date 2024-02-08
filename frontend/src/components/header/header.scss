@@ -1,0 +1,38 @@
+#app-header, .header, .header header {
+    position: relative;
+    z-index: initial;
+}
+
+#top-bar {
+    color: var(--yomi-white);
+    background-color: var(--yomi-dark-blue);
+    display: flex;
+    padding: 16px;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+    z-index: 3;
+}
+
+#header-rectangle {
+    height: 60px;
+    background: var(--yomi-dark-blue);
+}
+
+#header-oval {
+    margin-top: -60px;
+    height: 120px;
+    background: var(--yomi-dark-blue);
+    border-radius: 700px / 100px;
+    width: 102%;
+    margin-left: -1%;
+}
+
+#header-text {
+    position: absolute;
+    top: 70px;
+    text-align: center;
+    width: 100%;
+    font-size: 20px;
+    padding: 0 20px;
+}

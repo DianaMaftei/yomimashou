@@ -1,0 +1,86 @@
+#add-page {
+    height: 100%;
+}
+
+#add-page .MuiInputBase-input {
+    border-bottom: 2px solid var(--yomi-dark-blue);
+}
+
+.add-text-container {
+    padding: 50px;
+}
+
+.ql-toolbar {
+    box-shadow: 0 1px 10px rgba(0, 0, 0, .1);
+    text-align: center;
+}
+
+.ql-container {
+    border-radius: 0 0 5px 5px;
+}
+
+.add-action-footer {
+    margin-top: 50px;
+}
+
+.add-action-buttons {
+    margin: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.add-text-series {
+   margin-bottom: 20px;
+}
+
+.chips-list {
+    padding: 20px 0;
+}
+
+.chips-list .MuiChip-outlinedPrimary {
+    color: var(--yomi-dark-blue);
+    border: 1px solid var(--yomi-dark-blue);
+}
+
+.chips-list .MuiChip-deleteIconOutlinedColorPrimary {
+    color: var(--yomi-dark-blue);
+}
+
+#tags .MuiFormControl-root {
+    width: 70%;
+}
+
+#add-tags-btn {
+    float: right;
+}
+
+.tag-chip {
+    margin: 5px 5px 0 0;
+}
+
+.pell-content {
+    border: 2px solid var(--yomi-dark-blue);
+    border-radius: 5px;
+}
+
+#default-content {
+    color: lightgray;
+}
+
+#text-source .text-source-tabs button:focus {
+    outline: none;
+}
+
+.MuiTabs-scrollable .PrivateTabIndicator-colorSecondary-3 {
+    background-color: var(--yomi-dark-blue);
+}
+
+#add-action-btn {
+    background-color: var(--yomi-dark-blue);
+    color: var(--yomi-white);
+}
+
+#add-action-btn.Mui-disabled {
+    background-color: var(--yomi-gray-300);
+    color: var(--yomi-light-black);
+}
