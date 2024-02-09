@@ -278,6 +278,15 @@ public class KanjiCategoriesService {
         return textKanjiCountByCategory;
     }
 
+    public String getJlptLevel(final Character kanji) {
+        return kanjiByCategory.entrySet().stream()
+                .filter(entry -> entry.getKey().startsWith("N"))
+                .filter(entry -> entry.getValue().contains(kanji))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null);
+    }
+
     private boolean isCharacterAKanji(char character) {
         return KANJI_BLOCKS.contains(Character.UnicodeBlock.of(character));
     }

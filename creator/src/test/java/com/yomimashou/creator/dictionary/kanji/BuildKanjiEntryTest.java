@@ -3,8 +3,10 @@ package com.yomimashou.creator.dictionary.kanji;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.when;
 
 import com.yomimashou.appscommon.model.Kanji;
+import com.yomimashou.appscommon.service.KanjiCategoriesService;
 import com.yomimashou.creator.dictionary.kanji.kanjidicXMLmodels.Character;
 import com.yomimashou.creator.dictionary.kanji.kanjidicXMLmodels.Codepoint;
 import com.yomimashou.creator.dictionary.kanji.kanjidicXMLmodels.CpValue;
@@ -33,10 +35,17 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class BuildKanjiEntryTest {
 
   private KanjiEntriesFromXMLToPOJO kanjiEntriesFromXMLToPOJO;
+
+  @Mock
+  private KanjiCategoriesService kanjiCategoriesService;
 
   @BeforeEach
   void setUp() {
@@ -49,7 +58,7 @@ class BuildKanjiEntryTest {
     enrichers.add(new KanjiRadicalComponent());
     enrichers.add(new KanjiReadingMeaningComponent());
 
-    kanjiEntriesFromXMLToPOJO = new KanjiEntriesFromXMLToPOJO(null, "", "", enrichers);
+    kanjiEntriesFromXMLToPOJO = new KanjiEntriesFromXMLToPOJO(kanjiCategoriesService, null, "", "", enrichers);
   }
 
   @Test
@@ -606,10 +615,7 @@ class BuildKanjiEntryTest {
 
   @Test
   void buildKanjiEntryShouldPopulateNewJLPTLevelIfPresent() {
-    final Map<String, String> kanjiJLPTLevelMap = new HashMap<>();
-    kanjiJLPTLevelMap.put("大", "mock N5");
-    kanjiEntriesFromXMLToPOJO.setKanjiJLPTLevelMap(kanjiJLPTLevelMap);
-
+    when(kanjiCategoriesService.getJlptLevel('大')).thenReturn("mock N5");
     final Character character = new Character();
     character.getLiteralAndCodepointAndRadical().add("大");
 
@@ -620,8 +626,7 @@ class BuildKanjiEntryTest {
 
   @Test
   void buildKanjiEntryShouldNotPopulateNewJLPTLevelIfAbsent() {
-    final Map<String, String> kanjiJLPTLevelMap = new HashMap<>();
-    kanjiEntriesFromXMLToPOJO.setKanjiJLPTLevelMap(kanjiJLPTLevelMap);
+    when(kanjiCategoriesService.getJlptLevel('大')).thenReturn(null);
 
     final Character character = new Character();
     character.getLiteralAndCodepointAndRadical().add("大");

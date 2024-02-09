@@ -2,6 +2,7 @@ package com.yomimashou.appscommon.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KanjiCategoriesServiceTest {
@@ -62,5 +64,30 @@ class KanjiCategoriesServiceTest {
 
         // Assert
         assertEquals(3, kanjiCountByCategory.get("unknown"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "高,N5",
+            "的,N4",
+            "息,N3",
+            "丸,N2",
+            "審,N1"
+    })
+    void getJlptLevel_shouldReturnNewJlptLevel_ifKanjiIsInJLPTLists(Character kanji, String expectedResult) {
+        // Act
+        String actualResult = kanjiCategoriesService.getJlptLevel(kanji);
+
+        // Assert
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    void getJlptLevel_shouldReturnNull_ifKanjiIsInNotInJLPTLists() {
+        // Act
+        String actualResult = kanjiCategoriesService.getJlptLevel('鼠');
+
+        // Assert
+        assertNull(actualResult);
     }
 }

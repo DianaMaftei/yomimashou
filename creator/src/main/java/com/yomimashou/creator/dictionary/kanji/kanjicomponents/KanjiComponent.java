@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public interface KanjiComponent {
 
-  boolean applies(KanjiComponentType kanjiComponentType);
+    boolean applies(KanjiComponentType kanjiComponentType);
 
-  Kanji enrich(Kanji kanji, Object component);
+    Kanji enrich(Kanji kanji, Object component);
 
 }
