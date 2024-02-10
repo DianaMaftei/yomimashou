@@ -5,10 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.yomimashou.analyzer.Token;
-import com.yomimashou.appscommon.model.KanjiCategories;
+import com.yomimashou.appscommon.service.KanjiCategoriesService;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +29,7 @@ class TextServiceTest {
   private TextRepository textRepository;
 
   @Mock
-  private KanjiCategories kanjiCategories;
+  private KanjiCategoriesService kanjiCategories;
 
   @Mock
   private TokenizerService tokenizerService;

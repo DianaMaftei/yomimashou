@@ -5,8 +5,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.atilika.kuromoji.jumandic.Token;
-import com.atilika.kuromoji.jumandic.Tokenizer;
+import com.atilika.kuromoji.ipadic.Token;
+import com.atilika.kuromoji.ipadic.Tokenizer;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,16 +90,5 @@ class SentenceServiceTest {
     List<SentenceToken> tokens = sentenceService.analyze("word");
     SentenceToken sentenceToken = tokens.get(0);
     assertEquals(reading, sentenceToken.getReading());
-  }
-
-  @Test
-  void analyzeShouldPopulateTheSentenceTokenWithTheSemanticInfo() {
-    Token token = mock(Token.class);
-    String semanticInfo = "semantic info";
-    when(token.getSemanticInformation()).thenReturn(semanticInfo);
-    when(tokenizer.tokenize(anyString())).thenReturn(Collections.singletonList(token));
-    List<SentenceToken> tokens = sentenceService.analyze("word");
-    SentenceToken sentenceToken = tokens.get(0);
-    assertEquals(semanticInfo, sentenceToken.getSemanticInformation());
   }
 }

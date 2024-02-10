@@ -2,18 +2,18 @@ package com.yomimashou.text;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.yomimashou.appscommon.model.KanjiCategories;
+import com.yomimashou.appscommon.service.KanjiCategoriesService;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class KanjiCategoriesTest {
 
-  private KanjiCategories kanjiCategories;
+  private KanjiCategoriesService kanjiCategories;
 
   @BeforeEach
   void setUp() {
-    kanjiCategories = new KanjiCategories();
+    kanjiCategories = new KanjiCategoriesService();
   }
 
   @Test

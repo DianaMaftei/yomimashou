@@ -1,8 +1,8 @@
 package com.yomimashou.text;
 
 import com.yomimashou.text.dictionary.Deinflector;
-import com.yomimashou.text.dictionary.NameDictionary;
-import com.yomimashou.text.dictionary.WordDictionary;
+import com.yomimashou.dictionary.name.NameDictionary;
+import com.yomimashou.dictionary.word.WordDictionary;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiFunction;

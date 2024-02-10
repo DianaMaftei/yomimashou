@@ -1,6 +1,5 @@
 package com.yomimashou.uploads;
 
-import static com.google.common.io.ByteStreams.toByteArray;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,13 +50,11 @@ public class FileService {
   }
 
   public void getFile(final String fileName, final HttpServletResponse response) {
-    final Path file = Paths.get(uploadsPath, fileName);
-
-    response.setContentType("image/jpeg");
-
-    try (final InputStream in = Files.newInputStream(file, StandardOpenOption.READ)) {
-      final byte[] byteArray = toByteArray(in);
-      response.getOutputStream().write(byteArray);
+    try {
+      final Path file = Paths.get(uploadsPath, fileName);
+      response.setContentType("image/jpeg");
+      byte[] bytes = Files.readAllBytes(file);
+      response.getOutputStream().write(bytes);
     } catch (final Exception exception) {
       throw new FileException("Could not read file", exception);
     }
