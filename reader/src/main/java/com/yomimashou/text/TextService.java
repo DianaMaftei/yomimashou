@@ -3,7 +3,7 @@ package com.yomimashou.text;
 import com.yomimashou.analyzer.Token;
 import com.yomimashou.analyzer.TokenizerService;
 import com.yomimashou.appscommon.model.Kanji;
-import com.yomimashou.appscommon.model.KanjiCategories;
+import com.yomimashou.appscommon.service.KanjiCategoriesService;
 import com.yomimashou.appscommon.model.Text;
 import com.yomimashou.appscommon.model.Word;
 import com.yomimashou.dictionary.kanji.KanjiService;
@@ -32,13 +32,13 @@ public class TextService {
     private static final String DELIMITER = "|";
 
     private final TextRepository textRepository;
-    private final KanjiCategories kanjiCategories;
+    private final KanjiCategoriesService kanjiCategories;
     private final TokenizerService tokenizerService;
     private final WordService wordService;
     private final KanjiService kanjiService;
 
     @Autowired
-    public TextService(final TextRepository textRepository, final KanjiCategories kanjiCategories, TokenizerService tokenizerService, WordService wordService, KanjiService kanjiService) {
+    public TextService(final TextRepository textRepository, final KanjiCategoriesService kanjiCategories, TokenizerService tokenizerService, WordService wordService, KanjiService kanjiService) {
         this.textRepository = textRepository;
         this.kanjiCategories = kanjiCategories;
         this.tokenizerService = tokenizerService;

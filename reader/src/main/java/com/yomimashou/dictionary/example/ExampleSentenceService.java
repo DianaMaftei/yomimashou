@@ -1,35 +1,21 @@
 package com.yomimashou.dictionary.example;
 
 import com.yomimashou.appscommon.model.ExampleSentence;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static com.yomimashou.appscommon.model.QExampleSentence.exampleSentence;
 
 @Service
+@AllArgsConstructor
 public class ExampleSentenceService {
 
-  private final JPAQueryFactory jpaQueryFactory;
+    private ExampleSentenceRepository exampleSentenceRepository;
 
-  @Autowired
-  public ExampleSentenceService(final JPAQueryFactory jpaQueryFactory) {
-    this.jpaQueryFactory = jpaQueryFactory;
-  }
-
-  @Transactional
-  public List<ExampleSentence> get(final String[] searchItems, Pageable pageable) {
-    final BooleanBuilder booleanBuilder = new BooleanBuilder();
-    for (final String searchItem : searchItems) {
-      booleanBuilder.or(exampleSentence.sentence.contains(searchItem))
-          .or(exampleSentence.textBreakdown.contains(searchItem));
+    @Transactional
+    public Page<ExampleSentence> get(final String[] searchItems, Pageable pageable) {
+        return exampleSentenceRepository.findBySentenceOrTextBreakdownIn(searchItems, pageable);
     }
-    return (List<ExampleSentence>) jpaQueryFactory.query().from(exampleSentence)
-        .where(booleanBuilder).distinct().limit(pageable.getPageSize()).fetch();
-  }
 }

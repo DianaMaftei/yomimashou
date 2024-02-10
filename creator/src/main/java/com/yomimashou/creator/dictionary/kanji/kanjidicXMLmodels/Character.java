@@ -1,14 +1,15 @@
 package com.yomimashou.creator.dictionary.kanji.kanjidicXMLmodels;
 
 import com.yomimashou.creator.dictionary.DictionaryEntry;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -80,7 +81,7 @@ public class Character implements DictionaryEntry {
      */
     public List<Object> getLiteralAndCodepointAndRadical() {
         if (literalAndCodepointAndRadical == null) {
-          literalAndCodepointAndRadical = new ArrayList<>();
+            literalAndCodepointAndRadical = new ArrayList<>();
         }
         return this.literalAndCodepointAndRadical;
     }

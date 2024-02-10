@@ -1,7 +1,7 @@
 package com.yomimashou.sentence;
 
-import com.atilika.kuromoji.jumandic.Token;
-import com.atilika.kuromoji.jumandic.Tokenizer;
+import com.atilika.kuromoji.ipadic.Token;
+import com.atilika.kuromoji.ipadic.Tokenizer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -69,9 +69,6 @@ public class SentenceService {
     sentenceToken.setPartOfSpeechLevel2(posLvl2Map.get(token.getPartOfSpeechLevel2()));
     sentenceToken.setPartOfSpeechLevel3(posLvl3Map.get(token.getPartOfSpeechLevel3()));
     sentenceToken.setPartOfSpeechLevel4(posLvl4Map.get(token.getPartOfSpeechLevel4()));
-    String semanticInfo = token.getSemanticInformation();
-    sentenceToken.setSemanticInformation((semanticInfo != null && !semanticInfo.equals("*")) ?
-        semanticInfo : null);
     return sentenceToken;
   }
 

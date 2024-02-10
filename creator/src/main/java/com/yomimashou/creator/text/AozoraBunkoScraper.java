@@ -1,5 +1,6 @@
 package com.yomimashou.creator.text;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,9 +20,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class AozoraBunkoScraper extends Scraper {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AozoraBunkoScraper.class);
 
     @Value("${path.aozoraBunko}")
     private String aozoraBunkoCSVFilePath;
@@ -41,7 +41,7 @@ public class AozoraBunkoScraper extends Scraper {
                         try {
                             texts.add(getScrapedText(getBookTextUrl(buildBookInfoUrl(authorId, bookId), authorId)));
                         } catch (IOException error) {
-                            LOGGER.error("Unable to scrape book with id {} and author {}", bookId, authorId, error);
+                            log.error("Unable to scrape book with id {} and author {}", bookId, authorId, error);
                         }
                     });
         } catch (final IOException e) {

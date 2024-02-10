@@ -10,14 +10,13 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(scanBasePackages = {"com.yomimashou"})
 public class CreatorApplication implements CommandLineRunner {
+    @Autowired
+    private EntriesCreator entriesCreator;
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder.build();
     }
-
-    @Autowired
-    private EntriesCreator entriesCreator;
 
     public static void main(final String[] args) {
         SpringApplication.run(CreatorApplication.class, args);
