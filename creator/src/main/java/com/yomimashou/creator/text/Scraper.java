@@ -1,10 +1,10 @@
 package com.yomimashou.creator.text;
 
+import com.yomimashou.creator.config.CreatorProperties;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,18 +20,13 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
+@Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Scraper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Scraper.class);
-
-    @Value("${api.creator.username}")
-    public String username;
-
-    @Value("${api.creator.password}")
-    public String password;
-
-    @Autowired
-    public RestTemplate restTemplate;
+    private CreatorProperties creatorProperties;
+    private RestTemplate restTemplate;
 
     public void createContent() {
         try {
@@ -39,7 +34,7 @@ public abstract class Scraper {
                 addTextToApplication(scrapedText);
             }
         } catch (IOException e) {
-            LOGGER.error("could not create content", e);
+            log.error("could not create content", e);
         }
     }
 
@@ -49,7 +44,7 @@ public abstract class Scraper {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        headers.setBasicAuth(username, password);
+        headers.setBasicAuth(creatorProperties.getUsername(), creatorProperties.getPassword());
 
         JSONObject textJsonObject = new JSONObject();
         textJsonObject.put("title", scrapedText.getTitle());

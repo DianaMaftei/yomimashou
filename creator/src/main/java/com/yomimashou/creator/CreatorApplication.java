@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication(scanBasePackages = {"com.yomimashou"})
 public class CreatorApplication implements CommandLineRunner {
+
     @Autowired
     private EntriesCreator entriesCreator;
 

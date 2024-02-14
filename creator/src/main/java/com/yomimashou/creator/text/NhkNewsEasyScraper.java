@@ -1,26 +1,20 @@
 package com.yomimashou.creator.text;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class NhkNewsEasyScraper extends Scraper {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NhkNewsEasyScraper.class);
 
     private static final String NHK_EASY_RECENT_ARTICLES_URL = "https://www3.nhk.or.jp/news/easy/news-list.json";
     private static final String NHK_EASY_ARTICLE_URL = "https://www3.nhk.or.jp/news/easy/%s/%s.html";
@@ -32,7 +26,7 @@ public class NhkNewsEasyScraper extends Scraper {
                     try {
                         return getScrapedText(buildArticleUrl(newsId));
                     } catch (IOException error) {
-                        LOGGER.error("Unable to scrape news with id {}", newsId, error);
+                        log.error("Unable to scrape news with id {}", newsId, error);
                         return null;
                     }
                 }).filter(Objects::nonNull)
@@ -49,7 +43,7 @@ public class NhkNewsEasyScraper extends Scraper {
                     .map(article -> (String) article.get("news_id"))
                     .collect(Collectors.toList());
         } catch (IOException error) {
-            LOGGER.error("Unable to fetch recent news ids", error);
+            log.error("Unable to fetch recent news ids", error);
             return Collections.emptyList();
         }
     }

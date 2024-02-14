@@ -1,13 +1,13 @@
 package com.yomimashou.creator.text;
 
+import com.yomimashou.creator.config.CreatorProperties;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -21,10 +21,11 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class AozoraBunkoScraper extends Scraper {
 
-    @Value("${path.aozoraBunko}")
-    private String aozoraBunkoCSVFilePath;
+    private CreatorProperties creatorProperties;
 
     private static final String AOZORA_BUNKO_AUTHOR_ROOT = "https://www.aozora.gr.jp/cards/%s/";
     private static final String AOZORA_BUNKO_BOOK_INFO_URL = AOZORA_BUNKO_AUTHOR_ROOT + "card%s.html";
@@ -32,7 +33,7 @@ public class AozoraBunkoScraper extends Scraper {
 
     public List<ScrapedText> getContent() {
         List<ScrapedText> texts = new ArrayList<>();
-        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader(aozoraBunkoCSVFilePath))) {
+        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader(creatorProperties.getAozoraBunkoCSVFilePath()))) {
             bufferedReader.lines().collect(Collectors.toList()).stream().limit(10)
                     .forEach(line -> {
                         final String[] splitLine = line.split(",");

@@ -1,7 +1,7 @@
 package com.yomimashou.creator;
 
-import com.yomimashou.creator.dictionary.XMLEntryToPOJO;
-import com.yomimashou.creator.examplesentence.ExampleSentencesCSVtoPOJO;
+import com.yomimashou.creator.dictionary.DictionaryService;
+import com.yomimashou.creator.examplesentence.ExampleSentencesDictionary;
 import com.yomimashou.creator.text.Scraper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 public class EntriesCreator {
 
-    private final List<XMLEntryToPOJO> xmlEntryToPOJOList;
-    private final ExampleSentencesCSVtoPOJO exampleSentencesCSVtoPOJO;
+    private final List<DictionaryService> dictionaryServiceList;
+    private final ExampleSentencesDictionary exampleSentencesDictionary;
     private final List<Scraper> scraperList;
 
     public void run() {
@@ -23,8 +23,8 @@ public class EntriesCreator {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "20");
 
         try {
-            xmlEntryToPOJOList.forEach(XMLEntryToPOJO::processEntries);
-            exampleSentencesCSVtoPOJO.saveSentencesFromFileToDB();
+            dictionaryServiceList.forEach(DictionaryService::processEntries);
+            exampleSentencesDictionary.saveSentencesFromFileToDB();
             scraperList.forEach(Scraper::createContent);
         } catch (final Exception e) {
             log.error("Could not create entries", e);

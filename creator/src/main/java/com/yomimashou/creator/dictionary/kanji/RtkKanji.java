@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class RtkKanji {
-    private String kanji;
+    private Character kanji;
     private String components;
     private String keyword;
     private String story1;

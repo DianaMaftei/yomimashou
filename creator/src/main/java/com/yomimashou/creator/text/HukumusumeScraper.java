@@ -1,11 +1,10 @@
 package com.yomimashou.creator.text;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,9 +16,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Component
+@Slf4j
 public class HukumusumeScraper extends Scraper {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(HukumusumeScraper.class);
 
     private static final String HUKUMUSUME_ROOT = "http://hukumusume.com/douwa/";
     private static final String HUKUMUSUME_STORY_URL = HUKUMUSUME_ROOT + "pc/%s/%s/%s.htm"; // http://hukumusume.com/douwa/pc/jap/01/01.htm
@@ -31,7 +29,7 @@ public class HukumusumeScraper extends Scraper {
                     try {
                         return getScrapedText(buildStoryUrl(StoryType.JAP, 3, day));
                     } catch (IOException error) {
-                        LOGGER.error("Unable to scrape story type {} for month {} and day {}", StoryType.JAP, 3, day, error);
+                        log.error("Unable to scrape story type {} for month {} and day {}", StoryType.JAP, 3, day, error);
                         return null;
                     }
                 }).filter(Objects::nonNull)
