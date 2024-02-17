@@ -5,16 +5,8 @@ import com.yomimashou.study.card.Card;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.ANSWER_DONT_KNOW;
-import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.ANSWER_KNOW;
-import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.ANSWER_KNOW_WELL;
-import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.MAX_INTERVAL;
-import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.MIN_INTERVAL;
-import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.ONE_DAY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.yomimashou.study.card.spacedrepetition.SM2Tweaked.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SM2TweakedTest {
 

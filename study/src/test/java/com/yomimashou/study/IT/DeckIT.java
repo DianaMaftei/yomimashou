@@ -35,11 +35,11 @@ public class DeckIT {
         // Arrange
         String uri = LOCALHOST + port + DECK_URL;
         String anotherDeckName = "another deck name";
-        Deck deck1 = new Deck("words");
+        Deck deck1 = Deck.builder().name("words").build();
         deckRepository.save(deck1);
-        Deck deck2 = new Deck("kanji");
+        Deck deck2 = Deck.builder().name("kanji").build();
         deckRepository.save(deck2);
-        Deck deck3 = new Deck("sentences");
+        Deck deck3 = Deck.builder().name("sentences").build();
         deckRepository.save(deck3);
 
         // Fetch all decks

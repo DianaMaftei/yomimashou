@@ -2,9 +2,8 @@ package com.yomimashou.study.deck;
 
 
 import com.yomimashou.study.BLValidationException;
-import com.yomimashou.study.card.Card;
-import com.yomimashou.study.card.CardService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.yomimashou.study.card.CardRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +11,11 @@ import java.util.List;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class DeckService {
 
-    @Autowired
     private DeckRepository deckRepository;
-
-    @Autowired
-    private CardService cardService;
+    private CardRepository cardRepository;
 
     public List<Deck> getAll() {
         return deckRepository.findAll();
@@ -38,11 +35,7 @@ public class DeckService {
     }
 
     public void delete(final Long id) {
-        Deck deck = findById(id);
-
-        List<Card> cards = cardService.findAllInDeck(deck.getId());
-        cardService.deleteAll(cards);
+        cardRepository.deleteAllByDeckId(id);
         deckRepository.deleteById(id);
     }
-
 }

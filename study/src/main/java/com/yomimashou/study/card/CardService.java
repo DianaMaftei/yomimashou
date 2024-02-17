@@ -4,8 +4,9 @@ import com.yomimashou.study.BLValidationException;
 import com.yomimashou.study.card.spacedrepetition.PracticeAlgorithm;
 import com.yomimashou.study.deck.Deck;
 import com.yomimashou.study.deck.DeckService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,18 +15,14 @@ import java.util.List;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class CardService {
 
     private static final String ELLIPSIS = "...";
-    public static final int MAX_EXPLANATION_LENGTH = 100;
+    private static final int MAX_EXPLANATION_LENGTH = 100;
 
-    @Autowired
     private DeckService deckService;
-
-    @Autowired
     private CardRepository cardRepository;
-
-    @Autowired
     private PracticeAlgorithm practiceAlgorithm;
 
     public Card findById(Long cardId) {
@@ -51,14 +48,14 @@ public class CardService {
         if (StringUtils.isBlank(deckName)) {
             throw new BLValidationException("Invalid deck name");
         }
-        Deck deck = new Deck(deckName);
+        Deck deck = Deck.builder().name(deckName).build();
         deck = deckService.save(deck);
         return addCardToDeck(deck, card);
     }
 
     private Card addCardToDeck(final Deck deck, final Card card) {
         card.setDeck(deck);
-        if (!StringUtils.isBlank(card.getExplanation()) && card.getExplanation().length() > MAX_EXPLANATION_LENGTH) {
+        if (StringUtils.isNotBlank(card.getExplanation()) && card.getExplanation().length() > MAX_EXPLANATION_LENGTH) {
             card.setExplanation(trimToDesiredLength(card.getExplanation(), MAX_EXPLANATION_LENGTH));
         }
         return cardRepository.save(card);

@@ -45,9 +45,8 @@ class CardServiceTest {
 
     @BeforeEach
     void setUp() {
-        card = CardTestHelper.buildCard("猫", "ねこ ビョウ", "cat", CardItemOrigin.KANJI);
-        deck = new Deck("deck");
-        deck.setId(2L);
+        card = Card.builder().kanji("猫").kana("ねこ ビョウ").explanation("cat").cardItemOrigin(CardItemOrigin.KANJI).build();
+        deck = Deck.builder().name("deck").id(2L).build();
     }
 
     @Test
@@ -135,7 +134,7 @@ class CardServiceTest {
         // Arrange
         card.setExplanation("111111111112222222222233333333333444444444445555555555556666666666777777777778888888888899999999999000000000001234567890");
         Long deckId = 2L;
-        Deck deck = new Deck("deck");
+        Deck deck = Deck.builder().name("deck").build();
         deck.setId(deckId);
         when(deckService.findById(deckId)).thenReturn(deck);
         when(cardRepository.save(card)).thenReturn(card);

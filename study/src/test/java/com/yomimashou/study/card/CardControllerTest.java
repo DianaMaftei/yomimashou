@@ -25,10 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(MockitoExtension.class)
 class CardControllerTest {
@@ -47,7 +44,7 @@ class CardControllerTest {
 
     @BeforeEach
     void setup() {
-        card = CardTestHelper.buildCard("猫", "ねこ ビョウ", "cat", CardItemOrigin.KANJI);
+        card = Card.builder().kanji("猫").kana("ねこ ビョウ").explanation("cat").cardItemOrigin(CardItemOrigin.KANJI).build();
         card.setId(1L);
         mvc = MockMvcBuilders.standaloneSetup(cardController).build();
     }
@@ -56,10 +53,10 @@ class CardControllerTest {
     void getAllInDeckShouldReturnAllCardsBelongingToGivenDeck() throws Exception {
         // Arrange
         Long deckId = 1L;
-        Deck deck = new Deck("deck");
+        Deck deck = Deck.builder().name("deck").build();
         deck.setId(deckId);
         card.setDeck(deck);
-        Card card2 = CardTestHelper.buildCard("犬", "いぬ、 いぬ- ケン", "dog", CardItemOrigin.KANJI);
+        Card card2 = Card.builder().kanji("犬").kana("いぬ、 いぬ- ケン").explanation("dog").cardItemOrigin(CardItemOrigin.KANJI).build();
         card2.setDeck(deck);
         List<Card> cardsInDeck = Arrays.asList(card, card2);
         when(cardService.findAllInDeck(deckId)).thenReturn(cardsInDeck);
@@ -101,7 +98,7 @@ class CardControllerTest {
     void getDueInDeckShouldReturnAllCardsBelongingToGivenDeckThatAreDueForReview() throws Exception {
         // Arrange
         Long deckId = 1L;
-        Deck deck = new Deck("deck");
+        Deck deck = Deck.builder().name("deck").build();
         deck.setId(deckId);
         card.setDeck(deck);
         card.setNextPractice(LocalDateTime.now());

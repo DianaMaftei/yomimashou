@@ -1,8 +1,7 @@
 package com.yomimashou.study.deck;
 
 import com.yomimashou.study.BLValidationException;
-import com.yomimashou.study.card.Card;
-import com.yomimashou.study.card.CardService;
+import com.yomimashou.study.card.CardRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,22 +20,19 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DeckServiceTest {
-
-    @Mock
-    private DeckRepository deckRepository;
-
-    @Mock
-    private CardService cardService;
-
     @InjectMocks
     private DeckService deckService;
+    @Mock
+    private DeckRepository deckRepository;
+    @Mock
+    private CardRepository cardRepository;
+
 
     private Deck deck;
 
     @BeforeEach
     void setUp() {
-        deck = new Deck("deck");
-        deck.setId(2L);
+        deck = Deck.builder().name("deck2").id(2L).build();
     }
 
     @Test
@@ -88,27 +84,12 @@ class DeckServiceTest {
     }
 
     @Test
-    void deleteShouldRemoveCardsInDeck() {
-        // Arrange
-        when(deckRepository.findById(deck.getId())).thenReturn(Optional.of(deck));
-        List<Card> cardsInDeck = Collections.singletonList(buildCard());
-        when(cardService.findAllInDeck(deck.getId())).thenReturn(cardsInDeck);
-
+    void deleteShouldRemoveDeckAndItsCards() {
         // Act
         deckService.delete(deck.getId());
 
         // Assert
-        verify(cardService).deleteAll(cardsInDeck);
+        verify(cardRepository).deleteAllByDeckId(deck.getId());
         verify(deckRepository).deleteById(deck.getId());
-    }
-
-    private Card buildCard() {
-        Card card = new Card();
-        card.setId(1L);
-        card.setKanji("猫");
-        card.setKana("ねこ ビョウ");
-        card.setExplanation("cat");
-
-        return card;
     }
 }
